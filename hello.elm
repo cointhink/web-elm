@@ -1,4 +1,4 @@
 import Html exposing (text)
 
 main =
-  text "Hello, World!"
+  text "Coithink. Cryptocoin Market Analysis for the New Economy. Check back soon."
