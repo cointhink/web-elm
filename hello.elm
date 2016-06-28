@@ -1,4 +1,9 @@
-import Html exposing (text)
+import Html exposing (div, span, text)
+import Html.App exposing (beginnerProgram)
+import Html.Attributes exposing (..)
 
-main =
-  text "Coithink. Cryptocoin Market Analysis for the New Economy. Check back soon."
+main = beginnerProgram{view = view, model = "", update = update}
+
+view model = div [ class "bob" ] [ text "hi" ]
+
+update msg model = ""
