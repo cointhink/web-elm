@@ -5,3 +5,24 @@
 .biglogo {
   margin: 2em 0em
 }
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  background-color: #222;
+  padding: 0.5em 0.5em;
+  font-size: 1em;
+}
+
+.navbar img {
+  vertical-align: middle;
+}
+
+.navbar .menuitem {
+}
+
+.littlelogo {
+  height: 2em;
+  padding: 0 0.2em;
+}
