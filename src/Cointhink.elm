@@ -27,9 +27,12 @@ login = Html.form []
                     button [ ] [ text "Signin" ]
                   ]
 
+chart = div [ id "chart" ] []
+
 view model = div [ class "main" ]
                  [
                    navbar,
+                   chart,
                    div [] [ img [ class "biglogo", src "assets/logo.svg" ] [] ],
                    div [] [ text "Cointhink is being rebuilt." ],
                    div [] [ text "Check back later." ]
