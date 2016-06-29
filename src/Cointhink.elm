@@ -1,8 +1,7 @@
-import Html exposing (..)
-import Html.App exposing (beginnerProgram)
-import Html.Attributes exposing (..)
+module Cointhink exposing (navbar, login, view, update)
 
-main = beginnerProgram{view = view, model = "", update = update}
+import Html exposing (..)
+import Html.Attributes exposing (..)
 
 navbar = div [ class "navbar" ]
              [

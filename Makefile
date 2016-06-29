@@ -4,5 +4,5 @@ npm: ./node_modules/.bin/elm
 	npm install
 	./node_modules/.bin/elm-package install
 
-build: hello.elm
-	./node_modules/.bin/elm-make hello.elm --output=public/elm.js
+build: src/*.elm
+	./node_modules/.bin/elm-make src/Main.elm --output=public/elm.js
