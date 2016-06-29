@@ -38,4 +38,4 @@ view model = div [ class "main" ]
                    div [] [ text "Check back later." ]
                  ]
 
-update msg model = ""
+update msg model = (model, Cmd.none)
