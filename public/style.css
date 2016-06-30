@@ -26,3 +26,9 @@
   height: 2em;
   padding: 0 0.2em;
 }
+
+#chart {
+  margin: 1em auto;
+  width: 80%;
+  background-color: grey;
+}
