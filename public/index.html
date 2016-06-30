@@ -15,7 +15,9 @@
 </body>
 
 <script type="text/javascript">
-  let main = Elm.Main.fullscreen();
+  let windowHostname = window.location.hostname
+  let wsHost = windowHostname.length > 0 ? windowHostname : "localhost"
+  let main = Elm.Main.fullscreen({hostname: wsHost});
   main.ports.output.subscribe(function(){
     d3init()
   })

@@ -1,13 +1,13 @@
 port module Main exposing (..)
 
-import Html.App exposing (program)
-import Debug exposing (log)
+import Html.App
+import Debug
 
 import Cointhink exposing (..)
 
 
-main = program {
-          init = log "init" init,
+main = Html.App.programWithFlags {
+          init = Debug.log "init" init,
           view = view,
           update = update,
           subscriptions = subscriptions
