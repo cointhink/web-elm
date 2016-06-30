@@ -1,43 +1,41 @@
-port module Cointhink exposing (navbar, login, view, update)
+port module Cointhink exposing (init, subscriptions, view, update)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Platform.Cmd exposing (Cmd)
+import Task
+
+import Components
 
 port output : () -> Cmd msg
 
-navbar = div [ class "navbar" ]
-             [
-               span [ class "menuitem" ]
-                    [
-                      img [ class "littlelogo", src "assets/logo.svg" ] [],
-                      text "Cointhink"
-                    ],
-               span [ class "menuitem" ]
-                    [
-                      login
-                    ]
+view = Components.view
 
-             ]
+type alias Model = String
 
-login = Html.form []
-                  [
-                    input [
-                            type' "email",
-                            placeholder "username"
-                          ]
-                          [],
-                    button [ ] [ text "Signin" ]
-                  ]
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case (Debug.log "MESSAGE" msg) of
+        Init ->
+            ( "init", output () )
+        Ask ->
+            ( model, output () )
+        Get x ->
+            ( "wtf", Cmd.none )
 
-chart = div [ id "chart" ] []
+type Msg = Init | Ask | Get Int
 
-view model = div [ class "main" ]
-                 [
-                   navbar,
-                   chart,
-                   div [] [ img [ class "biglogo", src "assets/logo.svg" ] [] ],
-                   div [] [ text "Cointhink is being rebuilt." ],
-                   div [] [ text "Check back later." ]
-                 ]
+port input : (Int -> msg) -> Sub msg
 
-update msg model = (model, output () )
+subscriptions : Model -> Sub Msg
+subscriptions model =
+     input Get
+
+init : ( Model, Cmd Msg )
+init =
+    ( "",
+      send Init )
+
+send : Msg -> Cmd Msg
+send msg =
+  Task.perform identity identity (Task.succeed msg)
+
+
