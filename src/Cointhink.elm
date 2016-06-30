@@ -2,6 +2,7 @@ port module Cointhink exposing (init, subscriptions, view, update)
 
 import Platform.Cmd exposing (Cmd)
 import Task
+import WebSocket
 
 import Components
 
@@ -9,29 +10,39 @@ port output : () -> Cmd msg
 
 view = Components.view
 
-type alias Model = String
+type alias Model = { start_range : String }
+
+ws_url = "ws://echo.websocket.org"
+
+moredata : String -> Cmd Msg
+moredata say = WebSocket.send ws_url say
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "MESSAGE" msg) of
         Init ->
-            ( "init", output () )
+            ( Model "2015", moredata "init")
         Ask ->
-            ( model, output () )
+            ( Model "2015", output () )
         Get x ->
-            ( "wtf", Cmd.none )
+            ( Model "2015", Cmd.none )
 
 type Msg = Init | Ask | Get Int
 
 port input : (Int -> msg) -> Sub msg
 
+wsin str =
+  case (Debug.log "ws" str) of
+    "ab" -> Ask
+    _ -> Ask
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-     input Get
+  WebSocket.listen ws_url wsin
 
 init : ( Model, Cmd Msg )
 init =
-    ( "",
+    ( Model "2014",
       send Init )
 
 send : Msg -> Cmd Msg
