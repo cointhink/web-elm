@@ -10,18 +10,16 @@ port output : () -> Cmd msg
 
 view = Components.view
 
-type alias Model = { url: String, start_range : String }
+type alias Model = { ws_url: String, start_range : String }
 
-ws_url = "ws://echo.websocket.org"
-
-moredata : String -> Cmd Msg
-moredata say = WebSocket.send ws_url say
+moredata : String -> String -> Cmd Msg
+moredata url say = WebSocket.send url say
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "MESSAGE" msg) of
         Init ->
-            ( Debug.log "model" model, moredata "init")
+            ( Debug.log "model" model, moredata model.ws_url "init")
         Ask ->
             ( Debug.log "model" model, output () )
         Get x ->
@@ -31,20 +29,20 @@ type Msg = Init | Ask | Get Int
 
 port input : (Int -> msg) -> Sub msg
 
-wsin str =
+ws_parse str =
   case (Debug.log "ws" str) of
     "ab" -> Ask
     _ -> Ask
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  WebSocket.listen ws_url wsin
+  WebSocket.listen model.ws_url ws_parse
 
-type alias Flags = { hostname : String }
+type alias Flags = { url : String }
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( Model ("ws://" ++ (Debug.log "flags" flags).hostname) "2014",
+    ( Model ((Debug.log "flags" flags).url) "2014",
       send Init )
 
 send : Msg -> Cmd Msg
