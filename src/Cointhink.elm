@@ -1,7 +1,9 @@
-module Cointhink exposing (navbar, login, view, update)
+port module Cointhink exposing (navbar, login, view, update)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+
+port output : () -> Cmd msg
 
 navbar = div [ class "navbar" ]
              [
@@ -38,4 +40,4 @@ view model = div [ class "main" ]
                    div [] [ text "Check back later." ]
                  ]
 
-update msg model = (model, Cmd.none)
+update msg model = (model, output () )

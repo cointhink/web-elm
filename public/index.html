@@ -14,15 +14,18 @@
 </body>
 
 <script type="text/javascript">
-var main = Elm.Main.fullscreen();
-</script>
-
-<script type="text/javascript">
 function d3go(el) {
+  console.log('d3go')
   d3.selectAll("div").style("color", "yellow")
 }
 </script>
 
+<script type="text/javascript">
+var main = Elm.Main.fullscreen();
+main.ports.output.subscribe(function(){
+  console.log('elm output!!')
+})
+</script>
 
 <script type="text/javascript">
   var _gaq = _gaq || [];
