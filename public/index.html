@@ -16,7 +16,9 @@
 
 <script type="text/javascript">
   let main = Elm.Main.fullscreen();
-  main.ports.output.subscribe(d3go)
+  main.ports.output.subscribe(function(){
+    d3init()
+  })
 </script>
 
 <script type="text/javascript">

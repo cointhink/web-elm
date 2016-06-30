@@ -1,16 +1,24 @@
-function d3go(el) {
-  let chart = d3.select('#chart');
-  chartpants(chart)
 
-  d3.select(window)
-  .on("resize", function() {
-    chartpants(chart)
-  })
+function d3init() {
+  let chart = d3.select('#chart');
+
+  resize(chart)
+
+  d3.select(window).on("resize", function(){ resize(chart) })
+
+  chart.append('svg')
 }
 
-function chartpants(chart) {
+function resize(chart) {
   let aspect = 3
-  var targetWidth = chart.node().getBoundingClientRect().width;
-  chart.attr("width", targetWidth);
-  chart.style("height", (targetWidth / aspect) +"px");
+
+  // DIV size
+  let boundingRect = chart.node().getBoundingClientRect();
+  chart.attr("width", boundingRect.width);
+  chart.style("height", (boundingRect.width / aspect) +"px");
+
+  // SVG size
+  let svg = chart.select("svg")
+  svg.style('width', boundingRect.width + 'px')
+     .style('height', boundingRect.height + 'px')
 }
