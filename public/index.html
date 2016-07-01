@@ -19,8 +19,11 @@
   let wsHost = windowHostname.length > 0 ? windowHostname : "localhost:2050"
   let wsUrl = ('https:' == document.location.protocol ? 'wss://' : 'ws://') + wsHost
   let main = Elm.Main.fullscreen({url: wsUrl});
-  main.ports.output.subscribe(function(){
+  main.ports.setup.subscribe(function(){
     d3init()
+  })
+  main.ports.graphdata.subscribe(function(){
+    d3draw()
   })
 </script>
 

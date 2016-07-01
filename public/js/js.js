@@ -1,5 +1,6 @@
 
 function d3init() {
+  console.log('d3init')
   let chart = d3.select('#chart');
 
   resize(chart)
@@ -7,6 +8,10 @@ function d3init() {
   d3.select(window).on("resize", function(){ resize(chart) })
 
   chart.append('svg')
+}
+
+function d3draw() {
+  console.log('d3draw')
 }
 
 function resize(chart) {

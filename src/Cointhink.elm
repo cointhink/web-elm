@@ -7,7 +7,11 @@ import Json.Encode exposing (object, encode, string)
 
 import Components
 
-port output : () -> Cmd msg
+type Msg = Init | Ask | Noop
+
+port input : (Int -> msg) -> Sub msg
+port graphdata : () -> Cmd msg
+port setup : () -> Cmd msg
 
 view = Components.view
 
@@ -26,16 +30,13 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "MESSAGE" msg) of
         Init ->
-            ( Debug.log "model" model, Cmd.batch [ marketquery model "btc" "usd",
-                                                   output () ] )
+            ( Debug.log "model" model, marketquery model "btc" "usd"
+                                                    )
         Ask ->
-            ( Debug.log "model" model, output () )
+            ( Debug.log "model" model, graphdata () )
         Noop ->
             ( model, Cmd.none )
 
-type Msg = Init | Ask | Noop
-
-port input : (Int -> msg) -> Sub msg
 
 ws_parse : String -> Msg
 ws_parse str =
@@ -52,7 +53,7 @@ type alias Flags = { url : String }
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( Model ((Debug.log "flags" flags).url) "2014",
-      send Init )
+      setup () )
 
 send : Msg -> Cmd Msg
 send msg =
