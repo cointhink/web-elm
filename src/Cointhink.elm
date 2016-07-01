@@ -32,6 +32,8 @@ update msg model =
                                                    rpc (orderbookRequest "btc" "xusd") ] )
         Cointhink.Shared.OrderbookUpdate orderbook ->
             ( model, graphdata () )
+        Cointhink.Shared.Alert string ->
+            ( model, Cmd.none )
         Cointhink.Shared.Noop ->
             ( model, Cmd.none )
 
@@ -43,7 +45,7 @@ ws_parse : String -> Msg
 ws_parse json =
   case jmsg json of
     Result.Ok value -> dispatch value
-    Result.Err msg -> Cointhink.Shared.Noop
+    Result.Err msg -> Cointhink.Shared.Alert msg
 
 dispatch : WsResponse -> Msg
 dispatch wsresponse =
@@ -55,7 +57,7 @@ dispatch wsresponse =
       in
         case orderbookResult of
           Result.Ok value -> Cointhink.Shared.OrderbookUpdate value
-          Result.Err msg -> Cointhink.Shared.Noop
+          Result.Err msg -> Cointhink.Shared.Alert msg
     _ -> Cointhink.Shared.Noop
 
 subscriptions : Model -> Sub Msg
