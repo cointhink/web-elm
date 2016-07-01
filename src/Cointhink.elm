@@ -29,15 +29,15 @@ update msg model =
     case (Debug.log "MESSAGE" msg) of
         Cointhink.Shared.Init ->
             ( Debug.log "model" model, Cmd.batch [ rpc exchangesRequest,
-                                                   rpc (coinRequest "btc" "xusd") ] )
+                                                   rpc (orderbookRequest "btc" "xusd") ] )
         Cointhink.Shared.Ask ->
             ( Debug.log "model" model, graphdata () )
         Cointhink.Shared.Noop ->
             ( model, Cmd.none )
 
-jmsg : String -> Result String String
+jmsg : String -> Result String WsResponse
 jmsg json =
-    decodeString ("type" := Json.Decode.string) json
+    decodeString Cointhink.Protocol.job json
 
 ws_parse : String -> Msg
 ws_parse json =
@@ -45,9 +45,9 @@ ws_parse json =
     Result.Ok value -> dispatch value
     Result.Err msg -> Cointhink.Shared.Noop
 
-dispatch : String -> Msg
-dispatch method =
-  case method of
+dispatch : WsResponse -> Msg
+dispatch wsresponse =
+  case wsresponse.method of
     "bing" -> Cointhink.Shared.Ask
     _ -> Cointhink.Shared.Noop
 
