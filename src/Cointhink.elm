@@ -21,19 +21,15 @@ type alias Model = { ws_url: String, start_range : String }
 wsSend : String -> Json.Encode.Value -> Cmd Msg
 wsSend url say = WebSocket.send url (encode 2 (Debug.log "say" say))
 
-exchangesRpc : Model -> Cmd Msg
-exchangesRpc model = wsSend model.ws_url (exchangesRequest)
-
-marketRpc : Model -> String -> String -> Cmd Msg
-marketRpc model base quote = wsSend model.ws_url (coinrequest base quote)
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+  let
+    rpc = wsSend model.ws_url
+  in
     case (Debug.log "MESSAGE" msg) of
         Cointhink.Shared.Init ->
-            ( Debug.log "model" model, Cmd.batch [ exchangesRpc model,
-                                                   marketRpc model "btc" "xusd" ]
-                                                    )
+            ( Debug.log "model" model, Cmd.batch [ rpc exchangesRequest,
+                                                   rpc (coinRequest "btc" "xusd") ] )
         Cointhink.Shared.Ask ->
             ( Debug.log "model" model, graphdata () )
         Cointhink.Shared.Noop ->
