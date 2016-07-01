@@ -4,11 +4,11 @@ import Platform.Cmd exposing (Cmd)
 import Task
 import WebSocket
 import Json.Encode exposing (object, encode, string, int)
-import Json.Decode exposing ( (:=), decodeString )
+import Json.Decode exposing ( (:=), decodeString, decodeValue )
 
 import Components
 import Cointhink.Protocol exposing (..)
-import Cointhink.Shared exposing (Msg)
+import Cointhink.Shared exposing (..)
 
 port input : (Int -> msg) -> Sub msg
 port graphdata : () -> Cmd msg
@@ -26,12 +26,12 @@ update msg model =
   let
     rpc = wsSend model.ws_url
   in
-    case (Debug.log "MESSAGE" msg) of
+    case (Debug.log "Update Msg" msg) of
         Cointhink.Shared.Init ->
             ( Debug.log "model" model, Cmd.batch [ rpc exchangesRequest,
                                                    rpc (orderbookRequest "btc" "xusd") ] )
-        Cointhink.Shared.Ask ->
-            ( Debug.log "model" model, graphdata () )
+        Cointhink.Shared.OrderbookUpdate orderbook ->
+            ( model, graphdata () )
         Cointhink.Shared.Noop ->
             ( model, Cmd.none )
 
@@ -41,16 +41,22 @@ jmsg json =
 
 ws_parse : String -> Msg
 ws_parse json =
-  case (Debug.log "ws" (jmsg json)) of
+  case jmsg json of
     Result.Ok value -> dispatch value
     Result.Err msg -> Cointhink.Shared.Noop
 
 dispatch : WsResponse -> Msg
 dispatch wsresponse =
-  case wsresponse.method of
-    "bing" -> Cointhink.Shared.Ask
+  case (Debug.log "ws method" wsresponse.method) of
+    "orderbook" ->
+      let
+        orderbookResult : Result String Orderbook
+        orderbookResult = decodeValue orderbookDecoder wsresponse.object
+      in
+        case orderbookResult of
+          Result.Ok value -> Cointhink.Shared.OrderbookUpdate value
+          Result.Err msg -> Cointhink.Shared.Noop
     _ -> Cointhink.Shared.Noop
-
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
