@@ -3,7 +3,7 @@ port module Cointhink exposing (init, subscriptions, view, update)
 import Platform.Cmd exposing (Cmd)
 import Task
 import WebSocket
-import Json.Encode exposing (object, encode, string)
+import Json.Encode exposing (object, encode, string, int)
 
 import Components
 
@@ -17,20 +17,30 @@ view = Components.view
 
 type alias Model = { ws_url: String, start_range : String }
 
-moredata : String -> Json.Encode.Value -> Cmd Msg
-moredata url say = WebSocket.send url (Debug.log "say" (encode 2 say))
+wsSend : String -> Json.Encode.Value -> Cmd Msg
+wsSend url say = WebSocket.send url (encode 2 (Debug.log "say" say))
 
-marketquery : Model -> String -> String -> Cmd Msg
-marketquery model base quote = moredata model.ws_url (coinrequest base quote)
+exchangesRpc : Model -> Cmd Msg
+exchangesRpc model = wsSend model.ws_url (exchangesRequest)
+
+marketRpc : Model -> String -> String -> Cmd Msg
+marketRpc model base quote = wsSend model.ws_url (coinrequest base quote)
 
 coinrequest : String -> String -> Json.Encode.Value
-coinrequest base quote = object [ ("base", string base), ("quote", string quote) ]
+coinrequest base quote = object [ ( "method" , string "orderbook" ),
+                                  ( "params" , object [ ("base", string base),
+                                                        ("quote", string quote),
+                                                        ("days", int 1)
+                                                      ] )
+                                ]
+exchangesRequest = object [ ( "method" , string "exchanges" ) ]
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "MESSAGE" msg) of
         Init ->
-            ( Debug.log "model" model, marketquery model "btc" "usd"
+            ( Debug.log "model" model, Cmd.batch [ exchangesRpc model,
+                                                   marketRpc model "btc" "xusd" ]
                                                     )
         Ask ->
             ( Debug.log "model" model, graphdata () )
