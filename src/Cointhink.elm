@@ -4,6 +4,7 @@ import Platform.Cmd exposing (Cmd)
 import Task
 import WebSocket
 import Json.Encode exposing (object, encode, string, int)
+import Json.Decode exposing ( (:=), decodeString )
 
 import Components
 
@@ -47,12 +48,21 @@ update msg model =
         Noop ->
             ( model, Cmd.none )
 
+jmsg : String -> Result String String
+jmsg json = decodeString ("type" := Json.Decode.string) json
 
 ws_parse : String -> Msg
-ws_parse str =
-  case (Debug.log "ws" str) of
-    "ab" -> Ask
+ws_parse json =
+  case (Debug.log "ws" (jmsg json)) of
+    Result.Ok value -> dispatch value
+    Result.Err msg -> Noop
+
+dispatch : String -> Msg
+dispatch method =
+  case method of
+    "bing" -> Ask
     _ -> Noop
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
