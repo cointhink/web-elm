@@ -53,7 +53,7 @@ type alias Flags = { url : String }
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( Model ((Debug.log "flags" flags).url) "2014",
-      setup () )
+      Cmd.batch [ setup (), send Init ] )
 
 send : Msg -> Cmd Msg
 send msg =
