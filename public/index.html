@@ -16,7 +16,7 @@
 
 <script type="text/javascript">
   let windowHostname = window.location.hostname
-  let wsHost = windowHostname.length > 0 ? windowHostname : "localhost"
+  let wsHost = windowHostname.length > 0 ? windowHostname : "localhost:2050"
   let wsUrl = ('https:' == document.location.protocol ? 'wss://' : 'ws://') + wsHost
   let main = Elm.Main.fullscreen({url: wsUrl});
   main.ports.output.subscribe(function(){

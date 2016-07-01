@@ -7,7 +7,7 @@ import Cointhink exposing (..)
 
 
 main = Html.App.programWithFlags {
-          init = Debug.log "init" init,
+          init = init,
           view = view,
           update = update,
           subscriptions = subscriptions

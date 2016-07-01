@@ -3,7 +3,7 @@ module Components exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-navbar = div [ class "navbar" ]
+navbar model = div [ class "navbar" ]
              [
                span [ class "menuitem" ]
                     [
@@ -29,11 +29,15 @@ login = Html.form []
 
 chart = div [ id "chart" ] []
 
+footer model = div [ class "footer" ]
+                   [ text model.ws_url ]
+
 view model = div [ class "main" ]
                  [
-                   navbar,
+                   navbar model,
                    chart,
                    div [] [ img [ class "biglogo", src "assets/logo.svg" ] [] ],
                    div [] [ text "Cointhink is being rebuilt." ],
-                   div [] [ text "Check back later." ]
+                   div [] [ text "Check back later." ],
+                   footer model
                  ]
