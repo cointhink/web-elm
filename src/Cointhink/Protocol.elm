@@ -20,9 +20,6 @@ orderbookRequest base quote = object [ ( "method" , string "orderbook" ),
                                                              ("days", int 1)
                                                            ] )
                                 ]
-
-type alias OMarket = { base : String, quote : String }
-
 orderbookDecoder : Json.Decode.Decoder Orderbook
 orderbookDecoder =
   object5 Orderbook
@@ -30,7 +27,7 @@ orderbookDecoder =
           ("exchange" := Json.Decode.string)
           ("market" :=
              (object2
-                 OMarket
+                 OrderbookMarket
                  ( "base" := Json.Decode.string )
                  ( "quote" := Json.Decode.string )
              )

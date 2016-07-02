@@ -5,10 +5,13 @@ type Msg = Init
            | Alert String
            | Noop
 
+
 type alias Orderbook = {
               date : String,
               exchange : String,
-              market : { base : String , quote : String },
+              market : OrderbookMarket,
               bids : List (String,Float),
               asks : List (String,Float)
            }
+
+type alias OrderbookMarket = { base : String, quote : String }
