@@ -11,7 +11,7 @@ import Cointhink.Protocol exposing (..)
 import Cointhink.Shared exposing (..)
 
 port input : (Int -> msg) -> Sub msg
-port graphdata : () -> Cmd msg
+port graphdata : Orderbook -> Cmd msg
 port setup : () -> Cmd msg
 
 view = Components.view
@@ -28,10 +28,9 @@ update msg model =
   in
     case (Debug.log "Update Msg" msg) of
         Cointhink.Shared.Init ->
-            ( Debug.log "model" model, Cmd.batch [ rpc exchangesRequest,
-                                                   rpc (orderbookRequest "btc" "xusd") ] )
+            ( Debug.log "model" model, rpc (orderbookRequest "btc" "xusd") )
         Cointhink.Shared.OrderbookUpdate orderbook ->
-            ( model, graphdata () )
+            ( model, graphdata orderbook )
         Cointhink.Shared.Alert string ->
             ( model, Cmd.none )
         Cointhink.Shared.Noop ->

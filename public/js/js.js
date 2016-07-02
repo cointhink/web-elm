@@ -10,8 +10,8 @@ function d3init() {
   chart.append('svg')
 }
 
-function d3draw() {
-  console.log('d3draw')
+function d3draw(data) {
+  console.log('d3draw', data)
 }
 
 function resize(chart) {

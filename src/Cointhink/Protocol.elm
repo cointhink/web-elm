@@ -1,7 +1,7 @@
 module Cointhink.Protocol exposing (..)
 
 import Json.Encode exposing (object, encode, string, int)
-import Json.Decode exposing (object2, value, (:=))
+import Json.Decode exposing (tuple2, object5, object2, value, (:=))
 
 import Cointhink.Shared exposing (..)
 
@@ -21,11 +21,22 @@ orderbookRequest base quote = object [ ( "method" , string "orderbook" ),
                                                            ] )
                                 ]
 
+type alias OMarket = { base : String, quote : String }
+
 orderbookDecoder : Json.Decode.Decoder Orderbook
 orderbookDecoder =
-  object2 Orderbook
+  object5 Orderbook
           ("date" := Json.Decode.string)
           ("exchange" := Json.Decode.string)
+          ("market" :=
+             (object2
+                 OMarket
+                 ( "base" := Json.Decode.string )
+                 ( "quote" := Json.Decode.string )
+             )
+          )
+          ("bids" :=  Json.Decode.list (tuple2 (,) Json.Decode.string Json.Decode.float) )
+          ("asks" :=  Json.Decode.list (tuple2 (,) Json.Decode.string Json.Decode.float) )
 
 exchangesRequest : Json.Encode.Value
 exchangesRequest = object [ ( "method" , string "exchanges" ) ]

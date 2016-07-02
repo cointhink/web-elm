@@ -22,8 +22,8 @@
   main.ports.setup.subscribe(function(){
     d3init()
   })
-  main.ports.graphdata.subscribe(function(){
-    d3draw()
+  main.ports.graphdata.subscribe(function(ob){
+    d3draw(ob)
   })
 </script>
 
