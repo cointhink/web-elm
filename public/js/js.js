@@ -1,3 +1,4 @@
+let chartData = []
 
 function d3init() {
   console.log('d3init')
@@ -13,17 +14,42 @@ function d3draw(data) {
   let chart = d3.select('#chart');
   let boundingRect = chart.node().getBoundingClientRect();
 
+  // iso8601 to js date
+  data.date = new Date(data.date)
+  data.bids = data.bids.map(function(offer){return [ parseFloat(offer[0]), offer[1] ] })
+  console.log(data.date, data.bids[0])
+
+  // todo: insert in-place
+  chartData.push(data)
+  chartData = chartData.sort(function(a, b) { return a.date > b.date })
+
+  let chartDates = chartData.map(function(d){return d.date})
+  let timeMax = Math.max(...chartDates)
+  let timeMin = Math.min(...chartDates)
+
+  let chartBidPrices = chartData.map(function(d){return d.bids[0][0]})
+  let bidPriceMax = Math.max(...chartBidPrices)
+  let bidPriceMin = Math.min(...chartBidPrices)
+  console.log('bidPriceMax', bidPriceMax, 'bidPriceMin', bidPriceMin)
+  let x = d3.scaleTime()
+    .domain([new Date(timeMin), new Date(timeMax)])
+    .range([0, boundingRect.width])
+
+  let y = d3.scaleLinear()
+    .domain([bidPriceMax, bidPriceMin])
+    .range([0, boundingRect.height]);
+
   chart
   .select('svg')
   .selectAll('line')
-  .data([ [100,100],[100,200] ])
+  .data(chartData)
   .enter()
     .append("line")
       .attr("stroke", "white")
       .attr("x1", 0)
-      .attr("y1", 0)
-      .attr("x2", function(xy){console.log('new line x', xy);return xy[0]})
-      .attr("y2", function(xy){console.log('new line y', xy);return xy[1]})
+      .attr("y1", boundingRect.height)
+      .attr("x2", function(d){return x(d.date)})
+      .attr("y2", function(d){return y(d.bids[0][0])})
 }
 
 function resize(chart) {
