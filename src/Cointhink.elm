@@ -44,12 +44,12 @@ jmsg json =
 ws_parse : String -> Msg
 ws_parse json =
   case jmsg json of
-    Result.Ok value -> dispatch value
+    Result.Ok value -> dispatch (Debug.log "wsresponse" value)
     Result.Err msg -> Cointhink.Shared.Alert msg
 
 dispatch : WsResponse -> Msg
 dispatch wsresponse =
-  case (Debug.log "ws method" wsresponse.method) of
+  case (Debug.log "ws response type" wsresponse.rtype) of
     "orderbook" ->
       let
         orderbookResult : Result String Orderbook

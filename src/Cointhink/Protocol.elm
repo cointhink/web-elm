@@ -5,7 +5,7 @@ import Json.Decode exposing (object2, value, (:=))
 
 import Cointhink.Shared exposing (..)
 
-type alias WsResponse = { method : String, object : Json.Decode.Value }
+type alias WsResponse = { rtype : String, object : Json.Decode.Value }
 
 job : Json.Decode.Decoder WsResponse
 job =
