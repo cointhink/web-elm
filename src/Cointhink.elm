@@ -43,7 +43,7 @@ jmsg json =
 ws_parse : String -> Msg
 ws_parse json =
   case jmsg json of
-    Result.Ok value -> dispatch (Debug.log "wsresponse" value)
+    Result.Ok value -> dispatch value
     Result.Err msg -> Cointhink.Shared.Alert msg
 
 dispatch : WsResponse -> Msg
