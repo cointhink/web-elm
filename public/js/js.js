@@ -3,7 +3,16 @@ let chartData = []
 function d3init() {
   console.log('d3init')
   let chart = d3.select('#chart');
-  chart.append('svg')
+  let svg = chart.append('svg')
+  svg
+    .append('g')
+      .attr('id', 'draw')
+  svg
+    .append('g')
+      .attr('id', 'yaxis')
+  svg
+    .append('g')
+      .attr('id', 'xaxis')
 
   resize(chart)
 
@@ -11,8 +20,11 @@ function d3init() {
 }
 
 function d3draw(data) {
-  let chart = d3.select('#chart');
-  let boundingRect = chart.node().getBoundingClientRect();
+  // let svg = d3.select('svg');
+  // let boundingRect = draw.node().getBoundingClientRect();
+  let draw = d3.select('#draw')
+  let boundingRect = {width: parseInt(draw.style('width')),
+                      height: parseInt(draw.style('height')) }
 
   // iso8601 to js date
   data.date = new Date(data.date)
@@ -45,19 +57,22 @@ function d3draw(data) {
     .range([0+radius, boundingRect.height-radius]);
   console.log('ymin', 0, 'ymax', boundingRect.height)
 
-  chart
-  .select('svg')
+  // add new point
+  draw
   .selectAll('circle')
   .data(chartData)
-  .attr("cx", calcx)
-  .attr("cy", calcy)
   .enter()
     .append('circle')
       .attr('stroke', 'white')
-      .attr('r', radius)
-      .attr('cx', calcx)
-      .attr('cy', calcy)
       .attr('fill', 'blue')
+
+  // reposition/resize all points
+  draw
+  .selectAll('circle')
+  .data(chartData)
+    .attr('r', radius)
+    .attr('cx', calcx)
+    .attr('cy', calcy)
 
   function calcx(d) {
     console.log('x', x(d.date))
@@ -68,6 +83,8 @@ function d3draw(data) {
     console.log('y', y(d.bids[0][0]), d.bids[0][0])
     return y(d.bids[0][0])
   }
+
+
 }
 
 function resize(chart) {
@@ -77,11 +94,26 @@ function resize(chart) {
   let boundingRect = chart.node().getBoundingClientRect();
   let aspectHeight = (boundingRect.width / aspect)
 
-  chart.attr("width", boundingRect.width);
+  chart.style("width", boundingRect.width);
   chart.style("height", aspectHeight +"px");
 
   // SVG size
   let svg = chart.select("svg")
   svg.style('width', boundingRect.width + 'px')
      .style('height', aspectHeight + 'px')
+
+  // draw area size
+  let drawWidth = boundingRect.width * 0.9
+  let draw = chart.select("#draw")
+  draw.style('width', drawWidth + 'px')
+      .style('height', aspectHeight + 'px')
+
+  // draw area size
+  let yAxisWidth = boundingRect.width * 0.1
+  let yAxis = chart.select("#yaxis")
+  yAxis.style('width', yAxisWidth + 'px')
+       .style('height', aspectHeight + 'px')
+       .attr('transform', function(d) {
+         return 'translate(' + drawWidth + ')';
+       })
 }
