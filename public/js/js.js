@@ -10,9 +10,11 @@ function d3init() {
   svg
     .append('g')
       .attr('id', 'yaxis')
+      .append('rect')
   svg
     .append('g')
       .attr('id', 'xaxis')
+      .append('rect')
 
   resize(chart)
 
@@ -104,16 +106,33 @@ function resize(chart) {
 
   // draw area size
   let drawWidth = boundingRect.width * 0.9
+  let drawHeight = aspectHeight * 0.9
   let draw = chart.select("#draw")
   draw.style('width', drawWidth + 'px')
-      .style('height', aspectHeight + 'px')
+      .style('height', drawHeight + 'px')
 
   // draw area size
   let yAxisWidth = boundingRect.width * 0.1
   let yAxis = chart.select("#yaxis")
-  yAxis.style('width', yAxisWidth + 'px')
-       .style('height', aspectHeight + 'px')
-       .attr('transform', function(d) {
-         return 'translate(' + drawWidth + ')';
-       })
+  yAxis
+     .attr('transform', function(d) {
+       return 'translate(' + drawWidth + ')';
+     })
+    .select('rect')
+      .attr('width', yAxisWidth + 'px')
+      .attr('height', aspectHeight + 'px')
+      .attr('fill', 'blue')
+
+  // draw area size
+  let xAxisWidth = boundingRect.width
+  let xAxisHeight = aspectHeight * 0.1
+  let xAxis = chart.select("#xaxis")
+  xAxis
+    .attr('transform', function(d) {
+      return 'translate(0,' + drawHeight + ')';
+    })
+    .select('rect')
+      .attr('width', xAxisWidth + 'px')
+      .attr('height', xAxisHeight + 'px')
+      .attr('fill', 'yellow')
 }
