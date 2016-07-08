@@ -33,7 +33,7 @@ function d3draw(data) {
   let bidPriceMin = Math.min(...chartBidPrices)
   console.log('bidPriceMin', bidPriceMin, 'bidPriceMax', bidPriceMax)
 
-  let radius = 50
+  let radius = boundingRect.width/100
 
   let x = d3.scaleTime()
     .domain([new Date(timeMin), new Date(timeMax)])
@@ -49,13 +49,25 @@ function d3draw(data) {
   .select('svg')
   .selectAll('circle')
   .data(chartData)
-  .attr("cx", function(d){console.log('x', x(d.date));return x(d.date)})
-  .attr("cy", function(d){console.log('y', y(d.bids[0][0]), d.bids[0][0]);return y(d.bids[0][0])})
+  .attr("cx", calcx)
+  .attr("cy", calcy)
   .enter()
     .append('circle')
       .attr('stroke', 'white')
+      .attr('r', radius)
+      .attr('cx', calcx)
+      .attr('cy', calcy)
       .attr('fill', 'blue')
-      .attr('r', 10)
+
+  function calcx(d) {
+    console.log('x', x(d.date))
+    return x(d.date)
+  }
+
+  function calcy(d) {
+    console.log('y', y(d.bids[0][0]), d.bids[0][0])
+    return y(d.bids[0][0])
+  }
 }
 
 function resize(chart) {
