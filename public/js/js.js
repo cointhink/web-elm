@@ -89,20 +89,36 @@ function d3draw(data) {
     return y(d.bids[0][0])
   }
 
+  let yLabels = [bidPriceMax, bidPriceMin]
+  d3
+    .select('#yaxis')
+    .selectAll('text')
+      .data(yLabels)
+      .enter()
+        .append('text')
+          .style('stroke', 'white')
+          .style('fill', 'white')
+          .text(function(d) { return d })
 
+  d3
+    .select('#yaxis')
+    .selectAll('text')
+    .data(yLabels)
+      .attr('x', 1)
+      .attr('y', function(d,i){return y(d)})
 }
 
 function resize(chart) {
   let aspect = 3
 
-  // DIV size
+  // DIV size DOM style
   let boundingRect = chart.node().getBoundingClientRect();
   let aspectHeight = (boundingRect.width / aspect)
 
   chart.style("width", boundingRect.width);
   chart.style("height", aspectHeight +"px");
 
-  // SVG size
+  // SVG size *DOM style*
   let svg = chart.select("svg")
   svg.style('width', boundingRect.width + 'px')
      .style('height', aspectHeight + 'px')
