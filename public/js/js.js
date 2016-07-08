@@ -7,6 +7,8 @@ function d3init() {
   svg
     .append('g')
       .attr('id', 'draw')
+      .append('rect')
+        .attr('fill', 'grey')
   svg
     .append('g')
       .attr('id', 'yaxis')
@@ -25,8 +27,9 @@ function d3draw(data) {
   // let svg = d3.select('svg');
   // let boundingRect = draw.node().getBoundingClientRect();
   let draw = d3.select('#draw')
-  let boundingRect = {width: parseInt(draw.style('width')),
-                      height: parseInt(draw.style('height')) }
+  let drawbox = draw.select('rect')
+  let boundingRect = {width: drawbox.attr('width'),
+                      height: drawbox.attr('height') }
 
   // iso8601 to js date
   data.date = new Date(data.date)
@@ -104,14 +107,16 @@ function resize(chart) {
   svg.style('width', boundingRect.width + 'px')
      .style('height', aspectHeight + 'px')
 
-  // draw area size
+  // set draw area size
   let drawWidth = boundingRect.width * 0.9
   let drawHeight = aspectHeight * 0.9
   let draw = chart.select("#draw")
-  draw.style('width', drawWidth + 'px')
-      .style('height', drawHeight + 'px')
+  draw
+    .select('rect')
+      .attr('width', drawWidth)
+      .attr('height', drawHeight)
 
-  // draw area size
+  // set yaxis legend size
   let yAxisWidth = boundingRect.width * 0.1
   let yAxis = chart.select("#yaxis")
   yAxis
@@ -119,11 +124,11 @@ function resize(chart) {
        return 'translate(' + drawWidth + ')';
      })
     .select('rect')
-      .attr('width', yAxisWidth + 'px')
-      .attr('height', aspectHeight + 'px')
+      .attr('width', yAxisWidth)
+      .attr('height', aspectHeight)
       .attr('fill', 'blue')
 
-  // draw area size
+  // set xaxis legend size
   let xAxisWidth = boundingRect.width
   let xAxisHeight = aspectHeight * 0.1
   let xAxis = chart.select("#xaxis")
@@ -132,7 +137,7 @@ function resize(chart) {
       return 'translate(0,' + drawHeight + ')';
     })
     .select('rect')
-      .attr('width', xAxisWidth + 'px')
-      .attr('height', xAxisHeight + 'px')
+      .attr('width', xAxisWidth)
+      .attr('height', xAxisHeight)
       .attr('fill', 'yellow')
 }
