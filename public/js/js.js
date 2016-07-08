@@ -20,6 +20,7 @@ function d3draw(data) {
   console.log(data.date, data.bids[0])
 
   // todo: insert in-place
+  console.log('push', data)
   chartData.push(data)
   chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
@@ -30,7 +31,8 @@ function d3draw(data) {
   let chartBidPrices = chartData.map(function(d){return d.bids[0][0]})
   let bidPriceMax = Math.max(...chartBidPrices)
   let bidPriceMin = Math.min(...chartBidPrices)
-  console.log('bidPriceMax', bidPriceMax, 'bidPriceMin', bidPriceMin)
+  console.log('bidPriceMin', bidPriceMin, 'bidPriceMax', bidPriceMax)
+
   let x = d3.scaleTime()
     .domain([new Date(timeMin), new Date(timeMax)])
     .range([0, boundingRect.width])
@@ -38,6 +40,7 @@ function d3draw(data) {
   let y = d3.scaleLinear()
     .domain([bidPriceMax, bidPriceMin])
     .range([0, boundingRect.height]);
+  console.log('ymin', 0, 'ymax', boundingRect.height)
 
   chart
   .select('svg')
@@ -48,8 +51,8 @@ function d3draw(data) {
       .attr("stroke", "white")
       .attr("x1", 0)
       .attr("y1", boundingRect.height)
-      .attr("x2", function(d){return x(d.date)})
-      .attr("y2", function(d){return y(d.bids[0][0])})
+      .attr("x2", function(d){console.log('x', x(d.date));return x(d.date)})
+      .attr("y2", function(d){console.log('y', y(d.bids[0][0]), d.bids[0][0]);return y(d.bids[0][0])})
 }
 
 function resize(chart) {
