@@ -76,33 +76,42 @@ function d3draw(data) {
   const color = d3.scaleLinear()
     .domain([0, exchanges.length])
     .range(["blue", "yellow"])
+    .interpolate(d3.interpolateHcl)
 
   // add new point
-  draw
-  .selectAll('circle')
-  .data(chartData)
-  .enter()
+  const circleData = draw
+    .selectAll('circle')
+    .data(chartData)
+
+  const circleDataEnter = circleData.enter()
+
+  // ask circle
+  circleDataEnter
     .append('circle')
       .attr('fill', '#eee')
+      .attr('class', 'ob-ask')
+
+  // bid circle
+  circleDataEnter
+    .append('circle')
+      .attr('fill', '#eee')
+      .attr('class', 'ob-bid')
 
   // reposition/resize all points
-  draw
-  .selectAll('circle')
-  .data(chartData)
+  circleData
     .attr('r', radius)
-    .attr('cx', calcx)
-    .attr('cy', calcy)
-    .attr('stroke', d => color(exchanges.indexOf(d.exchange)))
 
-  function calcx(d,i ) {
-//    console.log('circx', i, x(d.date))
-    return x(d.date)
-  }
+  draw
+  .selectAll('circle.ob-ask')
+    .attr('cx', d => x(d.date))
+    .attr('cy', d => y(d.asks[0][0]))
+    .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))))
 
-  function calcy(d, i) {
-//    console.log('circy', i, y(d.bids[0][0]), d.bids[0][0])
-    return y(d.bids[0][0])
-  }
+  draw
+  .selectAll('circle.ob-bid')
+    .attr('cx', d => x(d.date))
+    .attr('cy', d => y(d.bids[0][0]))
+    .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))).darker(2))
 
   let yLabels = [bidPriceMin, bidPriceMax]
 
