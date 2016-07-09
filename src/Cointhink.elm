@@ -39,7 +39,7 @@ update msg model =
   let
     rpc = wsSend model.ws_url
   in
-    case (Debug.log "Update Msg" msg) of
+    case msg of
         Cointhink.Shared.Init ->
             quoteDo rpc model "usdt" "btc"
         Cointhink.Shared.OrderbookUpdate orderbook ->
