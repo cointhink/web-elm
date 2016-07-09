@@ -79,22 +79,26 @@ function d3draw(data) {
     .attr('cx', calcx)
     .attr('cy', calcy)
 
-  function calcx(d) {
-    console.log('x', x(d.date))
+  function calcx(d,i ) {
+    console.log('circx', i, x(d.date))
     return x(d.date)
   }
 
-  function calcy(d) {
-    console.log('y', y(d.bids[0][0]), d.bids[0][0])
+  function calcy(d, i) {
+    console.log('circy', i, y(d.bids[0][0]), d.bids[0][0])
     return y(d.bids[0][0])
   }
 
-  let yLabels = [bidPriceMax, bidPriceMin]
+  let yLabels = [bidPriceMin, bidPriceMax]
+
   // Populate the y-axis
-  d3
+  let yLabelData = d3
     .select('#yaxis')
     .selectAll('text')
-      .data(yLabels)
+      .data(yLabels, function(d){return d})
+
+  yLabelData.exit().remove()
+  yLabelData
       .enter()
         .append('text')
           .style('fill', '#333')
@@ -107,21 +111,22 @@ function d3draw(data) {
     .selectAll('text')
     .data(yLabels)
       .attr('x', 1)
-      .attr('y', function(d,i){return y(d)+radius})
+      .attr('y', function(d,i){ return y(d)+radius})
 
 
   let timeFormatter = d3.timeFormat('%I:%M:%S %p')
   let dateFormatter = d3.timeFormat('%d/%m')
 
   let xLabels = [new Date(timeMin), new Date(timeMax)]
-  console.log('xLabels', xLabels)
-  // Populate the x-axis
-  let xLabel = d3
-    .select('#xaxis')
-    .selectAll('text')
-      .data(xLabels)
 
-  var labelBar = xLabel.enter()
+  // Populate the x-axis
+  let xLabelData = d3
+    .select('#xaxis')
+    .selectAll('g')
+      .data(xLabels, function(d){ return d} )
+
+  xLabelData.exit().remove()
+  var labelBar = xLabelData.enter()
                        .append('g')
   labelBar
         .append('text')
@@ -130,14 +135,14 @@ function d3draw(data) {
           .style('font-family', 'Calibri, Candara, Arial, sans-serif')
           .style('font-weight', 300)
           .attr('y', 20)
-          .text(function(d) { return dateFormatter(d) })
+          .text(function(d) {return dateFormatter(d) })
   labelBar
         .append('text')
           .style('fill', '#333')
           .style('font-size', '13px')
           .text(function(d) { return timeFormatter(d) })
 
-  // Position the members
+  // Rebind the data to include the new member, then position the members
   d3
     .select('#xaxis')
     .selectAll('g')
