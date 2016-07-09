@@ -37,11 +37,12 @@ function d3draw(data) {
 
   // iso8601 to js date
   data.date = new Date(data.date)
+  // ignore the string-decimal format
   data.bids = data.bids.map(function(offer){return [ parseFloat(offer[0]), offer[1] ] })
-  console.log(data.date, data.bids[0])
+  data.asks = data.asks.map(function(offer){return [ parseFloat(offer[0]), offer[1] ] })
 
   // todo: insert in-place
-  console.log('push', data)
+  //console.log('push', data)
   if(!exchanges.includes(data.exchange)) {
     exchanges.push(data.exchange)
   }
@@ -71,7 +72,7 @@ function d3draw(data) {
 
   const y = d3.scaleLinear()
     .domain([priceMax, priceMin])
-    .range([0+radius+radius, boundingRect.height-radius]);
+    .range([0+(radius*3), boundingRect.height-radius]);
 
   const color = d3.scaleLinear()
     .domain([0, exchanges.length])
