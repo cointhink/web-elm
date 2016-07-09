@@ -44,22 +44,28 @@ function d3draw(data) {
   chartData.push(data)
   chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
-  let chartDates = chartData.map(function(d){return d.date})
-  let timeMax = Math.max(...chartDates)
-  let timeMin = Math.min(...chartDates)
+  const timeMin = chartData[0].date
+  const timeMax = chartData[chartData.length-1].date
 
-  let chartBidPrices = chartData.map(function(d){return d.bids[0][0]})
-  let bidPriceMax = Math.max(...chartBidPrices)
-  let bidPriceMin = Math.min(...chartBidPrices)
+  const chartBidPrices = chartData.map(function(d){return d.bids[0][0]})
+  const bidPriceMax = Math.max(...chartBidPrices)
+  const bidPriceMin = Math.min(...chartBidPrices)
 
-  let radius = boundingRect.width * 0.005
+  const chartAskPrices = chartData.map(function(d){return d.asks[0][0]})
+  const askPriceMax = Math.max(...chartAskPrices)
+  const askPriceMin = Math.min(...chartAskPrices)
+
+  const priceMax = Math.max(bidPriceMax, askPriceMax)
+  const priceMin = Math.min(bidPriceMin, askPriceMin)
+
+  const radius = boundingRect.width * 0.005
 
   let x = d3.scaleTime()
     .domain([new Date(timeMin), new Date(timeMax)])
     .range([0+radius, boundingRect.width-radius])
 
   let y = d3.scaleLinear()
-    .domain([bidPriceMax, bidPriceMin])
+    .domain([priceMax, priceMin])
     .range([0+radius+radius, boundingRect.height-radius]);
 
   // add new point
@@ -80,12 +86,12 @@ function d3draw(data) {
     .attr('cy', calcy)
 
   function calcx(d,i ) {
-    console.log('circx', i, x(d.date))
+//    console.log('circx', i, x(d.date))
     return x(d.date)
   }
 
   function calcy(d, i) {
-    console.log('circy', i, y(d.bids[0][0]), d.bids[0][0])
+//    console.log('circy', i, y(d.bids[0][0]), d.bids[0][0])
     return y(d.bids[0][0])
   }
 
