@@ -15,10 +15,12 @@ job =
 
 orderbookRequest : String -> String -> Json.Encode.Value
 orderbookRequest base quote = object [ ( "method" , string "orderbook" ),
-                                       ( "params" , object [ ("base", string base),
+                                       ( "params" , object [
+                                                             ("base", string base),
                                                              ("quote", string quote),
                                                              ("hours", int 4)
-                                                           ] )
+                                                           ]
+                                       )
                                 ]
 orderbookDecoder : Json.Decode.Decoder Orderbook
 orderbookDecoder =

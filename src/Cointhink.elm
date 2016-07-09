@@ -16,10 +16,23 @@ port setup : () -> Cmd msg
 
 view = Components.view
 
-type alias Model = { ws_url: String, start_range : String }
+type alias Model = {
+                     ws_url: String,
+                     base: String,
+                     quote: String,
+                     hours : Int
+                   }
 
 wsSend : String -> Json.Encode.Value -> Cmd Msg
 wsSend url say = WebSocket.send url (encode 2 (Debug.log "say" say))
+
+quotePair model base quote = Model model.ws_url base quote model.hours
+
+quoteDo rpc model base quote =
+  let
+    updatedModel = quotePair model base quote
+  in
+    ( Debug.log "updatedModel" updatedModel, rpc (orderbookRequest updatedModel.base updatedModel.quote) )
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -28,7 +41,7 @@ update msg model =
   in
     case (Debug.log "Update Msg" msg) of
         Cointhink.Shared.Init ->
-            ( Debug.log "model" model, rpc (orderbookRequest "usdt" "btc") )
+            quoteDo rpc model "usdt" "btc"
         Cointhink.Shared.OrderbookUpdate orderbook ->
             ( model, graphdata orderbook )
         Cointhink.Shared.Alert string ->
@@ -67,7 +80,7 @@ type alias Flags = { url : String }
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( Model ((Debug.log "flags" flags).url) "2014",
+    ( Model ((Debug.log "flags" flags).url) "usdt" "btc" 4,
       Cmd.batch [ setup (), send Cointhink.Shared.Init ] )
 
 send : Msg -> Cmd Msg
