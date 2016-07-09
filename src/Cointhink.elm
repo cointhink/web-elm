@@ -28,7 +28,7 @@ update msg model =
   in
     case (Debug.log "Update Msg" msg) of
         Cointhink.Shared.Init ->
-            ( Debug.log "model" model, rpc (orderbookRequest "btc" "xusd") )
+            ( Debug.log "model" model, rpc (orderbookRequest "usdt" "btc") )
         Cointhink.Shared.OrderbookUpdate orderbook ->
             ( model, graphdata orderbook )
         Cointhink.Shared.Alert string ->
