@@ -1,7 +1,8 @@
 let chartData = []
+let exchanges = []
 
-function d3init() {
-  console.log('d3init')
+function d3init(params) {
+  console.log('d3init', 'params', params)
   let chart = d3.select('#chart');
   let svg = chart.append('svg')
   svg
@@ -41,6 +42,10 @@ function d3draw(data) {
 
   // todo: insert in-place
   console.log('push', data)
+  if(!exchanges.includes(data.exchange)) {
+    exchanges.push(data.exchange)
+  }
+
   chartData.push(data)
   chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
@@ -58,15 +63,19 @@ function d3draw(data) {
   const priceMax = Math.max(bidPriceMax, askPriceMax)
   const priceMin = Math.min(bidPriceMin, askPriceMin)
 
-  const radius = boundingRect.width * 0.005
+  const radius = boundingRect.width * 0.003
 
-  let x = d3.scaleTime()
+  const x = d3.scaleTime()
     .domain([new Date(timeMin), new Date(timeMax)])
     .range([0+radius, boundingRect.width-radius])
 
-  let y = d3.scaleLinear()
+  const y = d3.scaleLinear()
     .domain([priceMax, priceMin])
     .range([0+radius+radius, boundingRect.height-radius]);
+
+  const color = d3.scaleLinear()
+    .domain([0, exchanges.length])
+    .range(["blue", "yellow"])
 
   // add new point
   draw
@@ -74,7 +83,6 @@ function d3draw(data) {
   .data(chartData)
   .enter()
     .append('circle')
-      .attr('stroke', 'blue')
       .attr('fill', '#eee')
 
   // reposition/resize all points
@@ -84,6 +92,7 @@ function d3draw(data) {
     .attr('r', radius)
     .attr('cx', calcx)
     .attr('cy', calcy)
+    .attr('stroke', d => color(exchanges.indexOf(d.exchange)))
 
   function calcx(d,i ) {
 //    console.log('circx', i, x(d.date))
