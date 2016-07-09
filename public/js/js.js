@@ -114,7 +114,7 @@ function d3draw(data) {
       .attr('y', function(d,i){ return y(d)+radius})
 
 
-  let timeFormatter = d3.timeFormat('%I:%M:%S %p')
+  let timeFormatter = d3.timeFormat('%I:%M %p')
   let dateFormatter = d3.timeFormat('%d/%m')
 
   let xLabels = [new Date(timeMin), new Date(timeMax)]
