@@ -8,15 +8,18 @@ function d3init() {
     .append('g')
       .attr('id', 'draw')
       .append('rect')
-        .attr('fill', 'grey')
+        .attr('stroke', '#333')
+        .attr('fill', '#eee')
   svg
     .append('g')
       .attr('id', 'yaxis')
       .append('rect')
+        .attr('fill', 'white')
   svg
     .append('g')
       .attr('id', 'xaxis')
       .append('rect')
+        .attr('fill', 'white')
 
   resize(chart)
 
@@ -48,19 +51,16 @@ function d3draw(data) {
   let chartBidPrices = chartData.map(function(d){return d.bids[0][0]})
   let bidPriceMax = Math.max(...chartBidPrices)
   let bidPriceMin = Math.min(...chartBidPrices)
-  console.log('bidPriceMin', bidPriceMin, 'bidPriceMax', bidPriceMax)
 
-  let radius = boundingRect.width/100
+  let radius = boundingRect.width * 0.005
 
   let x = d3.scaleTime()
     .domain([new Date(timeMin), new Date(timeMax)])
     .range([0+radius, boundingRect.width-radius])
-  console.log('xmin', 0, 'xmax', boundingRect.width)
 
   let y = d3.scaleLinear()
     .domain([bidPriceMax, bidPriceMin])
-    .range([0+radius, boundingRect.height-radius]);
-  console.log('ymin', 0, 'ymax', boundingRect.height)
+    .range([0+radius+radius, boundingRect.height-radius]);
 
   // add new point
   draw
@@ -68,8 +68,8 @@ function d3draw(data) {
   .data(chartData)
   .enter()
     .append('circle')
-      .attr('stroke', 'white')
-      .attr('fill', 'blue')
+      .attr('stroke', 'blue')
+      .attr('fill', '#eee')
 
   // reposition/resize all points
   draw
@@ -90,22 +90,60 @@ function d3draw(data) {
   }
 
   let yLabels = [bidPriceMax, bidPriceMin]
+  // Populate the y-axis
   d3
     .select('#yaxis')
     .selectAll('text')
       .data(yLabels)
       .enter()
         .append('text')
-          .style('stroke', 'white')
-          .style('fill', 'white')
+          .style('stroke', '#333')
+          .style('fill', '#333')
+          .style('font-size', '13px')
           .text(function(d) { return d })
 
+  // Position the members
   d3
     .select('#yaxis')
     .selectAll('text')
     .data(yLabels)
       .attr('x', 1)
-      .attr('y', function(d,i){return y(d)})
+      .attr('y', function(d,i){return y(d)+radius})
+
+
+  let timeFormatter = d3.timeFormat('%I:%M:%S %p')
+  let dateFormatter = d3.timeFormat('%Y-%m-%d')
+
+  let xLabels = [new Date(timeMin), new Date(timeMax)]
+  console.log('xLabels', xLabels)
+  // Populate the x-axis
+  let labelBar = d3
+    .select('#xaxis')
+    .selectAll('text')
+      .data(xLabels)
+      .enter()
+        .append('g')
+  labelBar
+        .append('text')
+          .style('stroke', '#333')
+          .style('fill', '#333')
+          .style('font-size', '13px')
+          .attr('y', 20)
+          .text(function(d) { return dateFormatter(d) })
+  labelBar
+        .append('text')
+          .style('stroke', '#333')
+          .style('fill', '#333')
+          .style('font-size', '13px')
+          .text(function(d) { return timeFormatter(d) })
+
+  // Position the members
+  d3
+    .select('#xaxis')
+    .selectAll('g')
+    .data(xLabels)
+      .attr('transform', function(d,i){return 'translate('+x(d)+', 10)'})
+
 }
 
 function resize(chart) {
@@ -142,7 +180,6 @@ function resize(chart) {
     .select('rect')
       .attr('width', yAxisWidth)
       .attr('height', aspectHeight)
-      .attr('fill', 'blue')
 
   // set xaxis legend size
   let xAxisWidth = boundingRect.width
@@ -155,5 +192,4 @@ function resize(chart) {
     .select('rect')
       .attr('width', xAxisWidth)
       .attr('height', xAxisHeight)
-      .attr('fill', 'yellow')
 }
