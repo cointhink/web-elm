@@ -97,7 +97,6 @@ function d3draw(data) {
       .data(yLabels)
       .enter()
         .append('text')
-          .style('stroke', '#333')
           .style('fill', '#333')
           .style('font-size', '13px')
           .text(function(d) { return d })
@@ -112,27 +111,28 @@ function d3draw(data) {
 
 
   let timeFormatter = d3.timeFormat('%I:%M:%S %p')
-  let dateFormatter = d3.timeFormat('%Y-%m-%d')
+  let dateFormatter = d3.timeFormat('%d/%m')
 
   let xLabels = [new Date(timeMin), new Date(timeMax)]
   console.log('xLabels', xLabels)
   // Populate the x-axis
-  let labelBar = d3
+  let xLabel = d3
     .select('#xaxis')
     .selectAll('text')
       .data(xLabels)
-      .enter()
-        .append('g')
+
+  var labelBar = xLabel.enter()
+                       .append('g')
   labelBar
         .append('text')
-          .style('stroke', '#333')
           .style('fill', '#333')
-          .style('font-size', '13px')
+          .style('font-size', '14px')
+          .style('font-family', 'Calibri, Candara, Arial, sans-serif')
+          .style('font-weight', 300)
           .attr('y', 20)
           .text(function(d) { return dateFormatter(d) })
   labelBar
         .append('text')
-          .style('stroke', '#333')
           .style('fill', '#333')
           .style('font-size', '13px')
           .text(function(d) { return timeFormatter(d) })
