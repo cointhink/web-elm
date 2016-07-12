@@ -1,9 +1,13 @@
 .main {
+}
+
+#centerblock {
   text-align: center
 }
 
 .biglogo {
-  margin: 2em 0em
+  margin: 2em 0em;
+  width: 10%;
 }
 
 .navbar {
@@ -27,11 +31,16 @@
   padding: 0 0.2em;
 }
 
-#chart {
+#chartZone {
   margin: 1em auto;
   width: 80%;
+}
+
+.pairtitle {
+  background-color: #eee;
+}
+
+#chart {
   background-color: grey;
 }
 
-#chartZone {
-}
