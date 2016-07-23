@@ -44,3 +44,8 @@
   background-color: grey;
 }
 
+#exchangeList {
+  margin: 0 0;
+  padding: 0em 0.5em;
+  list-style: none;
+}

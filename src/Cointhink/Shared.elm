@@ -1,6 +1,7 @@
 module Cointhink.Shared exposing (..)
 
 type Msg = Init
+           | ExchangesQuery
            | OrderbookUpdate Orderbook
            | ExchangeUpdate Exchange
            | Alert String

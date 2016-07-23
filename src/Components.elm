@@ -45,13 +45,17 @@ chart =
   div [ id "chart" ] []
 
 exchangeHtml exchange =
-  div []
-      [ text exchange.id ]
+  li []
+      [ span [] [text exchange.id],
+        text " ",
+        span [] [text (toString (List.length exchange.markets)) ],
+        text " markets"
+     ]
 
 exchangeList exchanges =
   div []
-      [ text "exchanges",
-        div []
+      [ text "Exchanges",
+        ul [ id "exchangeList" ]
             (List.map exchangeHtml exchanges)
       ]
 

@@ -29,14 +29,20 @@ wsSend url say = WebSocket.send url (encode 2 (Debug.log "say" say))
 
 quotePair model base quote = Model model.ws_url base quote model.hours model.exchanges
 
-quoteDo rpc model base quote =
+orderbookDo : (Json.Encode.Value -> Cmd Msg) -> Model -> String -> String -> (Model, Cmd Msg)
+orderbookDo rpc model base quote =
   let
     updatedModel = quotePair model base quote
   in
     ( Debug.log "updatedModel" updatedModel, rpc (orderbookRequest updatedModel.base updatedModel.quote) )
 
-freshenExchange exchange =
-  Cmd.none
+
+exchangeUpdate : Model -> Exchange -> ( Model, Cmd Msg )
+exchangeUpdate model exchange =
+  let
+    updatedModel = Model model.ws_url model.base model.quote model.hours (exchange :: model.exchanges)
+  in
+    (updatedModel, Cmd.none)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -45,11 +51,13 @@ update msg model =
   in
     case msg of
         Cointhink.Shared.Init ->
-            quoteDo rpc model "USDT" "BTC"
+            orderbookDo rpc model "USDT" "BTC"
+        Cointhink.Shared.ExchangesQuery ->
+            ( model, rpc exchangesRequest )
         Cointhink.Shared.OrderbookUpdate orderbook ->
-            ( model, graphdata orderbook)
+            ( model, graphdata orderbook )
         Cointhink.Shared.ExchangeUpdate exchange ->
-            ( model, freshenExchange (Debug.log "exchange" exchange) )
+            exchangeUpdate model (Debug.log "exchange" exchange)
         Cointhink.Shared.Alert string ->
             ( model, Cmd.none )
         Cointhink.Shared.Noop ->
@@ -95,7 +103,8 @@ type alias Flags = { url : String }
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( Model ((Debug.log "flags" flags).url) "USDT" "BTC" 4 [],
-      Cmd.batch [ setup (), send Cointhink.Shared.Init ] )
+      Cmd.batch [ setup (), send Cointhink.Shared.Init,
+                            send Cointhink.Shared.ExchangesQuery ] )
 
 send : Msg -> Cmd Msg
 send msg =
