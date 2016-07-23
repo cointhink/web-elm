@@ -51,13 +51,13 @@ update msg model =
   in
     case msg of
         Cointhink.Shared.Init ->
-            orderbookDo rpc model "USDT" "BTC"
+            orderbookDo rpc model model.base model.quote
         Cointhink.Shared.ExchangesQuery ->
             ( model, rpc exchangesRequest )
         Cointhink.Shared.OrderbookUpdate orderbook ->
             ( model, graphdata orderbook )
         Cointhink.Shared.ExchangeUpdate exchange ->
-            exchangeUpdate model (Debug.log "exchange" exchange)
+            exchangeUpdate model exchange
         Cointhink.Shared.Alert string ->
             ( model, Cmd.none )
         Cointhink.Shared.Noop ->
@@ -89,7 +89,7 @@ dispatch wsresponse =
         exchangeResult : Result String Exchange
         exchangeResult = decodeValue exchangeDecoder wsresponse.object
       in
-        case (Debug.log "exr" exchangeResult) of
+        case exchangeResult of
           Result.Ok value -> Cointhink.Shared.ExchangeUpdate value
           Result.Err msg -> Cointhink.Shared.Alert msg
     _ -> Cointhink.Shared.Noop
