@@ -2,6 +2,7 @@ module Cointhink.Shared exposing (..)
 
 type Msg = Init
            | OrderbookUpdate Orderbook
+           | ExchangeUpdate Exchange
            | Alert String
            | Noop
 
@@ -9,9 +10,16 @@ type Msg = Init
 type alias Orderbook = {
               date : String,
               exchange : String,
-              market : OrderbookMarket,
+              market : Market,
               bids : List (String,Float),
               asks : List (String,Float)
            }
 
-type alias OrderbookMarket = { base : String, quote : String }
+type alias Market = { base : String, quote : String }
+
+type alias Exchange = {
+               id : String,
+               markets : List Market,
+               date : String
+             }
+

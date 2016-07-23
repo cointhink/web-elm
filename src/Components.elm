@@ -44,6 +44,17 @@ chartZone model =
 chart =
   div [ id "chart" ] []
 
+exchangeHtml exchange =
+  div []
+      [ text exchange.id ]
+
+exchangeList exchanges =
+  div []
+      [ text "exchanges",
+        div []
+            (List.map exchangeHtml exchanges)
+      ]
+
 centerBlock =
   div [ id "centerblock" ]
       [
@@ -61,6 +72,7 @@ view model =
      [
        navbar model,
        chartZone model,
+       exchangeList model.exchanges,
        centerBlock,
        footer model
      ]
