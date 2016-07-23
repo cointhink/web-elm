@@ -41,12 +41,13 @@ function d3draw(data) {
   data.bids = data.bids.map(function(offer){return [ parseFloat(offer[0]), offer[1] ] })
   data.asks = data.asks.map(function(offer){return [ parseFloat(offer[0]), offer[1] ] })
 
-  // todo: insert in-place
-  //console.log('push', data)
   if(!exchanges.includes(data.exchange)) {
     exchanges.push(data.exchange)
   }
 
+  console.log('plot', data.exchange, data.date, data.market.base, data.market.quote,
+    data.bids[0][0], data.asks[0][0])
+  // todo: insert in-place
   chartData.push(data)
   chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
@@ -114,7 +115,7 @@ function d3draw(data) {
     .attr('cy', d => y(d.bids[0][0]))
     .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))).darker(2))
 
-  let yLabels = [bidPriceMin, bidPriceMax]
+  let yLabels = [priceMin, priceMax]
 
   // Populate the y-axis
   let yLabelData = d3
@@ -130,7 +131,7 @@ function d3draw(data) {
           .style('font-size', '13px')
           .text(function(d) { return d })
 
-  // Position the members
+  // Position the y-axis labels
   d3
     .select('#yaxis')
     .selectAll('text')
@@ -167,7 +168,7 @@ function d3draw(data) {
           .style('font-size', '13px')
           .text(function(d) { return timeFormatter(d) })
 
-  // Rebind the data to include the new member, then position the members
+  // Rebind the x-axis labels to include the new member, then position the members
   d3
     .select('#xaxis')
     .selectAll('g')
