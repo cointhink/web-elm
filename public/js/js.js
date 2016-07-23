@@ -115,7 +115,7 @@ function d3draw(data) {
     .attr('cy', d => y(d.bids[0][0]))
     .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))).darker(2))
 
-  let yLabels = [priceMin, priceMax]
+  let yLabels = flatten([priceMin, y.ticks(2), priceMax])
 
   // Populate the y-axis
   let yLabelData = d3
@@ -143,7 +143,7 @@ function d3draw(data) {
   let timeFormatter = d3.timeFormat('%I:%M %p')
   let dateFormatter = d3.timeFormat('%d/%m')
 
-  let xLabels = [new Date(timeMin), new Date(timeMax)]
+  let xLabels = flatten([new Date(timeMin), x.ticks(3), new Date(timeMax)])
 
   // Populate the x-axis
   let xLabelData = d3
@@ -173,7 +173,7 @@ function d3draw(data) {
     .select('#xaxis')
     .selectAll('g')
     .data(xLabels)
-      .attr('transform', function(d,i){return 'translate('+x(d)+', 10)'})
+      .attr('transform', function(d,i){console.log('xtrans', x(d), d); return 'translate('+x(d)+', 10)'})
 
 }
 
@@ -223,4 +223,10 @@ function resize(chart) {
     .select('rect')
       .attr('width', xAxisWidth)
       .attr('height', xAxisHeight)
+}
+
+function flatten(arr) {
+  return arr.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
 }
