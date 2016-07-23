@@ -82,38 +82,39 @@ function d3draw(data) {
 
   // add new point
   const circleData = draw
-    .selectAll('circle')
+    .selectAll('g')
     .data(chartData)
 
   const circleDataEnter = circleData.enter()
 
   // ask circle
-  circleDataEnter
+  const circleGroup = circleDataEnter.append('g')
+  circleGroup
     .append('circle')
       .attr('fill', '#eee')
       .attr('class', 'ob-ask')
-
-  // bid circle
-  circleDataEnter
+  circleGroup
     .append('circle')
       .attr('fill', '#eee')
       .attr('class', 'ob-bid')
 
   // reposition/resize all points
-  circleData
-    .attr('r', radius)
+  draw
+    .selectAll('g')
+      .select('circle.ob-ask')
+        .attr('cx', d => x(d.date))
+        .attr('cy', d => y(d.asks[0][0]))
+        .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))))
+        .attr('r', radius)
+        .attr('data-date', d => d.date)
 
   draw
-  .selectAll('circle.ob-ask')
-    .attr('cx', d => x(d.date))
-    .attr('cy', d => y(d.asks[0][0]))
-    .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))))
-
-  draw
-  .selectAll('circle.ob-bid')
-    .attr('cx', d => x(d.date))
-    .attr('cy', d => y(d.bids[0][0]))
-    .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))).darker(2))
+    .selectAll('g')
+      .select('circle.ob-bid')
+        .attr('cx', d => x(d.date))
+        .attr('cy', d => y(d.bids[0][0]))
+        .attr('r', radius)
+        .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))).darker(2))
 
   let yLabels = flatten([priceMin, y.ticks(2), priceMax])
 
@@ -173,7 +174,7 @@ function d3draw(data) {
     .select('#xaxis')
     .selectAll('g')
     .data(xLabels)
-      .attr('transform', function(d,i){console.log('xtrans', x(d), d); return 'translate('+x(d)+', 10)'})
+      .attr('transform', function(d,i){return 'translate('+x(d)+', 10)'})
 
 }
 
