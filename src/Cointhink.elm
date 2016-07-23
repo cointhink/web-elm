@@ -41,9 +41,9 @@ update msg model =
   in
     case msg of
         Cointhink.Shared.Init ->
-            quoteDo rpc model "usdt" "btc"
+            quoteDo rpc model "USDT" "BTC"
         Cointhink.Shared.OrderbookUpdate orderbook ->
-            ( model, graphdata orderbook )
+            ( model, graphdata (Debug.log "orderbook" orderbook) )
         Cointhink.Shared.Alert string ->
             ( model, Cmd.none )
         Cointhink.Shared.Noop ->
@@ -56,7 +56,7 @@ jmsg json =
 ws_parse : String -> Msg
 ws_parse json =
   case jmsg json of
-    Result.Ok value -> dispatch value
+    Result.Ok value -> dispatch (Debug.log "value" value)
     Result.Err msg -> Cointhink.Shared.Alert msg
 
 dispatch : WsResponse -> Msg
@@ -67,7 +67,7 @@ dispatch wsresponse =
         orderbookResult : Result String Orderbook
         orderbookResult = decodeValue orderbookDecoder wsresponse.object
       in
-        case orderbookResult of
+        case (Debug.log "obr" orderbookResult) of
           Result.Ok value -> Cointhink.Shared.OrderbookUpdate value
           Result.Err msg -> Cointhink.Shared.Alert msg
     _ -> Cointhink.Shared.Noop
@@ -80,7 +80,7 @@ type alias Flags = { url : String }
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( Model ((Debug.log "flags" flags).url) "usdt" "btc" 4,
+    ( Model ((Debug.log "flags" flags).url) "USDT" "BTC" 4,
       Cmd.batch [ setup (), send Cointhink.Shared.Init ] )
 
 send : Msg -> Cmd Msg
