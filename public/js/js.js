@@ -45,8 +45,6 @@ function d3draw(data) {
     exchanges.push(data.exchange)
   }
 
-  console.log('plot', data.exchange, data.date, data.market.base, data.market.quote,
-    data.bids[0][0], data.asks[0][0])
   // todo: insert in-place
   chartData.push(data)
   chartData = chartData.sort(function(a, b) { return a.date > b.date })
