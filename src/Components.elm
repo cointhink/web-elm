@@ -56,7 +56,7 @@ exchangeHtml exchange =
         text " ",
         span [] [text (toString (List.length exchange.markets)) ],
         text " markets",
-        ul []
+        ul [ id "marketList" ]
            (List.map marketHtml exchange.markets)
      ]
 

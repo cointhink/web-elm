@@ -49,3 +49,22 @@
   padding: 0em 0.5em;
   list-style: none;
 }
+
+#marketList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: stretch;
+}
+
+#marketList a {
+  color: blue;
+  text-decoration: none;
+}
+
+#marketList li {
+  margin: 0.2em 0.1em;
+  padding: 0.1em 0.1em;
+  background-color: #eee;
+}
