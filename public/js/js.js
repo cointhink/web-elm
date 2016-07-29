@@ -46,7 +46,7 @@ function d3draw(data) {
   }
 
   // todo: insert in-place
-  chartData.unshift(data)
+  chartData = [ data, ...chartData ]
   //chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
   const timeMin = chartData[0].date
