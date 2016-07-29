@@ -44,12 +44,20 @@ chartZone model =
 chart =
   div [ id "chart" ] []
 
+marketHtml market =
+  li []
+     [ a [ href ( "?m=" ++ market.base ++ ":" ++ market.quote) ]
+         [ text ( market.base ++ "/" ++ market.quote ) ]
+     ]
+
 exchangeHtml exchange =
   li []
       [ span [] [text exchange.id],
         text " ",
         span [] [text (toString (List.length exchange.markets)) ],
-        text " markets"
+        text " markets",
+        ul []
+           (List.map marketHtml exchange.markets)
      ]
 
 exchangeList exchanges =
