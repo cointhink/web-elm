@@ -10,7 +10,8 @@ navbar model =
         span [ class "menuitem" ]
              [
                img [ class "littlelogo", src "assets/logo.svg" ] [],
-               text "Cointhink"
+               a [ href "/" ]
+                 [ text "Cointhink" ]
              ],
         span [ class "menuitem" ]
              [
