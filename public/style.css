@@ -38,11 +38,12 @@
 
 #chartZone {
   margin: 1em auto;
-  width: 80%;
+  width: 90%;
+  display: flex;
 }
 
 .pairtitle {
-  background-color: #eee;
+
 }
 
 #chart {
@@ -53,6 +54,11 @@
   margin: 0 0;
   padding: 0em 0.5em;
   list-style: none;
+}
+
+#exchangeListLive {
+  margin-left: 2em;
+  width: 15em;
 }
 
 #marketList {

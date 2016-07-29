@@ -30,15 +30,29 @@ login =
               button [ ] [ text "Signin" ]
             ]
 
+pairTitle model =
+  span [ class "pairtitle" ]
+       [
+          text (toUpper model.base),
+          text "/",
+          text (toUpper model.quote)
+       ]
+
+exchangeListLive =
+  div [ id "exchangeListLive" ]
+      [ text "Exchanges" ]
+
 chartZone model =
   div [ id "chartZone" ]
       [
-        span [ class "pairtitle" ]
-             [
-                text (toUpper model.base),
-                text "/",
-                text (toUpper model.quote)
-             ],
+        exchangeListLive,
+        chartWithTitle model
+      ]
+
+chartWithTitle model =
+  div []
+      [
+        pairTitle model,
         chart
       ]
 
