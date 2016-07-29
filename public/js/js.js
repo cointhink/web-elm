@@ -46,8 +46,8 @@ function d3draw(data) {
   }
 
   // todo: insert in-place
-  chartData.push(data)
-  chartData = chartData.sort(function(a, b) { return a.date > b.date })
+  chartData.unshift(data)
+  //chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
   const timeMin = chartData[0].date
   const timeMax = chartData[chartData.length-1].date
