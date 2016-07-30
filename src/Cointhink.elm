@@ -11,23 +11,24 @@ import Cointhink.Protocol exposing (..)
 import Cointhink.Shared exposing (..)
 
 port input : (Int -> msg) -> Sub msg
-port graphdata : Orderbook -> Cmd msg
+port graphdataJs : Orderbook -> Cmd msg
 port setup : () -> Cmd msg
 
 view = Components.view
 
 type alias Model = {
-                     ws_url: String,
-                     base: String,
-                     quote: String,
-                     hours : Int,
-                     exchanges: List Exchange
-                   }
+    ws_url: String,
+    base: String,
+    quote: String,
+    hours : Int,
+    exchangesLive: List String,
+    exchanges: List Exchange
+  }
 
 wsSend : String -> Json.Encode.Value -> Cmd Msg
 wsSend url say = WebSocket.send url (encode 2 (Debug.log "say" say))
 
-quotePair model base quote = Model model.ws_url base quote model.hours model.exchanges
+quotePair model base quote = Model model.ws_url base quote model.hours [] model.exchanges
 
 orderbookDo : (Json.Encode.Value -> Cmd Msg) -> Model -> String -> String -> (Model, Cmd Msg)
 orderbookDo rpc model base quote =
@@ -40,9 +41,25 @@ orderbookDo rpc model base quote =
 exchangeUpdate : Model -> Exchange -> ( Model, Cmd Msg )
 exchangeUpdate model exchange =
   let
-    updatedModel = Model model.ws_url model.base model.quote model.hours (exchange :: model.exchanges)
+    updatedModel = Model model.ws_url model.base model.quote model.hours [] (exchange :: model.exchanges)
   in
     (updatedModel, Cmd.none)
+
+addIfExchangeUnique : String -> List String -> List String
+addIfExchangeUnique exchangeName exchangeNames =
+  if List.member exchangeName exchangeNames then
+    exchangeNames
+  else
+    ( exchangeName :: exchangeNames )
+
+orderbookUpdate : Model -> Orderbook -> ( Model, Cmd Msg )
+orderbookUpdate model orderbook =
+  let
+    updatedModel = Model model.ws_url model.base model.quote model.hours
+                         (addIfExchangeUnique orderbook.exchange model.exchangesLive)
+                          model.exchanges
+  in
+    (updatedModel, graphdataJs orderbook)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -50,18 +67,18 @@ update msg model =
     rpc = wsSend model.ws_url
   in
     case msg of
-        Cointhink.Shared.Init ->
-            orderbookDo rpc model model.base model.quote
-        Cointhink.Shared.ExchangesQuery ->
-            ( model, rpc exchangesRequest )
-        Cointhink.Shared.OrderbookUpdate orderbook ->
-            ( model, graphdata orderbook )
-        Cointhink.Shared.ExchangeUpdate exchange ->
-            exchangeUpdate model exchange
-        Cointhink.Shared.Alert string ->
-            ( model, Cmd.none )
-        Cointhink.Shared.Noop ->
-            ( model, Cmd.none )
+      Cointhink.Shared.Init ->
+        orderbookDo rpc model model.base model.quote
+      Cointhink.Shared.ExchangesQuery ->
+        ( model, rpc exchangesRequest )
+      Cointhink.Shared.OrderbookUpdate orderbook ->
+        orderbookUpdate model orderbook
+      Cointhink.Shared.ExchangeUpdate exchange ->
+        exchangeUpdate model exchange
+      Cointhink.Shared.Alert string ->
+        ( model, Cmd.none )
+      Cointhink.Shared.Noop ->
+        ( model, Cmd.none )
 
 jmsg : String -> Result String WsResponse
 jmsg json =
@@ -104,7 +121,7 @@ type alias Flags = { url : String,
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( Model ((Debug.log "flags" flags).url) flags.base flags.quote 4 [],
+    ( Model ((Debug.log "flags" flags).url) flags.base flags.quote 4 [] [],
       Cmd.batch [ setup (), send Cointhink.Shared.Init,
                             send Cointhink.Shared.ExchangesQuery ] )
 
