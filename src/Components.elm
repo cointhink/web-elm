@@ -43,11 +43,11 @@ exchangeLiveLine exchangeName =
      [ text exchangeName ]
 
 exchangeListLive exchangeNames =
-  div []
+  div [id "exchangeListLive" ]
       [
         text "Exchanges",
-        ul [ id "exchangeListLive" ]
-           (List.map exchangeLiveLine exchangeNames)
+        ul []
+           (List.map exchangeLiveLine (Debug.log "view names" exchangeNames))
       ]
 
 chartZone model =

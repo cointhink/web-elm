@@ -28,12 +28,10 @@ type alias Model = {
 wsSend : String -> Json.Encode.Value -> Cmd Msg
 wsSend url say = WebSocket.send url (encode 2 (Debug.log "say" say))
 
-quotePair model base quote = Model model.ws_url base quote model.hours [] model.exchanges
-
 orderbookDo : (Json.Encode.Value -> Cmd Msg) -> Model -> String -> String -> (Model, Cmd Msg)
 orderbookDo rpc model base quote =
   let
-    updatedModel = quotePair model base quote
+    updatedModel = { model | base = base, quote = quote }
   in
     ( Debug.log "updatedModel" updatedModel, rpc (orderbookRequest updatedModel.base updatedModel.quote) )
 
@@ -41,7 +39,7 @@ orderbookDo rpc model base quote =
 exchangeUpdate : Model -> Exchange -> ( Model, Cmd Msg )
 exchangeUpdate model exchange =
   let
-    updatedModel = Model model.ws_url model.base model.quote model.hours [] (exchange :: model.exchanges)
+    updatedModel = { model | exchanges = (exchange :: model.exchanges) }
   in
     (updatedModel, Cmd.none)
 
@@ -55,9 +53,9 @@ addIfExchangeUnique exchangeName exchangeNames =
 orderbookUpdate : Model -> Orderbook -> ( Model, Cmd Msg )
 orderbookUpdate model orderbook =
   let
-    updatedModel = Model model.ws_url model.base model.quote model.hours
-                         (addIfExchangeUnique orderbook.exchange model.exchangesLive)
-                          model.exchanges
+    updatedModel = { model | exchangesLive = (addIfExchangeUnique
+                                                     orderbook.exchange
+                                                     model.exchangesLive) }
   in
     (updatedModel, graphdataJs orderbook)
 
@@ -121,7 +119,12 @@ type alias Flags = { url : String,
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( Model ((Debug.log "flags" flags).url) flags.base flags.quote 4 [] [],
+    ( { ws_url = ((Debug.log "flags" flags).url),
+        base = flags.base,
+        quote = flags.quote,
+        hours = 4,
+        exchangesLive = [],
+        exchanges = [] },
       Cmd.batch [ setup (), send Cointhink.Shared.Init,
                             send Cointhink.Shared.ExchangesQuery ] )
 
