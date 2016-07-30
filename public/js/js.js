@@ -103,7 +103,7 @@ function d3draw(data) {
         .attr('cy', d => y(d.asks[0][0]))
         .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))))
         .attr('r', radius)
-        .attr('data-date', d => d.date)
+        .attr('data-exchange', d => d.exchange)
 
   draw
     .selectAll('g')
@@ -112,6 +112,7 @@ function d3draw(data) {
         .attr('cy', d => y(d.bids[0][0]))
         .attr('r', radius)
         .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))).darker(2))
+        .attr('data-exchange', d => d.exchange)
 
   let yLabels = flatten([priceMin, y.ticks(2), priceMax])
 
@@ -184,7 +185,16 @@ function d3draw(data) {
       .append('li')
         .style('color', (d,i) => d3.hsl(color(i)))
         .text(e => e)
-
+        .on("mouseover", d => {
+          d3
+            .selectAll('circle[data-exchange='+d+']')
+              .attr('r', radius*1.5)
+        })
+        .on("mouseout", d => {
+          d3
+            .selectAll('circle[data-exchange='+d+']')
+              .attr('r', radius)
+        })
 }
 
 function resize(chart) {
