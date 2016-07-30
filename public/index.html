@@ -23,9 +23,7 @@
   let quote = "USD"
   let market = getParameterByName('m')
   if(market) {
-    let pair = market.split(':')
-    base = pair[0]
-    quote = pair[1]
+    [base, quote] = market.split(':')
   }
   let main = Elm.Main.fullscreen({url: wsUrl, base: base, quote: quote});
   main.ports.setup.subscribe(function(){
