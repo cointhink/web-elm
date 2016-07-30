@@ -21,7 +21,6 @@ type alias Model = {
     base: String,
     quote: String,
     hours : Int,
-    exchangesLive: List String,
     exchanges: List Exchange
   }
 
@@ -53,9 +52,7 @@ addIfExchangeUnique exchangeName exchangeNames =
 orderbookUpdate : Model -> Orderbook -> ( Model, Cmd Msg )
 orderbookUpdate model orderbook =
   let
-    updatedModel = { model | exchangesLive = (addIfExchangeUnique
-                                                     orderbook.exchange
-                                                     model.exchangesLive) }
+    updatedModel = model
   in
     (updatedModel, graphdataJs orderbook)
 
@@ -123,7 +120,6 @@ init flags =
         base = flags.base,
         quote = flags.quote,
         hours = 4,
-        exchangesLive = [],
         exchanges = [] },
       Cmd.batch [ setup (), send Cointhink.Shared.Init,
                             send Cointhink.Shared.ExchangesQuery ] )

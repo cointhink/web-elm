@@ -38,27 +38,18 @@ pairTitle model =
           text (toUpper model.quote)
        ]
 
-exchangeLiveLine exchangeName =
-  li []
-     [ text exchangeName ]
-
-exchangeListLive exchangeNames =
-  div [id "exchangeListLive" ]
-      [
-        text "Exchanges",
-        ul []
-           (List.map exchangeLiveLine (Debug.log "view names" exchangeNames))
-      ]
+chartLegend =
+  ul [ class "legend" ] []
 
 chartZone model =
   div [ id "chartZone" ]
       [
-        exchangeListLive model.exchangesLive,
+        chartLegend,
         chartWithTitle model
       ]
 
 chartWithTitle model =
-  div []
+  div [ id "chartStuff" ]
       [
         pairTitle model,
         chart

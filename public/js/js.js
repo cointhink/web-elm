@@ -28,10 +28,9 @@ function d3init(params) {
 }
 
 function d3draw(data) {
-  // let svg = d3.select('svg');
-  // let boundingRect = draw.node().getBoundingClientRect();
   let draw = d3.select('#draw')
   let drawbox = draw.select('rect')
+  // let boundingRect = draw.node().getBoundingClientRect();
   let boundingRect = {width: drawbox.attr('width'),
                       height: drawbox.attr('height') }
 
@@ -173,6 +172,18 @@ function d3draw(data) {
     .selectAll('g')
     .data(xLabels)
       .attr('transform', function(d,i){return 'translate('+x(d)+', 10)'})
+
+  // populate the legend
+  let legendData = d3
+    .select('#chartZone .legend')
+    .selectAll('li')
+    .data(exchanges)
+
+  legendData
+    .enter()
+      .append('li')
+        .style('color', (d,i) => d3.hsl(color(i)))
+        .text(e => e)
 
 }
 
