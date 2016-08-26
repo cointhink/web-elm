@@ -45,10 +45,10 @@ function d3draw(data) {
   }
 
   // todo: insert in-place
-  chartData = [ data, ...chartData ]
+  chartData.push(data)
   //chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
-  const timeMax = chartData[chartData.length-1].date
+  const timeMax = chartData[0].date
   //const timeMin = chartData[0].date
   const timeMin =  new Date(timeMax - 1000*60*60*4) // fixed four hours
 
@@ -80,13 +80,14 @@ function d3draw(data) {
 
   // add new point
   const circleData = draw
-    .selectAll('g')
+    .selectAll('g.ob-parent')
     .data(chartData)
 
   const circleDataEnter = circleData.enter()
 
   // ask circle
   const circleGroup = circleDataEnter.append('g')
+                                      .attr('class', 'ob-parent')
   circleGroup
     .append('circle')
       .attr('fill', '#eee')
