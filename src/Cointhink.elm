@@ -62,7 +62,7 @@ update msg model =
     rpc = wsSend model.ws_url
   in
     case msg of
-      Cointhink.Shared.Init ->
+      Cointhink.Shared.OrderbookQuery ->
         orderbookDo rpc model model.base model.quote
       Cointhink.Shared.ExchangesQuery ->
         ( model, rpc exchangesRequest )
@@ -121,8 +121,8 @@ init flags =
         quote = flags.quote,
         hours = 4,
         exchanges = [] },
-      Cmd.batch [ setup (), send Cointhink.Shared.Init,
-                            send Cointhink.Shared.ExchangesQuery ] )
+      Cmd.batch [ setup (), send Cointhink.Shared.OrderbookQuery
+                             ] )
 
 send : Msg -> Cmd Msg
 send msg =
