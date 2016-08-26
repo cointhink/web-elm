@@ -48,8 +48,9 @@ function d3draw(data) {
   chartData = [ data, ...chartData ]
   //chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
-  const timeMin = chartData[0].date
   const timeMax = chartData[chartData.length-1].date
+  //const timeMin = chartData[0].date
+  const timeMin =  new Date(timeMax - 1000*60*60*4) // fixed four hours
 
   const chartBidPrices = chartData.map(function(d){return d.bids[0][0]})
   const bidPriceMax = Math.max(...chartBidPrices)
@@ -65,7 +66,7 @@ function d3draw(data) {
   const radius = boundingRect.width * 0.003
 
   const x = d3.scaleTime()
-    .domain([new Date(timeMin), new Date(timeMax)])
+    .domain([timeMin, timeMax])
     .range([0+radius, boundingRect.width-radius])
 
   const y = d3.scaleLinear()
@@ -105,14 +106,14 @@ function d3draw(data) {
   draw
     .selectAll('g')
       .select('circle.ob-ask')
-          .attr('cx', d => x(d.date))
-          .attr('cy', d => y(d.asks[0][0]))
+        .attr('cx', d => x(d.date))
+        .attr('cy', d => y(d.asks[0][0]))
 
   draw
     .selectAll('g')
       .select('circle.ob-bid')
-          .attr('cx', d => x(d.date))
-          .attr('cy', d => y(d.bids[0][0]))
+        .attr('cx', d => x(d.date))
+        .attr('cy', d => y(d.bids[0][0]))
 
   let yLabels = flatten([priceMin, y.ticks(2), priceMax])
 
