@@ -87,7 +87,7 @@ ws_parse json =
 
 dispatch : WsResponse -> Msg
 dispatch wsresponse =
-  case (Debug.log "ws response type" wsresponse.rtype) of
+  case wsresponse.rtype of
     "orderbook" ->
       let
         orderbookResult : Result String Orderbook
