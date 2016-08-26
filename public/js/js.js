@@ -90,29 +90,29 @@ function d3draw(data) {
     .append('circle')
       .attr('fill', '#eee')
       .attr('class', 'ob-ask')
+      .attr('stroke', d3.hsl(color(exchanges.indexOf(data.exchange))))
+      .attr('r', radius)
+      .attr('data-exchange', data.exchange)
   circleGroup
     .append('circle')
       .attr('fill', '#eee')
       .attr('class', 'ob-bid')
+      .attr('r', radius)
+      .attr('stroke', d3.hsl(color(exchanges.indexOf(data.exchange))).darker(2))
+      .attr('data-exchange', data.exchange)
 
   // reposition/resize all points
   draw
     .selectAll('g')
       .select('circle.ob-ask')
-        .attr('cx', d => x(d.date))
-        .attr('cy', d => y(d.asks[0][0]))
-        .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))))
-        .attr('r', radius)
-        .attr('data-exchange', d => d.exchange)
+          .attr('cx', d => x(d.date))
+          .attr('cy', d => y(d.asks[0][0]))
 
   draw
     .selectAll('g')
       .select('circle.ob-bid')
-        .attr('cx', d => x(d.date))
-        .attr('cy', d => y(d.bids[0][0]))
-        .attr('r', radius)
-        .attr('stroke', d => d3.hsl(color(exchanges.indexOf(d.exchange))).darker(2))
-        .attr('data-exchange', d => d.exchange)
+          .attr('cx', d => x(d.date))
+          .attr('cy', d => y(d.bids[0][0]))
 
   let yLabels = flatten([priceMin, y.ticks(2), priceMax])
 
