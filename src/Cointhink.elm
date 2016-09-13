@@ -121,8 +121,8 @@ init flags =
         quote = flags.quote,
         hours = 4,
         exchanges = [] },
-      Cmd.batch [ setup (), send Cointhink.Shared.OrderbookQuery
-                             ] )
+      Cmd.batch [ setup (), send Cointhink.Shared.OrderbookQuery,
+                            send Cointhink.Shared.ExchangesQuery ] )
 
 send : Msg -> Cmd Msg
 send msg =
