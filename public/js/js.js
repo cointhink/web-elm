@@ -95,6 +95,7 @@ function d3draw(data) {
       .attr('stroke', d3.hsl(color(exchanges.indexOf(data.exchange))))
       .attr('r', radius)
       .attr('data-exchange', data.exchange)
+      .attr('cx', d => x(data.date))
   circleGroup
     .append('circle')
       .attr('fill', '#eee')
@@ -102,18 +103,17 @@ function d3draw(data) {
       .attr('r', radius)
       .attr('stroke', d3.hsl(color(exchanges.indexOf(data.exchange))).darker(2))
       .attr('data-exchange', data.exchange)
+      .attr('cx', d => x(data.date))
 
   // reposition/resize all points
   draw
     .selectAll('g')
       .select('circle.ob-ask')
-        .attr('cx', d => x(d.date))
         .attr('cy', d => y(d.asks[0][0]))
 
   draw
     .selectAll('g')
       .select('circle.ob-bid')
-        .attr('cx', d => x(d.date))
         .attr('cy', d => y(d.bids[0][0]))
 
   let yLabels = flatten([priceMin, y.ticks(2), priceMax])
