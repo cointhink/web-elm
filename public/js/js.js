@@ -1,5 +1,6 @@
 let chartData = []
 let exchanges = []
+let maxPriceMin = Number.MAX_SAFE_INTEGER, maxPriceMax = 0
 
 function d3init(params) {
   console.log('d3init', 'params', params)
@@ -96,6 +97,7 @@ function d3draw(data) {
       .attr('r', radius)
       .attr('data-exchange', data.exchange)
       .attr('cx', d => x(data.date))
+      .attr('cy', d => y(data.asks[0][0]))
   circleGroup
     .append('circle')
       .attr('fill', '#eee')
@@ -104,17 +106,29 @@ function d3draw(data) {
       .attr('stroke', d3.hsl(color(exchanges.indexOf(data.exchange))).darker(2))
       .attr('data-exchange', data.exchange)
       .attr('cx', d => x(data.date))
+      .attr('cy', d => y(data.bids[0][0]))
 
-  // reposition/resize all points
-  draw
-    .selectAll('g')
-      .select('circle.ob-ask')
-        .attr('cy', d => y(d.asks[0][0]))
+  let redraw = false
+  if(maxPriceMax < priceMax) {
+    maxPriceMax = priceMax
+    redraw = true
+  }
+  if(maxPriceMin > priceMin) {
+    maxPriceMin = priceMin
+    redraw = true
+  }
+  if(redraw) {
+    // reposition/resize all points
+    draw
+      .selectAll('g')
+        .select('circle.ob-ask')
+          .attr('cy', d => y(d.asks[0][0]))
 
-  draw
-    .selectAll('g')
-      .select('circle.ob-bid')
-        .attr('cy', d => y(d.bids[0][0]))
+    draw
+      .selectAll('g')
+        .select('circle.ob-bid')
+          .attr('cy', d => y(d.bids[0][0]))
+  }
 
   let yLabels = flatten([priceMin, y.ticks(2), priceMax])
 
