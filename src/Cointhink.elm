@@ -39,10 +39,10 @@ orderbookDo rpc model base quote =
 exchangeUpdate : Model -> Exchange -> ( Model, Cmd Msg )
 exchangeUpdate model exchange =
   let
-    updatedModel = { model | exchanges = addExchangeIfMissing exchange model.exchanges }
-    updatederModel = { updatedModel | markets = addMarkets exchange model.markets }
+    updatedModel = { model | exchanges = addExchangeIfMissing exchange model.exchanges,
+                             markets = addMarketsIfMissing exchange.markets model.markets }
   in
-    (updatederModel, Cmd.none)
+    (updatedModel, Cmd.none)
 
 addExchangeIfMissing : Exchange -> List Exchange -> List Exchange
 addExchangeIfMissing exchange exchanges =
@@ -51,8 +51,8 @@ addExchangeIfMissing exchange exchanges =
   else
     ( exchange :: exchanges )
 
-addMarkets : Exchange -> List Market -> List Market
-addMarkets exchange markets =
+addMarketsIfMissing : List Market -> List Market -> List Market
+addMarketsIfMissing newMarkets markets =
   markets
 
 orderbookUpdate : Model -> Orderbook -> ( Model, Cmd Msg )
