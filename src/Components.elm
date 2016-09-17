@@ -89,7 +89,9 @@ marketList markets =
 
 marketOptionHtml market =
   option []
-         [ text market.base ]
+         [ text market.base,
+           text "/",
+           text market.quote ]
 
 centerBlock =
   div [ id "centerblock" ]

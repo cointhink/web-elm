@@ -53,7 +53,7 @@ addExchangeIfMissing exchange exchanges =
 
 addMarketsIfMissing : List Market -> List Market -> List Market
 addMarketsIfMissing newMarkets markets =
-  markets
+ (newMarkets ++ markets)
 
 orderbookUpdate : Model -> Orderbook -> ( Model, Cmd Msg )
 orderbookUpdate model orderbook =
