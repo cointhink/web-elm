@@ -5,6 +5,7 @@ type Msg =   OrderbookQuery
            | OrderbookUpdate Orderbook
            | ExchangeUpdate Exchange
            | Alert String
+           | MarketChoice String
            | Noop
 
 

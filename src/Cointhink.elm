@@ -62,6 +62,10 @@ orderbookUpdate model orderbook =
   in
     (updatedModel, graphdataJs orderbook)
 
+marketSet : Model -> String -> ( Model, Cmd Msg)
+marketSet model marketName =
+  (model, Cmd.none)
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   let
@@ -78,6 +82,8 @@ update msg model =
         exchangeUpdate model exchange
       Cointhink.Shared.Alert string ->
         ( model, Cmd.none )
+      Cointhink.Shared.MarketChoice marketName ->
+        marketSet model marketName
       Cointhink.Shared.Noop ->
         ( model, Cmd.none )
 

@@ -2,7 +2,10 @@ module Components exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onInput)
 import String exposing (toUpper)
+
+import Cointhink.Shared exposing (..)
 
 navbar model =
   div [ class "navbar" ]
@@ -83,7 +86,7 @@ exchangeList exchanges =
 
 marketList markets =
   div []
-      [ select [ id "markets"]
+      [ select [ id "markets", onInput MarketChoice]
                (List.map marketOptionHtml markets)
       ]
 
@@ -109,9 +112,9 @@ view model =
  div [ class "main" ]
      [
        navbar model,
+       marketList model.markets,
        chartZone model,
        exchangeList model.exchanges,
-       marketList model.markets,
        centerBlock,
        footer model
      ]
