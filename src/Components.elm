@@ -81,6 +81,16 @@ exchangeList exchanges =
             (List.map exchangeHtml exchanges)
       ]
 
+marketList markets =
+  div []
+      [ select [ id "markets"]
+               (List.map marketOptionHtml markets)
+      ]
+
+marketOptionHtml market =
+  option []
+         [ text market.base ]
+
 centerBlock =
   div [ id "centerblock" ]
       [
@@ -99,6 +109,7 @@ view model =
        navbar model,
        chartZone model,
        exchangeList model.exchanges,
+       marketList model.markets,
        centerBlock,
        footer model
      ]
