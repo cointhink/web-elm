@@ -21,7 +21,8 @@ type alias Model = {
     base: String,
     quote: String,
     hours : Int,
-    exchanges: List Exchange
+    exchanges: List Exchange,
+    markets: List Market
   }
 
 wsSend : String -> Json.Encode.Value -> Cmd Msg
@@ -120,7 +121,8 @@ init flags =
         base = flags.base,
         quote = flags.quote,
         hours = 4,
-        exchanges = [] },
+        exchanges = [],
+        markets = [] },
       Cmd.batch [ setup (), send Cointhink.Shared.OrderbookQuery,
                             send Cointhink.Shared.ExchangesQuery ] )
 
