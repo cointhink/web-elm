@@ -59,9 +59,16 @@ orderbookUpdate model orderbook =
   in
     (updatedModel, graphdataJs orderbook)
 
-marketSet : Model -> String -> ( Model, Cmd Msg)
-marketSet model marketName =
-  (model, Cmd.none)
+marketNameToMarket :  String -> Market
+marketNameToMarket name =
+  let
+    parts = String.split "/" name
+    baseMaybe = List.head parts
+    quoteMaybe = List.head (Maybe.withDefault [] (List.tail parts))
+    base = Maybe.withDefault "BTC" baseMaybe
+    quote = Maybe.withDefault "USD" quoteMaybe
+  in
+    { base = base, quote = quote }
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -80,14 +87,7 @@ update msg model =
       Cointhink.Shared.Alert string ->
         ( model, Cmd.none )
       Cointhink.Shared.MarketChoice marketName ->
-        let
-          parts = String.split "/" marketName
-          baseMaybe = List.head parts
-          quoteMaybe = List.head (Maybe.withDefault [] (List.tail parts))
-          newMarket = { base = Maybe.withDefault "BTC" baseMaybe,
-                        quote = Maybe.withDefault "USD" quoteMaybe }
-        in
-          ( { model | market = newMarket }, Cmd.none )
+        ( { model | market = marketNameToMarket marketName }, send OrderbookQuery )
       Cointhink.Shared.Noop ->
         ( model, Cmd.none )
 
