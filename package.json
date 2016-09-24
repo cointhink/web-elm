@@ -1,5 +1,5 @@
 {
- "dependencies": {
-    "elm": "*"
- }
+  "dependencies": {
+    "elm": "^0.17.1"
+  }
 }
