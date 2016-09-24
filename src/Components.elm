@@ -63,7 +63,8 @@ chart =
 
 marketHtml market =
   li []
-     [ a [ href ( "?m=" ++ market.base ++ ":" ++ market.quote) ]
+     [
+       a [ href ( "?m=" ++ market.base ++ ":" ++ market.quote) ]
          [ text ( market.base ++ "/" ++ market.quote ) ]
      ]
 
@@ -74,7 +75,7 @@ exchangeHtml exchange =
         span [] [text (toString (List.length exchange.markets)) ],
         text " markets",
         ul [ id "marketList" ]
-           (List.map marketHtml exchange.markets)
+           [] --(List.map marketHtml exchange.markets)
      ]
 
 exchangeList exchanges =
