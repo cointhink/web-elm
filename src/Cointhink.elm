@@ -76,19 +76,19 @@ update msg model =
     rpc = wsSend model.ws_url
   in
     case msg of
-      Cointhink.Shared.OrderbookQuery ->
+      OrderbookQuery ->
         orderbookDo rpc model
-      Cointhink.Shared.ExchangesQuery ->
+      ExchangesQuery ->
         ( model, rpc exchangesRequest )
-      Cointhink.Shared.OrderbookUpdate orderbook ->
+      OrderbookUpdate orderbook ->
         orderbookUpdate model orderbook
-      Cointhink.Shared.ExchangeUpdate exchange ->
+      ExchangeUpdate exchange ->
         exchangeUpdate model exchange
-      Cointhink.Shared.Alert string ->
+      Alert string ->
         ( model, Cmd.none )
-      Cointhink.Shared.MarketChoice marketName ->
+      MarketChoice marketName ->
         ( { model | market = marketNameToMarket marketName }, send OrderbookQuery )
-      Cointhink.Shared.Noop ->
+      Noop ->
         ( model, Cmd.none )
 
 jmsg : String -> Result String WsResponse
@@ -99,7 +99,7 @@ ws_parse : String -> Msg
 ws_parse json =
   case jmsg json of
     Result.Ok value -> dispatch value
-    Result.Err msg -> Cointhink.Shared.Alert msg
+    Result.Err msg -> Alert msg
 
 dispatch : WsResponse -> Msg
 dispatch wsresponse =
@@ -110,17 +110,17 @@ dispatch wsresponse =
         orderbookResult = decodeValue orderbookDecoder wsresponse.object
       in
         case orderbookResult of
-          Result.Ok value -> Cointhink.Shared.OrderbookUpdate value
-          Result.Err msg -> Cointhink.Shared.Alert msg
+          Result.Ok value -> OrderbookUpdate value
+          Result.Err msg -> Alert msg
     "exchange" ->
       let
         exchangeResult : Result String Exchange
         exchangeResult = decodeValue exchangeDecoder wsresponse.object
       in
         case exchangeResult of
-          Result.Ok value -> Cointhink.Shared.ExchangeUpdate value
-          Result.Err msg -> Cointhink.Shared.Alert msg
-    _ -> Cointhink.Shared.Noop
+          Result.Ok value -> ExchangeUpdate value
+          Result.Err msg -> Alert msg
+    _ -> Noop
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -137,8 +137,8 @@ init flags =
         hours = 4,
         exchanges = [],
         markets = [] },
-      Cmd.batch [ setup (), send Cointhink.Shared.OrderbookQuery,
-                            send Cointhink.Shared.ExchangesQuery ] )
+      Cmd.batch [ setup (), send OrderbookQuery,
+                            send ExchangesQuery ] )
 
 send : Msg -> Cmd Msg
 send msg =
