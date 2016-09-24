@@ -5,6 +5,7 @@ import Task
 import WebSocket
 import Json.Encode exposing (object, encode, string, int)
 import Json.Decode exposing ( (:=), decodeString, decodeValue )
+import String
 
 import Components
 import Cointhink.Protocol exposing (..)
@@ -18,8 +19,7 @@ view = Components.view
 
 type alias Model = {
     ws_url: String,
-    base: String,
-    quote: String,
+    market: Market,
     hours : Int,
     exchanges: List Exchange,
     markets: List Market
@@ -28,12 +28,9 @@ type alias Model = {
 wsSend : String -> Json.Encode.Value -> Cmd Msg
 wsSend url say = WebSocket.send url (encode 2 (Debug.log "say" say))
 
-orderbookDo : (Json.Encode.Value -> Cmd Msg) -> Model -> String -> String -> (Model, Cmd Msg)
-orderbookDo rpc model base quote =
-  let
-    updatedModel = { model | base = base, quote = quote }
-  in
-    ( Debug.log "updatedModel" updatedModel, rpc (orderbookRequest updatedModel.base updatedModel.quote) )
+orderbookDo : (Json.Encode.Value -> Cmd Msg) -> Model -> (Model, Cmd Msg)
+orderbookDo rpc model =
+  ( Debug.log "updatedModel" model, rpc (orderbookRequest model.market.base model.market.quote) )
 
 
 exchangeUpdate : Model -> Exchange -> ( Model, Cmd Msg )
@@ -73,7 +70,7 @@ update msg model =
   in
     case msg of
       Cointhink.Shared.OrderbookQuery ->
-        orderbookDo rpc model model.base model.quote
+        orderbookDo rpc model
       Cointhink.Shared.ExchangesQuery ->
         ( model, rpc exchangesRequest )
       Cointhink.Shared.OrderbookUpdate orderbook ->
@@ -83,7 +80,14 @@ update msg model =
       Cointhink.Shared.Alert string ->
         ( model, Cmd.none )
       Cointhink.Shared.MarketChoice marketName ->
-        marketSet model marketName
+        let
+          parts = String.split "/" marketName
+          baseMaybe = List.head parts
+          quoteMaybe = List.head (Maybe.withDefault [] (List.tail parts))
+          newMarket = { base = Maybe.withDefault "BTC" baseMaybe,
+                        quote = Maybe.withDefault "USD" quoteMaybe }
+        in
+          ( { model | market = newMarket }, Cmd.none )
       Cointhink.Shared.Noop ->
         ( model, Cmd.none )
 
@@ -129,8 +133,7 @@ type alias Flags = { url : String,
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { ws_url = ((Debug.log "flags" flags).url),
-        base = flags.base,
-        quote = flags.quote,
+        market = { base = flags.base, quote = flags.quote },
         hours = 4,
         exchanges = [],
         markets = [] },

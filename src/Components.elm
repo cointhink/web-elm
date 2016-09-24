@@ -36,9 +36,9 @@ login =
 pairTitle model =
   span [ class "pairtitle" ]
        [
-          text (toUpper model.base),
+          text (toUpper model.market.base),
           text "/",
-          text (toUpper model.quote)
+          text (toUpper model.market.quote)
        ]
 
 chartLegend =
