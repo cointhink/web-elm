@@ -87,7 +87,9 @@ update msg model =
       Alert string ->
         ( model, Cmd.none )
       MarketChoice marketName ->
-        ( { model | market = marketNameToMarket marketName }, send OrderbookQuery )
+        ( { model | market = marketNameToMarket marketName },
+          Cmd.batch [ setup(),
+                      send OrderbookQuery ] )
       Noop ->
         ( model, Cmd.none )
 
@@ -137,8 +139,9 @@ init flags =
         hours = 4,
         exchanges = [],
         markets = [] },
-      Cmd.batch [ setup (), send OrderbookQuery,
-                            send ExchangesQuery ] )
+      Cmd.batch [ setup (),
+                  send OrderbookQuery,
+                  send ExchangesQuery ] )
 
 send : Msg -> Cmd Msg
 send msg =

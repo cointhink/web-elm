@@ -1,9 +1,14 @@
-let chartData = []
-let exchanges = []
-let maxPriceMin = Number.MAX_SAFE_INTEGER, maxPriceMax = 0
+let chartData
+let exchanges
+let maxPriceMin
+let maxPriceMax
 
 function d3init(params) {
   console.log('d3init', 'params', params)
+  chartData = []
+  exchanges = []
+  maxPriceMin = Number.MAX_SAFE_INTEGER
+  maxPriceMax = 0
   let chart = d3.select('#chart');
   let svg = chart.append('svg')
   svg
