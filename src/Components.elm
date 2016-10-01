@@ -85,17 +85,20 @@ exchangeList exchanges =
             (List.map exchangeHtml exchanges)
       ]
 
-marketList markets =
+marketList markets market =
   div []
       [ select [ id "markets", onInput MarketChoice]
-               (List.map marketOptionHtml markets)
+               (List.map (marketOptionHtml market) markets)
       ]
 
-marketOptionHtml market =
-  option []
-         [ text market.base,
-           text "/",
-           text market.quote ]
+marketOptionHtml currentMarket market =
+    option [ selected (marketTest currentMarket market) ]
+           [ text market.base,
+             text "/",
+             text market.quote ]
+
+marketTest marketA marketB =
+  marketA == marketB
 
 centerBlock =
   div [ id "centerblock" ]
@@ -113,7 +116,7 @@ view model =
  div [ class "main" ]
      [
        navbar model,
-       marketList model.markets,
+       marketList model.markets model.market,
        chartZone model,
        exchangeList model.exchanges,
        centerBlock,
