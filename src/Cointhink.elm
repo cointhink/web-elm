@@ -11,7 +11,6 @@ import Components
 import Cointhink.Protocol exposing (..)
 import Cointhink.Shared exposing (..)
 
-port input : (Int -> msg) -> Sub msg
 port graphdataJs : Orderbook -> Cmd msg
 port setup : () -> Cmd msg
 
