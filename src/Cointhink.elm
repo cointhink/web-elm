@@ -50,7 +50,10 @@ addExchangeIfMissing exchange exchanges =
 
 addMarketsIfMissing : List Market -> List Market -> List Market
 addMarketsIfMissing newMarkets markets =
- (newMarkets ++ markets)
+  let
+    missingMarkets = List.filter (\market -> not(List.member market markets)) newMarkets
+  in
+   List.sortBy .base (missingMarkets ++ markets)
 
 orderbookUpdate : Model -> Orderbook -> ( Model, Cmd Msg )
 orderbookUpdate model orderbook =
