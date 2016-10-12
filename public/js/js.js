@@ -77,7 +77,7 @@ function d3draw(data) {
 
   const y = d3.scaleLinear()
     .domain([priceMax, priceMin])
-    .range([0+(radius*3), boundingRect.height-radius]);
+    .range([0+(radius*3), boundingRect.height-(radius*3)]);
 
   const color = d3.scaleLinear()
     .domain([0, exchanges.length])
