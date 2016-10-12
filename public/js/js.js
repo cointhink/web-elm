@@ -73,7 +73,7 @@ function d3draw(data) {
 
   const x = d3.scaleTime()
     .domain([timeMin, timeMax])
-    .range([0+radius, boundingRect.width-radius])
+    .range([0+radius, boundingRect.width-(radius*2)])
 
   const y = d3.scaleLinear()
     .domain([priceMax, priceMin])
