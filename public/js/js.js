@@ -2,6 +2,8 @@ let chartData
 let exchanges
 let maxPriceMin
 let maxPriceMax
+let timeMin
+let x
 
 function d3init(params) {
   console.log('d3init', 'params', params)
@@ -39,6 +41,7 @@ function d3draw(data) {
   // let boundingRect = draw.node().getBoundingClientRect();
   let boundingRect = {width: drawbox.attr('width'),
                       height: drawbox.attr('height') }
+  const radius = boundingRect.width * 0.003
 
   // iso8601 to js date
   data.date = new Date(data.date)
@@ -53,8 +56,43 @@ function d3draw(data) {
   chartData.push(data)
 
   const timeMax = chartData[0].date
-  //const timeMin = chartData[0].date
-  const timeMin =  new Date(timeMax - 1000*60*60*4) // fixed four hours
+  if (chartData.length == 1) {
+    // one-shot time calcs
+    timeMin =  new Date(timeMax - 1000*60*60*4) // fixed four hours
+    x = d3.scaleTime()
+      .domain([timeMin, timeMax])
+      .range([0+radius, boundingRect.width-(radius*2)])
+
+    // Populate the x-axis
+    let timeFormatter = d3.timeFormat('%I:%M %p')
+    let dateFormatter = d3.timeFormat('%d/%m')
+
+    let xLabels = flatten([new Date(timeMin), x.ticks(3), new Date(timeMax)])
+
+    let xLabelData = d3
+      .select('#xaxis')
+      .selectAll('g')
+        .data(xLabels, function(d){ return d} )
+
+    xLabelData.exit().remove()
+    var labelBar = xLabelData.enter()
+                         .append('g')
+                           .attr('transform', function(d,i){return 'translate('+x(d)+', 10)'})
+    labelBar
+          .append('text')
+            .style('fill', '#333')
+            .style('font-size', '14px')
+            .style('font-family', 'Calibri, Candara, Arial, sans-serif')
+            .style('font-weight', 300)
+            .attr('y', 20)
+            .text(function(d) {return dateFormatter(d) })
+    labelBar
+          .append('text')
+            .style('fill', '#333')
+            .style('font-size', '13px')
+            .text(function(d) { return timeFormatter(d) })
+
+  }
 
   const priceMax = data.asks[0][0]
   const priceMin = data.bids[0][0]
@@ -69,11 +107,6 @@ function d3draw(data) {
     redraw = true
   }
 
-  const radius = boundingRect.width * 0.003
-
-  const x = d3.scaleTime()
-    .domain([timeMin, timeMax])
-    .range([0+radius, boundingRect.width-(radius*2)])
 
   const y = d3.scaleLinear()
     .domain([maxPriceMax, maxPriceMin])
@@ -114,7 +147,6 @@ function d3draw(data) {
       .attr('cy', d => y(data.bids[0][0]))
 
   if(redraw) {
-    console.log('redraw')
     // reposition/resize all points
     draw
       .selectAll('g')
@@ -151,41 +183,6 @@ function d3draw(data) {
       .attr('x', 1)
       .attr('y', function(d,i){ return y(d)+radius})
 
-
-  let timeFormatter = d3.timeFormat('%I:%M %p')
-  let dateFormatter = d3.timeFormat('%d/%m')
-
-  let xLabels = flatten([new Date(timeMin), x.ticks(3), new Date(timeMax)])
-
-  // Populate the x-axis
-  let xLabelData = d3
-    .select('#xaxis')
-    .selectAll('g')
-      .data(xLabels, function(d){ return d} )
-
-  xLabelData.exit().remove()
-  var labelBar = xLabelData.enter()
-                       .append('g')
-  labelBar
-        .append('text')
-          .style('fill', '#333')
-          .style('font-size', '14px')
-          .style('font-family', 'Calibri, Candara, Arial, sans-serif')
-          .style('font-weight', 300)
-          .attr('y', 20)
-          .text(function(d) {return dateFormatter(d) })
-  labelBar
-        .append('text')
-          .style('fill', '#333')
-          .style('font-size', '13px')
-          .text(function(d) { return timeFormatter(d) })
-
-  // Rebind the x-axis labels to include the new member, then position the members
-  d3
-    .select('#xaxis')
-    .selectAll('g')
-    .data(xLabels)
-      .attr('transform', function(d,i){return 'translate('+x(d)+', 10)'})
 
   // populate the legend
   let legendData = d3
