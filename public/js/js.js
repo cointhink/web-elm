@@ -50,24 +50,24 @@ function d3draw(data) {
     exchanges.push(data.exchange)
   }
 
-  // todo: insert in-place
   chartData.push(data)
-  //chartData = chartData.sort(function(a, b) { return a.date > b.date })
 
   const timeMax = chartData[0].date
   //const timeMin = chartData[0].date
   const timeMin =  new Date(timeMax - 1000*60*60*4) // fixed four hours
 
-  const chartBidPrices = chartData.map(function(d){return d.bids[0][0]})
-  const bidPriceMax = Math.max(...chartBidPrices)
-  const bidPriceMin = Math.min(...chartBidPrices)
+  const priceMax = data.asks[0][0]
+  const priceMin = data.bids[0][0]
 
-  const chartAskPrices = chartData.map(function(d){return d.asks[0][0]})
-  const askPriceMax = Math.max(...chartAskPrices)
-  const askPriceMin = Math.min(...chartAskPrices)
-
-  const priceMax = Math.max(bidPriceMax, askPriceMax)
-  const priceMin = Math.min(bidPriceMin, askPriceMin)
+  let redraw = false
+  if(maxPriceMax < priceMax) {
+    maxPriceMax = priceMax * (1+0.005)
+    redraw = true
+  }
+  if(maxPriceMin > priceMin) {
+    maxPriceMin = priceMin * (1-0.005)
+    redraw = true
+  }
 
   const radius = boundingRect.width * 0.003
 
@@ -76,7 +76,7 @@ function d3draw(data) {
     .range([0+radius, boundingRect.width-(radius*2)])
 
   const y = d3.scaleLinear()
-    .domain([priceMax, priceMin])
+    .domain([maxPriceMax, maxPriceMin])
     .range([0+(radius*3), boundingRect.height-(radius*3)]);
 
   const color = d3.scaleLinear()
@@ -113,16 +113,8 @@ function d3draw(data) {
       .attr('cx', d => x(data.date))
       .attr('cy', d => y(data.bids[0][0]))
 
-  let redraw = false
-  if(maxPriceMax < priceMax) {
-    maxPriceMax = priceMax
-    redraw = true
-  }
-  if(maxPriceMin > priceMin) {
-    maxPriceMin = priceMin
-    redraw = true
-  }
   if(redraw) {
+    console.log('redraw')
     // reposition/resize all points
     draw
       .selectAll('g')
