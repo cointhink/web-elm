@@ -159,7 +159,7 @@ function d3draw(data) {
           .attr('cy', d => y(d.bids[0][0]))
   }
 
-  let yLabels = flatten([priceMin, y.ticks(2), priceMax])
+  let yLabels = flatten([maxPriceMin, y.ticks(2), maxPriceMax])
 
   // Populate the y-axis
   let yLabelData = d3
