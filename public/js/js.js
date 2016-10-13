@@ -64,8 +64,8 @@ function d3draw(data) {
       .range([0+radius, boundingRect.width-(radius*2)])
 
     // Populate the x-axis
-    let timeFormatter = d3.timeFormat('%I:%M %p')
-    let dateFormatter = d3.timeFormat('%d/%m')
+    let timeFormatter = d3.timeFormat('%-I:%M %p')
+    let dateFormatter = d3.timeFormat('%b %d')
 
     let xLabels = flatten([new Date(timeMin), x.ticks(3), new Date(timeMax)])
 
@@ -77,7 +77,7 @@ function d3draw(data) {
     xLabelData.exit().remove()
     var labelBar = xLabelData.enter()
                          .append('g')
-                           .attr('transform', function(d,i){return 'translate('+x(d)+', 10)'})
+                           .attr('transform', function(d,i){return 'translate('+x(d)+', 13)'})
     labelBar
           .append('text')
             .style('fill', '#333')
@@ -85,7 +85,7 @@ function d3draw(data) {
             .style('font-family', 'Calibri, Candara, Arial, sans-serif')
             .style('font-weight', 300)
             .attr('y', 20)
-            .text(function(d) {return dateFormatter(d) })
+            .text(function(d, i) {return i == xLabels.length-1 ? dateFormatter(d) : ''})
     labelBar
           .append('text')
             .style('fill', '#333')
@@ -173,7 +173,7 @@ function d3draw(data) {
         .append('text')
           .style('fill', '#333')
           .style('font-size', '13px')
-          .text(function(d) { return d })
+          .text(function(d) { return d.toFixed(4) })
 
   // Position the y-axis labels
   d3
