@@ -67,7 +67,7 @@ function d3draw(data) {
     let timeFormatter = d3.timeFormat('%-I:%M %p')
     let dateFormatter = d3.timeFormat('%b %d')
 
-    let xLabels = flatten([new Date(timeMin), x.ticks(3), new Date(timeMax)])
+    let xLabels = flatten([new Date(timeMin), x.ticks(4)])
 
     let xLabelData = d3
       .select('#xaxis')
