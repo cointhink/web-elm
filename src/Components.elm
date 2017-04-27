@@ -26,7 +26,7 @@ login =
   Html.form []
             [
               Html.input [
-                      type' "email",
+                      type_ "email",
                       placeholder "username"
                     ]
                     [],

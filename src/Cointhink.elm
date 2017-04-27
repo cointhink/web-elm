@@ -1,10 +1,10 @@
-port module Cointhink exposing (init, subscriptions, view, update, urlUpdate)
+port module Cointhink exposing (init, fromUrl, subscriptions, view, update, urlUpdate)
 
 import Platform.Cmd exposing (Cmd)
 import Task
 import WebSocket
 import Json.Encode exposing (object, encode, string, int)
-import Json.Decode exposing ( (:=), decodeString, decodeValue )
+import Json.Decode exposing (decodeString, decodeValue )
 import String
 import Navigation
 
@@ -135,20 +135,22 @@ type alias Flags = { url : String,
                      base : String,
                      quote : String }
 
-init : Flags -> Result String Int -> ( Model, Cmd Msg )
-init flags urlParserResult =
+init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+init flags location =
     ( { ws_url = ((Debug.log "flags" flags).url),
         market = { base = flags.base, quote = flags.quote },
         hours = 4,
         exchanges = [],
         markets = [] },
-      Cmd.batch [ setup (),
-                  send OrderbookQuery,
-                  send ExchangesQuery] )
+      Cmd.none )
+
+fromUrl : Navigation.Location -> Msg
+fromUrl url =
+  Noop
 
 send : Msg -> Cmd Msg
 send msg =
-  Task.perform identity identity (Task.succeed msg)
+  Task.perform identity (Task.succeed msg)
 
 urlUpdate : Result String Int -> Model -> (Model, Cmd msg)
 urlUpdate urlParserResult model =
