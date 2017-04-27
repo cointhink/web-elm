@@ -1,10 +1,10 @@
-port module Cointhink exposing (init, fromUrl, subscriptions, view, update, urlUpdate)
+port module Cointhink exposing (app)
 
 import Platform.Cmd exposing (Cmd)
 import Task
 import WebSocket
 import Json.Encode exposing (object, encode, string, int)
-import Json.Decode exposing (decodeString, decodeValue )
+import Json.Decode exposing (decodeString, decodeValue)
 import String
 import Navigation
 
@@ -171,3 +171,12 @@ urlUpdate urlParserResult model =
 toUrl : Int -> String
 toUrl count =
   "#/" ++ toString count
+
+app = Navigation.programWithFlags
+        fromUrl
+        {
+          init = init,
+          view = view,
+          update = update,
+          subscriptions = subscriptions
+        }
