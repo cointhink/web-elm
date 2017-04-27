@@ -4,5 +4,17 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 view model =
- div [ class "main" ]
-     [ text "I am Splash" ]
+ div [ class "splash" ]
+     [ catchphrase,
+       steps ]
+
+catchphrase =
+  div [ class "catchphrase" ]
+      [ text "Buy cryptocoins on your schedule." ]
+
+steps =
+  div [ class "steps" ]
+      [ div [] [ text "1. Connect your exchange account" ],
+        div [] [ text "2. Set a purchasing schedule" ],
+        div [] [ text "3. Have Bitcoins and other cryptocoins purchased automatically" ]
+      ]

@@ -1,6 +1,3 @@
-.main {
-}
-
 #centerblock {
   text-align: center
 }
@@ -86,4 +83,17 @@
   margin: 0.2em 0.1em;
   padding: 0.1em 0.1em;
   background-color: #eee;
+}
+
+.splash {
+  text-align: center;
+}
+
+.splash .catchphrase {
+  padding: 1em 0;
+}
+
+.splash .steps {
+  margin: auto;
+  width: 24em;
 }
