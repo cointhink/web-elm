@@ -137,7 +137,11 @@ type alias Flags = { url : String,
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
-    ( { ws_url = ((Debug.log "flags" flags).url),
+  let
+    debug_url = (Debug.log "init location" location.href)
+    debug_flags = (Debug.log "init flags" flags)
+  in
+    ( { ws_url = flags.url,
         market = { base = flags.base, quote = flags.quote },
         hours = 4,
         exchanges = [],
@@ -146,7 +150,10 @@ init flags location =
 
 fromUrl : Navigation.Location -> Msg
 fromUrl url =
-  Noop
+  let
+    debug_url = (Debug.log "fromUrl" url)
+  in
+    Noop
 
 send : Msg -> Cmd Msg
 send msg =
