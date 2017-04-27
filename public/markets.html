@@ -5,20 +5,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cointhink: Cryptocoin Market Analysis</title>
-  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="js/js.js"></script>
   <script type="text/javascript" src="js/elm.js"></script>
+  <script type="text/javascript" src="js/d3.v4.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div id='navbar'></div>
-  <div id='page'></div>
 </body>
 
 <script type="text/javascript">
-  let nav = document.getElementById('navbar');
-  Elm.Navbar.embed(navbar)
-  let page = document.getElementById('page');
-  Elm.Splash.embed(page)
+  let windowHostname = window.location.hostname
+  let wsHostPath = windowHostname.length > 0 ? windowHostname + '/ws' : 'localhost:2050'
+  let wsUrl = ('https:' == document.location.protocol ? 'wss://' : 'ws://') + wsHostPath
+  let base = "BTC"
+  let quote = "USD"
+  let market = getParameterByName('m')
+  if(market) {
+    [base, quote] = market.split(':')
+  }
+  let main = Elm.Main.fullscreen({url: wsUrl, base: base, quote: quote});
+  main.ports.setup.subscribe(function(){
+    d3init()
+  })
+  main.ports.graphdataJs.subscribe(function(ob){
+    d3draw(ob)
+  })
 </script>
 
 <script type="text/javascript">

@@ -1,4 +1,4 @@
-port module Cointhink exposing (app)
+port module Cointhink.Markets exposing (app)
 
 import Platform.Cmd exposing (Cmd)
 import Task
