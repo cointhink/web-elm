@@ -24,7 +24,7 @@
   if(market) {
     [base, quote] = market.split(':')
   }
-  let main = Elm.Main.fullscreen({url: wsUrl, base: base, quote: quote});
+  let main = Elm.Markets.fullscreen({url: wsUrl, base: base, quote: quote});
   main.ports.setup.subscribe(function(){
     d3init()
   })

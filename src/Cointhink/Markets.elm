@@ -8,14 +8,14 @@ import Json.Decode exposing (decodeString, decodeValue)
 import String
 import Navigation
 
-import Components
+import Cointhink.Components
 import Cointhink.Protocol exposing (..)
 import Cointhink.Shared exposing (..)
 
 port graphdataJs : Orderbook -> Cmd msg
 port setup : () -> Cmd msg
 
-view = Components.view
+view = Cointhink.Components.view
 
 type alias Model = {
     ws_url: String,

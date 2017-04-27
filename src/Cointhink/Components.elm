@@ -1,4 +1,4 @@
-module Components exposing (view)
+module Cointhink.Components exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
