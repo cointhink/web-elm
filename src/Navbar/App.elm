@@ -1,14 +1,13 @@
 port module Navbar.App exposing (app)
 
 import Platform.Cmd exposing (Cmd)
-import String
 import Navigation
 
-import Navbar.View
-view = Navbar.View.view
+import Navbar.View exposing (view)
 
 type alias Model = {
   }
+
 type Msg = Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -18,8 +17,7 @@ update msg model =
         ( model, Cmd.none )
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
-  Sub.none
+subscriptions model = Sub.none
 
 type alias Flags = { }
 
