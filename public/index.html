@@ -18,7 +18,6 @@
   let windowHostname = window.location.hostname
   let wsHostPath = windowHostname.length > 0 ? windowHostname + '/ws' : 'localhost:2050'
   let wsUrl = ('https:' == document.location.protocol ? 'wss://' : 'ws://') + wsHostPath
-  wsUrl = "wss://cointhink.com/ws"
   let base = "BTC"
   let quote = "USD"
   let market = getParameterByName('m')
