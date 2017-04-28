@@ -1,23 +1,26 @@
 port module Navbar.App exposing (app)
 
+-- elm modules
 import Platform.Cmd exposing (Cmd)
 import Navigation
 
+import Cointhink.Protocol exposing (ws_subscription, WsResponse)
+import Cointhink.Shared exposing (Msg)
 import Navbar.View exposing (view)
 
 type alias Model = {
+    ws_url: String
   }
 
-type Msg = Noop
+type Msg = Alert String | Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+      Alert s ->
+        ( model, Cmd.none )
       Noop ->
         ( model, Cmd.none )
-
-subscriptions : Model -> Sub Msg
-subscriptions model = Sub.none
 
 type alias Flags = { }
 
@@ -27,7 +30,7 @@ init flags location =
     debug_url = (Debug.log "init location" location.href)
     debug_flags = (Debug.log "init flags" flags)
   in
-    ( {  },
+    ( { ws_url = "bob" },
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg
@@ -36,6 +39,15 @@ fromUrl url =
     debug_url = (Debug.log "fromUrl" url)
   in
     Noop
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  ws_subscription dispatch model.ws_url
+
+dispatch : WsResponse -> Msg
+dispatch wsresponse =
+  case wsresponse.rtype of
+    _ -> Noop
 
 app = Navigation.programWithFlags
         fromUrl

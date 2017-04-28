@@ -87,6 +87,8 @@
 
 .splash {
   text-align: center;
+  margin: auto;
+  width: 24em;
 }
 
 .splash .catchphrase {
@@ -94,6 +96,13 @@
 }
 
 .splash .steps {
+}
+
+.splash form {
+  padding: 1em 0;
+}
+
+.splash form button {
+  display: block;
   margin: auto;
-  width: 24em;
 }

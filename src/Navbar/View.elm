@@ -26,5 +26,5 @@ login =
                       placeholder "username"
                     ]
                     [],
-              button [ ] [ text "Signin" ]
+              button [ ] [ text "Sign in" ]
             ]
