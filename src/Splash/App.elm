@@ -4,17 +4,18 @@ import Platform.Cmd exposing (Cmd)
 import String
 import Navigation
 
-import Splash.View
-view = Splash.View.view
+import Splash.Msg exposing (Msg)
+import Splash.Model exposing (Model)
+import Splash.View exposing (view)
 
-type alias Model = {
-  }
-type Msg = Noop
+type alias Model = {  }
+
+port ws_send : String -> Cmd msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-      Noop ->
+    case (Debug.log "splash update" msg) of
+      Splash.Msg.Noop ->
         ( model, Cmd.none )
 
 subscriptions : Model -> Sub Msg
@@ -37,7 +38,7 @@ fromUrl url =
   let
     debug_url = (Debug.log "fromUrl" url)
   in
-    Noop
+    Splash.Msg.Noop
 
 app = Navigation.programWithFlags
         fromUrl

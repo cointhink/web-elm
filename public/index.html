@@ -15,10 +15,10 @@
   <div id='page'></div>
 
   <script type="text/javascript">
-    let nav = document.getElementById('navbar')
-    Elm.Navbar.embed(navbar, { ws: 'ws.'+window.location.host })
-    let page = document.getElementById('page')
-    Elm.Splash.embed(page)
+    let navbar = Elm.Navbar.embed(document.getElementById('navbar'),
+                                  { ws: 'ws.'+window.location.host })
+    let page = Elm.Splash.embed(document.getElementById('page'))
+    page.ports.ws_send.subscribe(msg => navbar.ports.ws_send.send(msg))
   </script>
 
   <script type="text/javascript">

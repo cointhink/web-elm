@@ -16,6 +16,14 @@ type alias Flags = { ws : String }
 
 type Msg = Alert String | Noop
 
+port ws_send : (String -> msg) -> Sub msg
+do_send: String -> Msg
+do_send string =
+  let
+    debug_param = Debug.log "do_send" string
+  in
+    Noop
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -42,7 +50,8 @@ fromUrl url =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  ws_subscription dispatch model.ws_url
+  Sub.batch [ ws_subscription dispatch model.ws_url,
+              ws_send do_send ]
 
 dispatch : WsResponse -> Msg
 dispatch wsresponse =
