@@ -2,7 +2,8 @@ module Splash.View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (..)
+import Json.Decode
 
 import Splash.Msg exposing (Msg)
 import Splash.Model exposing (Model)
@@ -28,10 +29,16 @@ steps =
 signup =
   div [ class "signup" ]
       [
-        Html.form [action "javascript:void(0);"]
+        Html.form [ action "javascript:void(0);"
+                    --onWithOptions
+                    --  "submit"
+                    --  { preventDefault = True, stopPropagation = False }
+                    --  ( Json.Decode.succeed Nothing )
+                  ]
              [
                text "Get started by signing up.",
                Html.input [ type_ "email", placeholder "email address"] [],
+               button [ type_ "submit" ] [ text "Sign up" ],
                button [ onClick Splash.Msg.Noop ] [ text "Sign up" ]
              ]
       ]
