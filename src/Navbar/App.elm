@@ -12,6 +12,8 @@ type alias Model = {
     ws_url: String
   }
 
+type alias Flags = { ws : String }
+
 type Msg = Alert String | Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -21,8 +23,6 @@ update msg model =
         ( model, Cmd.none )
       Noop ->
         ( model, Cmd.none )
-
-type alias Flags = { }
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
