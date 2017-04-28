@@ -28,7 +28,7 @@ steps =
 signup =
   div [ class "signup" ]
       [
-        Html.form []
+        Html.form [action "javascript:void(0);"]
              [
                text "Get started by signing up.",
                Html.input [ type_ "email", placeholder "email address"] [],
