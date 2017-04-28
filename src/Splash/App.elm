@@ -8,13 +8,13 @@ import Splash.Msg exposing (Msg)
 import Splash.Model exposing (Model)
 import Splash.View exposing (view)
 
-type alias Model = {  }
-
 port ws_send : String -> Cmd msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "splash update" msg) of
+      Splash.Msg.Signup ->
+        ( model, ws_send (Debug.log "sending" "{}") )
       Splash.Msg.Noop ->
         ( model, Cmd.none )
 
