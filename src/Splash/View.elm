@@ -37,7 +37,7 @@ signup =
                   ]
              [
                text "Get started by signing up.",
-               Html.input [ type_ "email", placeholder "email address"] [],
-               button [ onClick Splash.Msg.Signup ] [ text "Sign up" ]
+               Html.input [ type_ "email", placeholder "email address", onInput Splash.Msg.SignupEmail] [],
+               button [ onClick Splash.Msg.SignupDone ] [ text "Sign up" ]
              ]
       ]

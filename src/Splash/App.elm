@@ -13,7 +13,10 @@ port ws_send : String -> Cmd msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "splash update" msg) of
-      Splash.Msg.Signup ->
+      Splash.Msg.SignupEmail email ->
+        ( { model | email = email },
+          Cmd.none )
+      Splash.Msg.SignupDone ->
         ( model, ws_send (Debug.log "sending" "{}") )
       Splash.Msg.Noop ->
         ( model, Cmd.none )
@@ -30,7 +33,7 @@ init flags location =
     debug_url = (Debug.log "init location" location.href)
     debug_flags = (Debug.log "init flags" flags)
   in
-    ( {  },
+    ( Model "",
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg
