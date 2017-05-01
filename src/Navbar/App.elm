@@ -4,7 +4,7 @@ port module Navbar.App exposing (app)
 import Platform.Cmd exposing (Cmd)
 import Navigation
 
-import Cointhink.Protocol exposing (ws_subscription, WsResponse)
+import Cointhink.Protocol exposing (ws_subscription, WsResponse, wsSend)
 import Cointhink.Shared exposing (Msg)
 import Navbar.View exposing (view)
 
@@ -14,19 +14,18 @@ type alias Model = {
 
 type alias Flags = { ws : String }
 
-type Msg = Alert String | Noop
+type Msg = Alert String | Noop | SendOut String
 
 port ws_send : (String -> msg) -> Sub msg
-do_send: String -> Msg
-do_send string =
-  let
-    debug_param = Debug.log "do_send" string
-  in
-    Noop
+
+msg_send: String -> Msg
+msg_send string = SendOut string
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+      SendOut string ->
+        ( model, wsSend model.ws_url string )
       Alert s ->
         ( model, Cmd.none )
       Noop ->
@@ -35,10 +34,10 @@ update msg model =
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
   let
-    debug_url = (Debug.log "init location" location.href)
-    debug_flags = (Debug.log "init flags" flags)
+    --debug_url = (Debug.log "init location" location.href)
+    debug_flags = (Debug.log "Navbar init flags" flags)
   in
-    ( { ws_url = "bob" },
+    ( Model flags.ws,
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg
@@ -51,7 +50,7 @@ fromUrl url =
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch [ ws_subscription dispatch model.ws_url,
-              ws_send do_send ]
+              ws_send msg_send ]
 
 dispatch : WsResponse -> Msg
 dispatch wsresponse =

@@ -13,6 +13,11 @@ ws_subscription : (WsResponse -> msg) -> String -> Sub msg
 ws_subscription dispatch ws_url =
   WebSocket.listen ws_url (ws_parse dispatch)
 
+wsSend : String -> String -> Cmd msg
+wsSend url say = WebSocket.send
+                      (Debug.log "ws url" url)
+                      (encode 2 (Debug.log "Protocol.wsSend" (Json.Encode.string say)))
+
 ws_parse : (WsResponse -> msg) -> String -> msg
 ws_parse dispatch json =
   case jmsg json of

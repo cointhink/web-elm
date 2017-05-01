@@ -17,7 +17,7 @@ update msg model =
         ( { model | email = email },
           Cmd.none )
       Splash.Msg.SignupDone ->
-        ( model, ws_send (Debug.log "sending" "{}") )
+        ( model, ws_send (Debug.log "sending" (Splash.Model.toJson model)) )
       Splash.Msg.Noop ->
         ( model, Cmd.none )
 
@@ -30,8 +30,7 @@ type alias Flags = { }
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
   let
-    debug_url = (Debug.log "init location" location.href)
-    debug_flags = (Debug.log "init flags" flags)
+    debug_flags = (Debug.log "Splash init flags" flags)
   in
     ( Model "",
       Cmd.none )
