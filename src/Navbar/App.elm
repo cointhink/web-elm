@@ -3,6 +3,7 @@ port module Navbar.App exposing (app)
 -- elm modules
 import Platform.Cmd exposing (Cmd)
 import Navigation
+import Json.Decode
 
 import Cointhink.Protocol exposing (ws_subscription, WsResponse, wsSend)
 import Cointhink.Shared exposing (Msg)
@@ -14,9 +15,10 @@ type alias Model = {
 
 type alias Flags = { ws : String }
 
-type Msg = Alert String | Noop | SendOut String
+type Msg = Alert String | Noop | SendOut String | Pump Json.Decode.Value
 
 port ws_send : (String -> msg) -> Sub msg
+port ws_pump : Json.Decode.Value -> Cmd msg
 
 msg_send: String -> Msg
 msg_send string = SendOut string
@@ -24,6 +26,8 @@ msg_send string = SendOut string
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+      Pump value ->
+        ( model, ws_pump value )
       SendOut string ->
         ( model, wsSend model.ws_url string )
       Alert s ->
@@ -55,6 +59,7 @@ subscriptions model =
 dispatch : WsResponse -> Msg
 dispatch wsresponse =
   case wsresponse.rtype of
+    "OK" -> Pump wsresponse.object
     _ -> Noop
 
 app = Navigation.programWithFlags
