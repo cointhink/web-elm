@@ -7,17 +7,23 @@ import Navigation
 import Splash.Msg exposing (Msg)
 import Splash.Model exposing (Model)
 import Splash.View exposing (view)
+import Signup_form exposing (..)
+import Json.Encode exposing (Value, encode, object, string)
 
-port ws_send : String -> Cmd msg
+port ws_send : Json.Encode.Value -> Cmd msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "splash update" msg) of
       Splash.Msg.SignupEmail email ->
-        ( { model | email = email },
+        let
+          signupfrm = model.signup
+          better = { signupfrm | email = email }
+        in
+        ( { model | signup = better },
           Cmd.none )
       Splash.Msg.SignupDone ->
-        ( model, ws_send (Debug.log "sending" (Splash.Model.toJson model)) )
+        ( model, ws_send (Debug.log "update-sending" (signupFormEncoder model.signup)) )
       Splash.Msg.Noop ->
         ( model, Cmd.none )
 
@@ -32,7 +38,7 @@ init flags location =
   let
     debug_flags = (Debug.log "Splash init flags" flags)
   in
-    ( Model "",
+    ( Model "" (SignupForm "" "" ""),
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg

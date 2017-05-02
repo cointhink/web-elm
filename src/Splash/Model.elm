@@ -1,9 +1,11 @@
 module Splash.Model exposing (Model, toJson)
 
 import Json.Encode exposing (Value, encode, object, string)
+import Signup_form exposing (..)
 
 type alias Model = {
-  email : String
+  email : String,
+  signup: SignupForm
 }
 
 toJson: Model -> String
