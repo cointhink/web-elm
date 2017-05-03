@@ -6,7 +6,7 @@ import Navigation
 import Json.Decode
 import Json.Encode
 
-import Cointhink.Protocol exposing (ws_subscription, WsResponse, wsSend)
+import Cointhink.Protocol exposing (WsResponse)
 import Cointhink.Shared exposing (Msg)
 import Navbar.View exposing (view)
 
@@ -18,19 +18,23 @@ type alias Flags = { ws : String }
 
 type Msg = Alert String | Noop | SendOut Json.Encode.Value | Pump Json.Decode.Value
 
-port ws_send : (Json.Encode.Value -> msg) -> Sub msg
-port ws_pump : Json.Decode.Value -> Cmd msg
+port ws_send : Json.Encode.Value -> Cmd msg
+port ws_recv : (WsResponse -> msg) -> Sub msg
 
-msg_send: Json.Encode.Value -> Msg
-msg_send value = SendOut value
+msg_recv: WsResponse -> Msg
+msg_recv response =
+  let
+    debug = Debug.log "wsresp" WsResponse
+  in
+    Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
       Pump value ->
-        ( model, ws_pump value )
+        ( model, ws_send value )
       SendOut value ->
-        ( model, wsSend model.ws_url value )
+        ( model, ws_send value )
       Alert s ->
         ( model, Cmd.none )
       Noop ->
@@ -54,14 +58,7 @@ fromUrl url =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.batch [ ws_subscription dispatch model.ws_url,
-              ws_send msg_send ]
-
-dispatch : WsResponse -> Msg
-dispatch wsresponse =
-  case wsresponse.rtype of
-    "OK" -> Pump wsresponse.object
-    _ -> Noop
+  Sub.batch [ ws_recv msg_recv ]
 
 app = Navigation.programWithFlags
         fromUrl

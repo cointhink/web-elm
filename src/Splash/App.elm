@@ -9,8 +9,18 @@ import Splash.Model exposing (Model)
 import Splash.View exposing (view)
 import Signup_form exposing (..)
 import Json.Encode exposing (Value, encode, object, string)
+import Json.Decode
+import Cointhink.Protocol exposing (WsResponse)
 
 port ws_send : Json.Encode.Value -> Cmd msg
+port ws_recv : (WsResponse -> msg) -> Sub msg
+
+msg_recv: WsResponse -> Msg
+msg_recv response =
+  let
+    debug = Debug.log "wsresp" WsResponse
+  in
+    Splash.Msg.Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -29,7 +39,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  Sub.batch [ ws_recv msg_recv ]
 
 type alias Flags = { }
 

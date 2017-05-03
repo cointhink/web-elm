@@ -7,32 +7,7 @@ import WebSocket
 
 import Cointhink.Shared exposing (..)
 
-type alias WsResponse = { rtype : String, object : Json.Decode.Value }
-
-ws_subscription : (WsResponse -> msg) -> String -> Sub msg
-ws_subscription dispatch ws_url =
-  WebSocket.listen ws_url (ws_parse dispatch)
-
-wsSend : String -> Json.Encode.Value -> Cmd msg
-wsSend url say = WebSocket.send
-                      (Debug.log "ws url" url)
-                      (Debug.log "Protocol.wsSend" (encode 2 say))
-
-ws_parse : (WsResponse -> msg) -> String -> msg
-ws_parse dispatch json =
-  case jmsg json of
-    Result.Ok value -> dispatch value
-    Result.Err msg -> dispatch (WsResponse "err" (string "z"))
-
-jmsg : String -> Result String WsResponse
-jmsg json =
-    decodeString job json
-
-job : Json.Decode.Decoder WsResponse
-job =
-    map2 WsResponse
-      (field "type" Json.Decode.string)
-      (field "object" value)
+type alias WsResponse = { id : String, object : Json.Decode.Value }
 
 orderbookRequest : String -> String -> Json.Encode.Value
 orderbookRequest base quote =
