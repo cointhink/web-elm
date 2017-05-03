@@ -8,6 +8,7 @@ import WebSocket
 import Cointhink.Shared exposing (..)
 
 type alias WsResponse = { id : String, object : Json.Decode.Value }
+type alias WsRequest = { id : String, object: Json.Encode.Value }
 
 orderbookRequest : String -> String -> Json.Encode.Value
 orderbookRequest base quote =

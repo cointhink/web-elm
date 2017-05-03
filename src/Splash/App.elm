@@ -10,9 +10,9 @@ import Splash.View exposing (view)
 import Signup_form exposing (..)
 import Json.Encode exposing (Value, encode, object, string)
 import Json.Decode
-import Cointhink.Protocol exposing (WsResponse)
+import Cointhink.Protocol exposing (WsResponse, WsRequest)
 
-port ws_send : Json.Encode.Value -> Cmd msg
+port ws_send : WsRequest -> Cmd msg
 port ws_recv : (WsResponse -> msg) -> Sub msg
 
 msg_recv: WsResponse -> Msg
@@ -33,7 +33,10 @@ update msg model =
         ( { model | signup = better },
           Cmd.none )
       Splash.Msg.SignupDone ->
-        ( model, ws_send (Debug.log "update-sending" (signupFormEncoder model.signup)) )
+        let
+          signupFormEncoded = signupFormEncoder model.signup
+        in
+        ( model, ws_send (Debug.log "update-sending" (WsRequest "abc123" signupFormEncoded)) )
       Splash.Msg.Noop ->
         ( model, Cmd.none )
 
