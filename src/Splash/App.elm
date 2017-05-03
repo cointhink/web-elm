@@ -36,7 +36,7 @@ update msg model =
         let
           signupFormEncoded = signupFormEncoder model.signup
         in
-        ( model, ws_send (Debug.log "update-sending" (WsRequest "abc123" signupFormEncoded)) )
+        ( model, ws_send (Debug.log "update-sending" (WsRequest "abc123" "SignupForm" signupFormEncoded)) )
       Splash.Msg.Noop ->
         ( model, Cmd.none )
 
