@@ -8,6 +8,7 @@ import Splash.Msg exposing (Msg)
 import Splash.Model exposing (Model)
 import Splash.View exposing (view)
 import Signup_form exposing (..)
+import Signup_form_response exposing (..)
 import Json.Encode exposing (Value, encode, object, string)
 import Json.Decode
 import Cointhink.Protocol exposing (WsResponse, WsRequest)
@@ -51,7 +52,7 @@ init flags location =
   let
     debug_flags = (Debug.log "Splash init flags" flags)
   in
-    ( Model "" (SignupForm "" "" ""),
+    ( Model (SignupForm "" "" "") "" (SignupFormResponse False) "",
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg
