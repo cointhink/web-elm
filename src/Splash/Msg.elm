@@ -5,4 +5,5 @@ type Mode = ModeSplash | ModeSignup
 type Msg = ShowSignup
            | SignupDone
            | SignupEmail String
+           | SignupResponse
            | Noop

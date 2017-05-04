@@ -3,15 +3,17 @@ port module Splash.App exposing (app)
 import Platform.Cmd exposing (Cmd)
 import String
 import Navigation
+import Json.Encode exposing (Value, encode, object, string)
+import Json.Decode
 
 import Splash.Msg exposing (..)
 import Splash.Model exposing (Model)
 import Splash.View exposing (view)
 import Signup_form exposing (..)
 import Signup_form_response exposing (..)
-import Json.Encode exposing (Value, encode, object, string)
-import Json.Decode
-import Cointhink.Protocol exposing (WsResponse, WsRequest)
+import Cointhink.Protocol exposing (..)
+
+import Random.Pcg exposing (Seed, initialSeed, step)
 
 port ws_send : WsRequest -> Cmd msg
 port ws_recv : (WsResponse -> msg) -> Sub msg
@@ -19,10 +21,10 @@ port ws_recv : (WsResponse -> msg) -> Sub msg
 msg_recv: WsResponse -> Msg
 msg_recv response =
   let
-    debug = Debug.log "wsresp" response
+    debug = Debug.log "ws_resp" response
   in
-    case response.class of
-      "Abc" -> Splash.Msg.Noop
+    case response.method of
+      "SignupFormResponse" -> Splash.Msg.SignupResponse
       _ -> Splash.Msg.Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -30,6 +32,8 @@ update msg model =
     case (Debug.log "splash update" msg) of
       Splash.Msg.ShowSignup ->
         ( { model | mode = ModeSignup }, Navigation.modifyUrl "#signup" )
+      Splash.Msg.SignupResponse ->
+        ( model, Cmd.none)
       Splash.Msg.SignupEmail email ->
         let
           signupfrm = model.signup
@@ -40,8 +44,10 @@ update msg model =
       Splash.Msg.SignupDone ->
         let
           signupFormEncoded = signupFormEncoder model.signup
+          (uuid, seed) = idGen model.seed
+          request = (Debug.log "ws_send" (WsRequest uuid "SignupForm" signupFormEncoded))
         in
-        ( model, ws_send (Debug.log "update-sending" (WsRequest "abc123" "SignupForm" signupFormEncoded)) )
+        ( { model | seed = seed }, ws_send request )
       Splash.Msg.Noop ->
         ( model, Cmd.none )
 
@@ -49,7 +55,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch [ ws_recv msg_recv ]
 
-type alias Flags = { }
+type alias Flags = { seed: Int }
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
@@ -61,7 +67,7 @@ init flags location =
         "#signup" -> ModeSignup
         _ -> ModeSplash
   in
-    ( Model mode (SignupForm "" "" "") "" (SignupFormResponse False) "",
+    ( Model (Random.Pcg.initialSeed flags.seed) mode (SignupForm "" "" "") "" (SignupFormResponse False) "",
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg
