@@ -29,7 +29,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "splash update" msg) of
       Splash.Msg.ShowSignup ->
-        ( { model | mode = ModeSignup }, Cmd.none )
+        ( { model | mode = ModeSignup }, Navigation.modifyUrl "#signup" )
       Splash.Msg.SignupEmail email ->
         let
           signupfrm = model.signup
@@ -55,8 +55,13 @@ init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
   let
     debug_flags = (Debug.log "Splash init flags" flags)
+    debug_location = (Debug.log "Splash init location" location)
+    mode =
+      case location.hash of
+        "#signup" -> ModeSignup
+        _ -> ModeSplash
   in
-    ( Model ModeSplash (SignupForm "" "" "") "" (SignupFormResponse False) "",
+    ( Model mode (SignupForm "" "" "") "" (SignupFormResponse False) "",
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg
