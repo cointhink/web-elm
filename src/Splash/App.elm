@@ -19,13 +19,17 @@ port ws_recv : (WsResponse -> msg) -> Sub msg
 msg_recv: WsResponse -> Msg
 msg_recv response =
   let
-    debug = Debug.log "wsresp" WsResponse
+    debug = Debug.log "wsresp" response
   in
-    Splash.Msg.Noop
+    case response.class of
+      "Abc" -> Splash.Msg.Noop
+      _ -> Splash.Msg.Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "splash update" msg) of
+      Splash.Msg.ShowSignup ->
+        ( { model | page = "signup" }, Cmd.none )
       Splash.Msg.SignupEmail email ->
         let
           signupfrm = model.signup
@@ -52,7 +56,7 @@ init flags location =
   let
     debug_flags = (Debug.log "Splash init flags" flags)
   in
-    ( Model (SignupForm "" "" "") "" (SignupFormResponse False) "",
+    ( Model "splash" (SignupForm "" "" "") "" (SignupFormResponse False) "",
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg

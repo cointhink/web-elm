@@ -1,5 +1,6 @@
 module Splash.Msg exposing (Msg(..))
 
-type Msg = SignupDone
+type Msg = ShowSignup
+           | SignupDone
            | SignupEmail String
            | Noop
