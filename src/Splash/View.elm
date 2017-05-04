@@ -5,19 +5,18 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode
 
-import Splash.Msg exposing (Msg)
+import Splash.Msg exposing (..)
 import Splash.Model exposing (Model)
 
 view : Model -> Html Msg
 view model =
  let
   page_parts =
-    case model.page of
-      "splash" ->
+    case model.mode of
+      ModeSplash ->
          [ catchphrase, steps]
-      "signup" ->
+      ModeSignup ->
          [ catchphrase, signup]
-      _ -> []
  in
    div [ class "splash" ] page_parts
 

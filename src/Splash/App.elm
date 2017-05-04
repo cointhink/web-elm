@@ -4,7 +4,7 @@ import Platform.Cmd exposing (Cmd)
 import String
 import Navigation
 
-import Splash.Msg exposing (Msg)
+import Splash.Msg exposing (..)
 import Splash.Model exposing (Model)
 import Splash.View exposing (view)
 import Signup_form exposing (..)
@@ -29,7 +29,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "splash update" msg) of
       Splash.Msg.ShowSignup ->
-        ( { model | page = "signup" }, Cmd.none )
+        ( { model | mode = ModeSignup }, Cmd.none )
       Splash.Msg.SignupEmail email ->
         let
           signupfrm = model.signup
@@ -56,7 +56,7 @@ init flags location =
   let
     debug_flags = (Debug.log "Splash init flags" flags)
   in
-    ( Model "splash" (SignupForm "" "" "") "" (SignupFormResponse False) "",
+    ( Model ModeSplash (SignupForm "" "" "") "" (SignupFormResponse False) "",
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg

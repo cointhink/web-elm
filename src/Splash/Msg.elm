@@ -1,4 +1,6 @@
-module Splash.Msg exposing (Msg(..))
+module Splash.Msg exposing (..)
+
+type Mode = ModeSplash | ModeSignup
 
 type Msg = ShowSignup
            | SignupDone
