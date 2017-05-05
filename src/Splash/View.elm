@@ -62,7 +62,7 @@ signup model =
                    onInput Splash.Msg.SignupNickname
                    ]
                    [],
-                   button [ onClick SignupSend ] [ text (if isFormSent model then "Sending..." else "Submit") ]
+                   button [ ] [ text (if isFormSent model then "Sending..." else "Submit") ]
                 ]
              ]
       ]
