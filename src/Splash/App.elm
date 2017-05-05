@@ -7,10 +7,10 @@ import Json.Encode exposing (Value, encode, object, string)
 import Json.Decode
 
 import Splash.Msg exposing (..)
-import Splash.Model exposing (Model)
+import Splash.Model exposing (..)
 import Splash.View exposing (view)
-import Signup_form exposing (..)
-import Signup_form_response exposing (..)
+import Proto.Signup_form exposing (..)
+import Proto.Signup_form_response exposing (..)
 import Cointhink.Protocol exposing (..)
 
 import Random.Pcg exposing (Seed, initialSeed, step)
@@ -36,15 +36,22 @@ update msg model =
         ( model, Cmd.none)
       Splash.Msg.SignupEmail email ->
         let
-          signupfrm = model.signup
-          better = { signupfrm | email = email }
+          signup = model.signup
         in
-        ( { model | signup = better },
-          Cmd.none )
+          ( { model | signup = { signup | email = email } },
+            Cmd.none )
       Splash.Msg.SignupFullname fullname ->
-        ( model, Cmd.none)
-      Splash.Msg.SignupNickname nickname ->
-        ( model, Cmd.none)
+        let
+          signup = model.signup
+        in
+          ( { model | signup = { signup | fullname = fullname } },
+            Cmd.none)
+      Splash.Msg.SignupNickname username ->
+        let
+          signup = model.signup
+        in
+          ( { model | signup = { signup | username = username } },
+            Cmd.none)
       Splash.Msg.SignupSend ->
         let
           signupFormEncoded = signupFormEncoder model.signup

@@ -3,8 +3,8 @@ module Splash.Model exposing (..)
 import String
 
 import Splash.Msg exposing (..)
-import Signup_form exposing (..)
-import Signup_form_response exposing (..)
+import Proto.Signup_form exposing (..)
+import Proto.Signup_form_response exposing (..)
 
 import Random.Pcg exposing (Seed)
 
@@ -19,3 +19,11 @@ type alias Model = {
 
 isFormSent : Model -> Bool
 isFormSent model = String.length model.signup_req_id > 0
+
+modelFormTweak : { b | x : a } -> { b | x : a } -> String
+modelFormTweak form field  =
+  let
+    the_form = form
+  in
+    "a"
+

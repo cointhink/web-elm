@@ -53,7 +53,6 @@ signup model =
                    ]
                    [],
                  Html.input [
-                   type_ "email",
                    placeholder "Email address",
                    onInput Splash.Msg.SignupEmail
                    ]
