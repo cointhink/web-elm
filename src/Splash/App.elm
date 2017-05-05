@@ -41,6 +41,10 @@ update msg model =
         in
         ( { model | signup = better },
           Cmd.none )
+      Splash.Msg.SignupFullname fullname ->
+        ( model, Cmd.none)
+      Splash.Msg.SignupNickname nickname ->
+        ( model, Cmd.none)
       Splash.Msg.SignupSend ->
         let
           signupFormEncoded = signupFormEncoder model.signup

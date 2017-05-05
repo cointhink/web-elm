@@ -37,23 +37,34 @@ steps =
 signup model =
   div [ class "signup" ]
       [
-        Html.form [ class (formClasses model [""]),
-
+        Html.form [
+                    class (formClasses model [""]),
                     onWithOptions
                       "submit"
                       { preventDefault = True, stopPropagation = False }
                       ( Json.Decode.succeed SignupSend )
                   ]
              [
-               div [] [text "Signup Form"],
-               Html.input [
-                 type_ "email",
-                 placeholder "email address",
-                 onInput Splash.Msg.SignupEmail,
-                 disabled (isFormSent model)
-                 ]
-                 [],
-               button [ onClick SignupSend ] [ text (if isFormSent model then "Sending..." else "Submit") ]
+               div [] [ text "Create a new account" ],
+               fieldset [ disabled (isFormSent model) ] [
+                 Html.input [
+                   placeholder "Full Legal Name",
+                   onInput Splash.Msg.SignupFullname
+                   ]
+                   [],
+                 Html.input [
+                   type_ "email",
+                   placeholder "Email address",
+                   onInput Splash.Msg.SignupEmail
+                   ]
+                   [],
+                 Html.input [
+                   placeholder "Cointhink username",
+                   onInput Splash.Msg.SignupNickname
+                   ]
+                   [],
+                   button [ onClick SignupSend ] [ text (if isFormSent model then "Sending..." else "Submit") ]
+                ]
              ]
       ]
 
