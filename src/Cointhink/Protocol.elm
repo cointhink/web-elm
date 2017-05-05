@@ -18,4 +18,4 @@ idGen seed =
   let
     (uuid, new_seed) = step Uuid.Barebones.uuidStringGenerator seed
   in
-  (slice 19 36 uuid, new_seed)
+    (slice 19 36 uuid, new_seed)

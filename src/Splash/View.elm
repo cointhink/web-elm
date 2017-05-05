@@ -6,7 +6,7 @@ import Html.Events exposing (..)
 import Json.Decode
 
 import Splash.Msg exposing (..)
-import Splash.Model exposing (Model)
+import Splash.Model exposing (..)
 
 view : Model -> Html Msg
 view model =
@@ -16,7 +16,7 @@ view model =
       ModeSplash ->
          [ catchphrase, steps]
       ModeSignup ->
-         [ catchphrase, signup]
+         [ catchphrase, signup model]
  in
    div [ class "splash" ] page_parts
 
@@ -34,18 +34,33 @@ steps =
       ]
 
 
-signup =
+signup model =
   div [ class "signup" ]
       [
-        Html.form [ action "javascript:void(0);"
-                    --onWithOptions
-                    --  "submit"
-                    --  { preventDefault = True, stopPropagation = False }
-                    --  ( Json.Decode.succeed Nothing )
+        Html.form [ class (formClasses model [""]),
+
+                    onWithOptions
+                      "submit"
+                      { preventDefault = True, stopPropagation = False }
+                      ( Json.Decode.succeed SignupSend )
                   ]
              [
                div [] [text "Signup Form"],
-               Html.input [ type_ "email", placeholder "email address", onInput Splash.Msg.SignupEmail] [],
-               button [ onClick Splash.Msg.SignupDone ] [ text "Submit" ]
+               Html.input [
+                 type_ "email",
+                 placeholder "email address",
+                 onInput Splash.Msg.SignupEmail,
+                 disabled (isFormSent model)
+                 ]
+                 [],
+               button [ onClick SignupSend ] [ text (if isFormSent model then "Sending..." else "Submit") ]
              ]
       ]
+
+formClasses : Model -> List String-> String
+formClasses model base_classes =
+  let
+    in_flight = String.length model.signup_req_id > 0 -- use a Maybe
+    classes = if in_flight then "disabled" :: base_classes else base_classes
+  in
+    String.join " " classes

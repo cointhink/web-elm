@@ -41,13 +41,13 @@ update msg model =
         in
         ( { model | signup = better },
           Cmd.none )
-      Splash.Msg.SignupDone ->
+      Splash.Msg.SignupSend ->
         let
           signupFormEncoded = signupFormEncoder model.signup
           (uuid, seed) = idGen model.seed
           request = (Debug.log "ws_send" (WsRequest uuid "SignupForm" signupFormEncoded))
         in
-        ( { model | seed = seed }, ws_send request )
+        ( { model | seed = seed, signup_req_id = uuid }, ws_send request )
       Splash.Msg.Noop ->
         ( model, Cmd.none )
 

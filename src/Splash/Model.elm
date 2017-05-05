@@ -1,4 +1,6 @@
-module Splash.Model exposing (Model)
+module Splash.Model exposing (..)
+
+import String
 
 import Splash.Msg exposing (..)
 import Signup_form exposing (..)
@@ -14,3 +16,6 @@ type alias Model = {
   signup_response: SignupFormResponse,
   signup_response_req_id: String
 }
+
+isFormSent : Model -> Bool
+isFormSent model = String.length model.signup_req_id > 0

@@ -3,7 +3,7 @@ module Splash.Msg exposing (..)
 type Mode = ModeSplash | ModeSignup
 
 type Msg = ShowSignup
-           | SignupDone
+           | SignupSend
            | SignupEmail String
            | SignupResponse
            | Noop
