@@ -16,10 +16,10 @@
   <div id='page'></div>
 
   <script type="text/javascript">
-    let ws_host = 'ws.'+window.location.host
     let ws_proto = 'https:' == document.location.protocol ? 'wss:' : 'ws:'
-    let ws_url = ws_proto + '//' + ws_host
-    ws_url = "ws://localhost:8085/"
+    let ws_host = window.location.host.split(':')[0]
+    let ws_port = ws_host == "localhost" ? ':8085' : ''
+    let ws_url = ws_proto + '//' + ws_host + ws_port
 
     let navbar = Elm.Navbar.embed(document.getElementById('navbar'),
                                   { ws: ws_url })
