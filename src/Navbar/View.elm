@@ -23,7 +23,7 @@ login =
             [
               Html.input [
                       type_ "email",
-                      placeholder "username"
+                      placeholder "email"
                     ]
                     [],
               button [ ] [ text "Sign in" ]

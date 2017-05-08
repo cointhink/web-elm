@@ -9,6 +9,7 @@ import Json.Decode
 import Splash.Msg exposing (..)
 import Splash.Model exposing (..)
 import Splash.View exposing (view)
+import Proto.Account exposing (..)
 import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
 import Cointhink.Protocol exposing (..)
@@ -37,20 +38,23 @@ update msg model =
       Splash.Msg.SignupEmail email ->
         let
           signup = model.signup
+          account = Maybe.withDefault (Account "" "" "") signup.account
         in
-          ( { model | signup = { signup | email = email } },
+          ( { model | signup = { signup | account = (Just { account | email = email }) } },
             Cmd.none )
       Splash.Msg.SignupFullname fullname ->
         let
           signup = model.signup
+          account = Maybe.withDefault (Account "" "" "") signup.account
         in
-          ( { model | signup = { signup | fullname = fullname } },
+          ( { model | signup = { signup | account = (Just { account | fullname = fullname }) } },
             Cmd.none)
       Splash.Msg.SignupNickname username ->
         let
           signup = model.signup
+          account = Maybe.withDefault (Account "" "" "") signup.account
         in
-          ( { model | signup = { signup | username = username } },
+          ( { model | signup = { signup | account = (Just { account | username = username } )} },
             Cmd.none)
       Splash.Msg.SignupSend ->
         let
@@ -78,7 +82,7 @@ init flags location =
         "#signup" -> ModeSignup
         _ -> ModeSplash
   in
-    ( Model (Random.Pcg.initialSeed flags.seed) mode (SignupForm "" "" "") "" (SignupFormResponse False) "",
+    ( Model (Random.Pcg.initialSeed flags.seed) mode (SignupForm Nothing "") "" (SignupFormResponse False) "",
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg

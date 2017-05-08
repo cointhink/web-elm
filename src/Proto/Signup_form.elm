@@ -9,27 +9,25 @@ import Protobuf exposing (..)
 
 import Json.Decode as JD
 import Json.Encode as JE
+import Proto.Account exposing (..)
 
 
 type alias SignupForm =
-    { email : String -- 1
-    , username : String -- 2
-    , fullname : String -- 3
+    { account : Maybe Account -- 1
+    , thing : String -- 2
     }
 
 
 signupFormDecoder : JD.Decoder SignupForm
 signupFormDecoder =
     JD.lazy <| \_ -> decode SignupForm
-        |> required "email" JD.string ""
-        |> required "username" JD.string ""
-        |> required "fullname" JD.string ""
+        |> optional "account" accountDecoder
+        |> required "thing" JD.string ""
 
 
 signupFormEncoder : SignupForm -> JE.Value
 signupFormEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "email" JE.string "" v.email)
-        , (requiredFieldEncoder "username" JE.string "" v.username)
-        , (requiredFieldEncoder "fullname" JE.string "" v.fullname)
+        [ (optionalEncoder "account" accountEncoder v.account)
+        , (requiredFieldEncoder "thing" JE.string "" v.thing)
         ]
