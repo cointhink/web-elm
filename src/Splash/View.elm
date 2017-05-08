@@ -48,13 +48,13 @@ signup model =
                div [] [ text "Create a new account" ],
                fieldset [ disabled (isFormSent model) ] [
                  Html.input [
-                   placeholder "Full Legal Name",
-                   onInput Splash.Msg.SignupFullname
+                     placeholder "Full Name",
+                     onInput Splash.Msg.SignupFullname
                    ]
                    [],
                  Html.input [
-                   placeholder "Email address",
-                   onInput Splash.Msg.SignupEmail
+                     placeholder "Email address",
+                     onInput Splash.Msg.SignupEmail
                    ]
                    [],
                    button [ ] [ text (if isFormSent model then "Sending..." else "Submit") ]
