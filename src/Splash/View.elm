@@ -57,11 +57,6 @@ signup model =
                    onInput Splash.Msg.SignupEmail
                    ]
                    [],
-                 Html.input [
-                   placeholder "Cointhink username",
-                   onInput Splash.Msg.SignupNickname
-                   ]
-                   [],
                    button [ ] [ text (if isFormSent model then "Sending..." else "Submit") ]
                 ]
              ]
