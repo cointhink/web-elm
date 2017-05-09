@@ -1,4 +1,6 @@
 module Navbar.Msg exposing (..)
 
+import Proto.Session_create_response exposing (..)
+
 type Msg = Noop
-           | LoginResponse
+           | SessionCreateResponseMsg SessionCreateResponse

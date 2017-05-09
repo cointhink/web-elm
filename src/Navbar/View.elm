@@ -14,17 +14,21 @@ view model =
              ],
         span [ class "menuitem" ]
              [
-               login
+               login model
              ]
       ]
 
-login =
-  Html.form []
-            [
-              Html.input [
-                      type_ "email",
-                      placeholder "email"
-                    ]
-                    [],
-              button [ ] [ text "Sign in" ]
-            ]
+login model =
+  case model.account of
+    Just account ->
+      text account.email
+    Nothing ->
+      Html.form []
+                [
+                  Html.input [
+                          type_ "email",
+                          placeholder "email"
+                        ]
+                        [],
+                  button [ ] [ text "Sign in" ]
+                ]

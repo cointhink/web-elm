@@ -3,16 +3,15 @@ port module Navbar.App exposing (app)
 -- elm modules
 import Platform.Cmd exposing (Cmd)
 import Navigation
-import Json.Decode
 import Json.Encode
+import Json.Decode exposing (decodeValue)
 
 import Cointhink.Protocol exposing (WsResponse)
 import Navbar.View exposing (view)
 import Navbar.Msg exposing (..)
-
-type alias Model = {
-    ws_url: String
-  }
+import Navbar.Model exposing (..)
+import Proto.Session_create_response exposing (..)
+import Proto.Account exposing (..)
 
 type alias Flags = { ws : String }
 
@@ -25,7 +24,10 @@ msg_recv response =
     debug = Debug.log "navbar ws_resp" response
   in
     case response.method of
-      "LoginResponse" -> Navbar.Msg.LoginResponse
+      "SessionCreateResponse" ->
+        case decodeValue sessionCreateResponseDecoder response.object of
+          Ok response -> Navbar.Msg.SessionCreateResponseMsg response
+          Err reason -> Noop
       _ -> Navbar.Msg.Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -33,8 +35,8 @@ update msg model =
   case msg of
     Noop ->
       ( model, Cmd.none )
-    LoginResponse ->
-      ( model, Cmd.none )
+    SessionCreateResponseMsg response ->
+      ( { model | account = response.account }, Cmd.none )
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
@@ -42,7 +44,7 @@ init flags location =
     --debug_url = (Debug.log "init location" location.href)
     debug_flags = (Debug.log "Navbar init flags" flags)
   in
-    ( Model flags.ws,
+    ( Model flags.ws Nothing,
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg
