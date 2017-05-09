@@ -22,7 +22,7 @@ port ws_recv : (WsResponse -> msg) -> Sub msg
 msg_recv: WsResponse -> Msg
 msg_recv response =
   let
-    debug = Debug.log "ws_resp" response
+    debug = Debug.log "splash ws_resp" response
   in
     case response.method of
       "SignupFormResponse" -> Splash.Msg.SignupResponse

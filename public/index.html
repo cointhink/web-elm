@@ -25,7 +25,9 @@
                                   { ws: ws_url })
     let page = Elm.Splash.embed(document.getElementById('page'), {seed: Math.floor(Math.random()*0xFFFFFFFF) })
 
-    var ws = ws_init(ws_url, (m) => page.ports.ws_recv.send(m))
+    var ws = ws_init(ws_url, (m) => [navbar.ports.ws_recv.send(m),
+                                     page.ports.ws_recv.send(m)])
+    navbar.ports.ws_send.subscribe(msg => ws_send(ws, msg))
     page.ports.ws_send.subscribe(msg => ws_send(ws, msg))
   </script>
 
