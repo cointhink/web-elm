@@ -67,7 +67,7 @@ signup model =
                           True -> []
                           False ->
                             case r.reason of
-                              SignupFormResponse_EmailTaken -> [text "taken"]
+                              SignupFormResponse_EmailAlert -> [text r.message]
                               _ -> []
                       Nothing -> []),
                  button [ ] [ text (if isFormSent model then "Sending..." else "Submit") ]

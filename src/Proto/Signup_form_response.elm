@@ -14,12 +14,13 @@ import Json.Encode as JE
 type alias SignupFormResponse =
     { ok : Bool -- 1
     , reason : SignupFormResponse_Reasons -- 2
+    , message : String -- 3
     }
 
 
 type SignupFormResponse_Reasons
-    = SignupFormResponse_EmailTaken -- 0
-    | SignupFormResponse_UsernameTaken -- 1
+    = SignupFormResponse_EmailAlert -- 0
+    | SignupFormResponse_UsernameAlert -- 1
 
 
 signupFormResponseDecoder : JD.Decoder SignupFormResponse
@@ -27,6 +28,7 @@ signupFormResponseDecoder =
     JD.lazy <| \_ -> decode SignupFormResponse
         |> required "ok" JD.bool False
         |> required "Reason" signupFormResponse_ReasonsDecoder signupFormResponse_ReasonsDefault
+        |> required "Message" JD.string ""
 
 
 signupFormResponse_ReasonsDecoder : JD.Decoder SignupFormResponse_Reasons
@@ -34,20 +36,20 @@ signupFormResponse_ReasonsDecoder =
     let
         lookup s =
             case s of
-                "EMAIL_TAKEN" ->
-                    SignupFormResponse_EmailTaken
+                "EMAIL_ALERT" ->
+                    SignupFormResponse_EmailAlert
 
-                "USERNAME_TAKEN" ->
-                    SignupFormResponse_UsernameTaken
+                "USERNAME_ALERT" ->
+                    SignupFormResponse_UsernameAlert
 
                 _ ->
-                    SignupFormResponse_EmailTaken
+                    SignupFormResponse_EmailAlert
     in
         JD.map lookup JD.string
 
 
 signupFormResponse_ReasonsDefault : SignupFormResponse_Reasons
-signupFormResponse_ReasonsDefault = SignupFormResponse_EmailTaken
+signupFormResponse_ReasonsDefault = SignupFormResponse_EmailAlert
 
 
 signupFormResponseEncoder : SignupFormResponse -> JE.Value
@@ -55,6 +57,7 @@ signupFormResponseEncoder v =
     JE.object <| List.filterMap identity <|
         [ (requiredFieldEncoder "ok" JE.bool False v.ok)
         , (requiredFieldEncoder "Reason" signupFormResponse_ReasonsEncoder signupFormResponse_ReasonsDefault v.reason)
+        , (requiredFieldEncoder "Message" JE.string "" v.message)
         ]
 
 
@@ -63,11 +66,11 @@ signupFormResponse_ReasonsEncoder v =
     let
         lookup s =
             case s of
-                SignupFormResponse_EmailTaken ->
-                    "EMAIL_TAKEN"
+                SignupFormResponse_EmailAlert ->
+                    "EMAIL_ALERT"
 
-                SignupFormResponse_UsernameTaken ->
-                    "USERNAME_TAKEN"
+                SignupFormResponse_UsernameAlert ->
+                    "USERNAME_ALERT"
 
     in
         JE.string <| lookup v
