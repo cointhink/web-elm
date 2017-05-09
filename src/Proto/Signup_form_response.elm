@@ -13,8 +13,9 @@ import Json.Encode as JE
 
 type alias SignupFormResponse =
     { ok : Bool -- 1
-    , reason : SignupFormResponse_Reasons -- 2
-    , message : String -- 3
+    , token : String -- 2
+    , reason : SignupFormResponse_Reasons -- 3
+    , message : String -- 4
     }
 
 
@@ -26,7 +27,8 @@ type SignupFormResponse_Reasons
 signupFormResponseDecoder : JD.Decoder SignupFormResponse
 signupFormResponseDecoder =
     JD.lazy <| \_ -> decode SignupFormResponse
-        |> required "ok" JD.bool False
+        |> required "Ok" JD.bool False
+        |> required "Token" JD.string ""
         |> required "Reason" signupFormResponse_ReasonsDecoder signupFormResponse_ReasonsDefault
         |> required "Message" JD.string ""
 
@@ -55,7 +57,8 @@ signupFormResponse_ReasonsDefault = SignupFormResponse_EmailAlert
 signupFormResponseEncoder : SignupFormResponse -> JE.Value
 signupFormResponseEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "ok" JE.bool False v.ok)
+        [ (requiredFieldEncoder "Ok" JE.bool False v.ok)
+        , (requiredFieldEncoder "Token" JE.string "" v.token)
         , (requiredFieldEncoder "Reason" signupFormResponse_ReasonsEncoder signupFormResponse_ReasonsDefault v.reason)
         , (requiredFieldEncoder "Message" JE.string "" v.message)
         ]

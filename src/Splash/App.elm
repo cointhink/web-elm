@@ -12,6 +12,7 @@ import Splash.View exposing (view)
 import Proto.Account exposing (..)
 import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
+import Proto.Session_create exposing (..)
 import Cointhink.Protocol exposing (..)
 
 import Random.Pcg exposing (Seed, initialSeed, step)
@@ -67,7 +68,16 @@ update msg model =
         in
         ( { model | seed = seed, signup_req_id = uuid }, ws_send request )
       Splash.Msg.SignupResponse r ->
-        ( { model | signup_req_id = "", signup_response = Just r }, Cmd.none)
+        ( { model | signup_req_id = "", signup_response = Just r },
+          case r.ok of
+            True ->
+              let
+                sessionCreateEncoded = sessionCreateEncoder (SessionCreate r.token)
+                (uuid, seed) = idGen model.seed
+                request = (Debug.log "ws_send" (WsRequest uuid "SessionCreate" sessionCreateEncoded))
+              in
+                ws_send request
+            False -> Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
