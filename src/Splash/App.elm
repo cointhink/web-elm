@@ -4,7 +4,7 @@ import Platform.Cmd exposing (Cmd)
 import String
 import Navigation
 import Json.Encode exposing (Value, encode, object, string)
-import Json.Decode
+import Json.Decode exposing (decodeValue)
 
 import Splash.Msg exposing (..)
 import Splash.Model exposing (..)
@@ -25,16 +25,19 @@ msg_recv response =
     debug = Debug.log "splash ws_resp" response
   in
     case response.method of
-      "SignupFormResponse" -> Splash.Msg.SignupResponse
-      _ -> Splash.Msg.Noop
+      "SignupFormResponse" ->
+        case decodeValue signupFormResponseDecoder response.object of
+          Ok o -> Splash.Msg.SignupResponse o
+          Err reason -> Noop
+      _ -> Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "splash update" msg) of
+      Splash.Msg.Noop ->
+        ( model, Cmd.none )
       Splash.Msg.ShowSignup ->
         ( { model | mode = ModeSignup }, Navigation.modifyUrl "#signup" )
-      Splash.Msg.SignupResponse ->
-        ( model, Cmd.none)
       Splash.Msg.SignupEmail email ->
         let
           signup = model.signup
@@ -63,8 +66,8 @@ update msg model =
           request = (Debug.log "ws_send" (WsRequest uuid "SignupForm" signupFormEncoded))
         in
         ( { model | seed = seed, signup_req_id = uuid }, ws_send request )
-      Splash.Msg.Noop ->
-        ( model, Cmd.none )
+      Splash.Msg.SignupResponse r ->
+        ( { model | signup_req_id = "", signup_response = Just r }, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -82,7 +85,12 @@ init flags location =
         "#signup" -> ModeSignup
         _ -> ModeSplash
   in
-    ( Model (Random.Pcg.initialSeed flags.seed) mode (SignupForm Nothing "") "" (SignupFormResponse False) "",
+    ( Model
+        (Random.Pcg.initialSeed flags.seed)
+        mode
+        (SignupForm Nothing "")
+        ""
+        Nothing,
       Cmd.none )
 
 fromUrl : Navigation.Location -> Msg

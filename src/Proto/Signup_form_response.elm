@@ -13,17 +13,61 @@ import Json.Encode as JE
 
 type alias SignupFormResponse =
     { ok : Bool -- 1
+    , reason : SignupFormResponse_Reasons -- 2
     }
+
+
+type SignupFormResponse_Reasons
+    = SignupFormResponse_EmailTaken -- 0
+    | SignupFormResponse_UsernameTaken -- 1
 
 
 signupFormResponseDecoder : JD.Decoder SignupFormResponse
 signupFormResponseDecoder =
     JD.lazy <| \_ -> decode SignupFormResponse
         |> required "ok" JD.bool False
+        |> required "Reason" signupFormResponse_ReasonsDecoder signupFormResponse_ReasonsDefault
+
+
+signupFormResponse_ReasonsDecoder : JD.Decoder SignupFormResponse_Reasons
+signupFormResponse_ReasonsDecoder =
+    let
+        lookup s =
+            case s of
+                "EMAIL_TAKEN" ->
+                    SignupFormResponse_EmailTaken
+
+                "USERNAME_TAKEN" ->
+                    SignupFormResponse_UsernameTaken
+
+                _ ->
+                    SignupFormResponse_EmailTaken
+    in
+        JD.map lookup JD.string
+
+
+signupFormResponse_ReasonsDefault : SignupFormResponse_Reasons
+signupFormResponse_ReasonsDefault = SignupFormResponse_EmailTaken
 
 
 signupFormResponseEncoder : SignupFormResponse -> JE.Value
 signupFormResponseEncoder v =
     JE.object <| List.filterMap identity <|
         [ (requiredFieldEncoder "ok" JE.bool False v.ok)
+        , (requiredFieldEncoder "Reason" signupFormResponse_ReasonsEncoder signupFormResponse_ReasonsDefault v.reason)
         ]
+
+
+signupFormResponse_ReasonsEncoder : SignupFormResponse_Reasons -> JE.Value
+signupFormResponse_ReasonsEncoder v =
+    let
+        lookup s =
+            case s of
+                SignupFormResponse_EmailTaken ->
+                    "EMAIL_TAKEN"
+
+                SignupFormResponse_UsernameTaken ->
+                    "USERNAME_TAKEN"
+
+    in
+        JE.string <| lookup v

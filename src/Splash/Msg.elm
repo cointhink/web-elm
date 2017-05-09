@@ -1,5 +1,7 @@
 module Splash.Msg exposing (..)
 
+import Proto.Signup_form_response exposing (..)
+
 type Mode = ModeSplash | ModeSignup
 
 type Msg = ShowSignup
@@ -7,5 +9,5 @@ type Msg = ShowSignup
            | SignupEmail String
            | SignupFullname String
            | SignupNickname String
-           | SignupResponse
+           | SignupResponse SignupFormResponse
            | Noop

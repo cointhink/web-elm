@@ -30,11 +30,11 @@ msg_recv response =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-      Noop ->
-        ( model, Cmd.none )
-      LoginResponse ->
-        ( model, Cmd.none )
+  case msg of
+    Noop ->
+      ( model, Cmd.none )
+    LoginResponse ->
+      ( model, Cmd.none )
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
@@ -57,10 +57,10 @@ subscriptions model =
   Sub.batch [ ws_recv msg_recv ]
 
 app = Navigation.programWithFlags
-        fromUrl
-        {
-          init = init,
-          view = view,
-          update = update,
-          subscriptions = subscriptions
-        }
+  fromUrl
+  {
+    init = init,
+    view = view,
+    update = update,
+    subscriptions = subscriptions
+  }

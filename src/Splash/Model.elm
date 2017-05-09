@@ -13,12 +13,17 @@ type alias Model = {
   mode: Mode,
   signup: SignupForm,
   signup_req_id: String,
-  signup_response: SignupFormResponse,
-  signup_response_req_id: String
+  signup_response: Maybe SignupFormResponse
 }
 
 isFormSent : Model -> Bool
 isFormSent model = String.length model.signup_req_id > 0
+
+isMaybeThere : Maybe a -> Bool
+isMaybeThere maybe =
+  case maybe of
+    Nothing -> False
+    Just a -> True
 
 modelFormTweak : { b | x : a } -> { b | x : a } -> String
 modelFormTweak form field  =
@@ -26,4 +31,3 @@ modelFormTweak form field  =
     the_form = form
   in
     "a"
-

@@ -57,7 +57,8 @@ signup model =
                      onInput Splash.Msg.SignupEmail
                    ]
                    [],
-                   button [ ] [ text (if isFormSent model then "Sending..." else "Submit") ]
+                 text (if isMaybeThere model.signup_response then "zoo" else ""),
+                 button [ ] [ text (if isFormSent model then "Sending..." else "Submit") ]
                 ]
              ]
       ]
