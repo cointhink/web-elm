@@ -85,13 +85,7 @@ init flags location =
         "#signup" -> ModeSignup
         _ -> ModeSplash
   in
-    ( Model
-        (Random.Pcg.initialSeed flags.seed)
-        mode
-        (SignupForm Nothing "")
-        ""
-        Nothing,
-      Cmd.none )
+    ( defaultModel mode flags.seed, Cmd.none )
 
 fromUrl : Navigation.Location -> Msg
 fromUrl url =
