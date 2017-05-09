@@ -7,6 +7,7 @@ import Json.Decode
 
 import Splash.Msg exposing (..)
 import Splash.Model exposing (..)
+import Proto.Signup_form_response exposing (..)
 
 view : Model -> Html Msg
 view model =
@@ -49,15 +50,23 @@ signup model =
                fieldset [ disabled (isFormSent model) ] [
                  Html.input [
                      placeholder "Full Name",
+                     autofocus True,
                      onInput Splash.Msg.SignupFullname
                    ]
                    [],
                  Html.input [
+                     id "f_email",
                      placeholder "Email address",
                      onInput Splash.Msg.SignupEmail
                    ]
                    [],
-                 text (if isMaybeThere model.signup_response then "zoo" else ""),
+                 label [ for "f_email", class "error"]
+                   (case model.signup_response of
+                      Just r ->
+                        case r.reason of
+                          SignupFormResponse_EmailTaken -> [text "taken"]
+                          _ -> []
+                      Nothing -> []),
                  button [ ] [ text (if isFormSent model then "Sending..." else "Submit") ]
                 ]
              ]
