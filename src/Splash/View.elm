@@ -63,9 +63,12 @@ signup model =
                  label [ for "f_email", class "error"]
                    (case model.signup_response of
                       Just r ->
-                        case r.reason of
-                          SignupFormResponse_EmailTaken -> [text "taken"]
-                          _ -> []
+                        case r.ok of
+                          True -> []
+                          False ->
+                            case r.reason of
+                              SignupFormResponse_EmailTaken -> [text "taken"]
+                              _ -> []
                       Nothing -> []),
                  button [ ] [ text (if isFormSent model then "Sending..." else "Submit") ]
                 ]
