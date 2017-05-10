@@ -11,5 +11,5 @@ import Dashboard.Model exposing (..)
 view : Model -> Html Msg
 view model =
   div [ class "catchphrase" ]
-      [ text "Buy cryptocoins on your schedule." ]
+      [ text "Welcome to cointhink." ]
 
