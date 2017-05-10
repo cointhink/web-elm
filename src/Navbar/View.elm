@@ -5,7 +5,10 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import Navbar.Msg as Msg
+import Navbar.Model as Model
+import Proto.Account as Account
 
+view : Model.Model -> Html Msg.Msg
 view model =
   div [ class "navbar" ]
       [
@@ -21,10 +24,11 @@ view model =
              ]
       ]
 
+userarea : Model.Model -> Html Msg.Msg
 userarea model =
   case model.account of
     Just account ->
-      text account.email
+      usercard account
     Nothing ->
       if model.hasToken then
         text "logging in"
@@ -39,8 +43,9 @@ userarea model =
                   button [ ] [ text "Sign in" ]
                 ]
 
+usercard : Account.Account -> Html Msg.Msg
 usercard account =
   div []
-      [ account.email,
-        span [ onClick Msg.LogoutButton ] [ text "logout" ]
+      [ text account.email,
+        div [ onClick Msg.LogoutButton ] [ text "logout" ]
       ]

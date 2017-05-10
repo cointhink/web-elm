@@ -57,7 +57,7 @@ update msg model =
     Msg.TokenReceived token ->
       ( (Debug.log "navbar token received. storing." model),  store_token token )
     Msg.LogoutButton ->
-      ( model, Cmd.none)
+      ( { model | account = Nothing, hasToken = False }, Cmd.batch [clear_token, Navigation.load "/"] )
 
 type alias Flags = { seed : Int,
                      ws : String,
