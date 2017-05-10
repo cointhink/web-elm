@@ -17,7 +17,11 @@ view model =
       ModeSplash ->
          [ catchphrase, steps]
       ModeSignup ->
-         [ catchphrase, signup model]
+        case model.account of
+          Just account ->
+           [ catchphrase, alreadLoggedIn]
+          Nothing ->
+           [ catchphrase, signup model]
  in
    div [ class "splash" ] page_parts
 
@@ -25,6 +29,10 @@ view model =
 catchphrase =
   div [ class "catchphrase" ]
       [ text "Buy cryptocoins on your schedule." ]
+
+alreadLoggedIn =
+  div [ class "catchphrase" ]
+      [ text "Already logged in." ]
 
 steps =
   div [ class "steps" ]

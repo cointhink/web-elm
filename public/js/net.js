@@ -1,7 +1,9 @@
+var ws_buffer = []
 function ws_init(url, receive) {
   let ws = new WebSocket(url)
   ws.onopen = function (event) {
     //console.log('onopen', event)
+    ws_buffer.forEach(msg => ws_send(ws, msg))
   }
   ws.onmessage = (event) => {
     let o = JSON.parse(event.data)
@@ -11,5 +13,10 @@ function ws_init(url, receive) {
 }
 
 function ws_send(ws, msg) {
-  ws.send(JSON.stringify(msg))
+  if (ws.readyState == 1) {
+    ws.send(JSON.stringify(msg))
+  } else {
+    console.log('buffering', msg)
+    ws_buffer.push(msg)
+  }
 }

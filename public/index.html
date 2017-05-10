@@ -22,12 +22,17 @@
     let ws_url = ws_proto + '//' + ws_host + ws_port
 
     let navbar = Elm.Navbar.embed(document.getElementById('navbar'),
-                                  { ws: ws_url })
-    let page = Elm.Splash.embed(document.getElementById('page'), {seed: Math.floor(Math.random()*0xFFFFFFFF) })
+                                  { seed: Math.floor(Math.random()*0xFFFFFFFF),
+                                    ws: ws_url,
+                                    token: localStorage.getItem('token') })
+    let page = Elm.Splash.embed(document.getElementById('page'),
+                                  { seed: Math.floor(Math.random()*0xFFFFFFFF) })
 
     var ws = ws_init(ws_url, (m) => [navbar.ports.ws_recv.send(m),
                                      page.ports.ws_recv.send(m)])
     navbar.ports.ws_send.subscribe(msg => ws_send(ws, msg))
+    navbar.ports.store_item.subscribe(msg => localStorage.setItem(msg.item, msg.value))
+    navbar.ports.remove_item.subscribe(msg => localStorage.removeItem(msg.item))
     page.ports.ws_send.subscribe(msg => ws_send(ws, msg))
   </script>
 

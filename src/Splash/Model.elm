@@ -10,7 +10,7 @@ import Proto.Signup_form_response exposing (..)
 import Random.Pcg exposing (Seed)
 
 type alias Model = {
-  current_account: Maybe Account,
+  account: Maybe Account,
   seed: Seed,
   mode: Mode,
   signup: SignupForm,

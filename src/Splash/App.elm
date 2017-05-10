@@ -6,13 +6,14 @@ import Navigation
 import Json.Encode exposing (Value, encode, object, string)
 import Json.Decode exposing (decodeValue)
 
-import Splash.Msg exposing (..)
+import Splash.Msg as Msg exposing (..)
 import Splash.Model exposing (..)
 import Splash.View exposing (view)
 import Proto.Account exposing (..)
 import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
 import Proto.Session_create exposing (..)
+import Proto.Session_create_response exposing (..)
 import Cointhink.Protocol exposing (..)
 
 import Random.Pcg exposing (Seed, initialSeed, step)
@@ -28,46 +29,50 @@ msg_recv response =
     case response.method of
       "SignupFormResponse" ->
         case decodeValue signupFormResponseDecoder response.object of
-          Ok formResponse -> Splash.Msg.SignupResponse formResponse
+          Ok formResponse -> Msg.SignupResponse formResponse
+          Err reason -> Noop
+      "SessionCreateResponse" ->
+        case decodeValue sessionCreateResponseDecoder response.object of
+          Ok response -> Msg.SessionCreateResponseMsg response
           Err reason -> Noop
       _ -> Noop
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case (Debug.log "splash update" msg) of
-      Splash.Msg.Noop ->
+      Msg.Noop ->
         ( model, Cmd.none )
-      Splash.Msg.ShowSignup ->
+      Msg.ShowSignup ->
         ( { model | mode = ModeSignup }, Navigation.modifyUrl "#signup" )
-      Splash.Msg.SignupEmail email ->
+      Msg.SignupEmail email ->
         let
           signup = model.signup
           account = Maybe.withDefault (Account "" "" "") signup.account
         in
           ( { model | signup = { signup | account = (Just { account | email = email }) } },
             Cmd.none )
-      Splash.Msg.SignupFullname fullname ->
+      Msg.SignupFullname fullname ->
         let
           signup = model.signup
           account = Maybe.withDefault (Account "" "" "") signup.account
         in
           ( { model | signup = { signup | account = (Just { account | fullname = fullname }) } },
             Cmd.none)
-      Splash.Msg.SignupNickname username ->
+      Msg.SignupNickname username ->
         let
           signup = model.signup
           account = Maybe.withDefault (Account "" "" "") signup.account
         in
           ( { model | signup = { signup | account = (Just { account | username = username } )} },
             Cmd.none)
-      Splash.Msg.SignupSend ->
+      Msg.SignupSend ->
         let
           signupFormEncoded = signupFormEncoder model.signup
           (uuid, seed) = idGen model.seed
           request = (Debug.log "ws_send" (WsRequest uuid "SignupForm" signupFormEncoded))
         in
         ( { model | seed = seed, signup_req_id = uuid }, ws_send request )
-      Splash.Msg.SignupResponse r ->
+      Msg.SignupResponse r ->
         ( { model | signup_req_id = "", signup_response = Just r },
           case r.ok of
             True ->
@@ -78,12 +83,14 @@ update msg model =
               in
                 ws_send request
             False -> Cmd.none)
+      Msg.SessionCreateResponseMsg response ->
+        ( { model | account = response.account }, Cmd.none )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch [ ws_recv msg_recv ]
 
-type alias Flags = { seed: Int }
+type alias Flags = { seed : Int }
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
@@ -102,7 +109,7 @@ fromUrl url =
   let
     debug_url = (Debug.log "fromUrl" url)
   in
-    Splash.Msg.Noop
+    Msg.Noop
 
 app = Navigation.programWithFlags
         fromUrl

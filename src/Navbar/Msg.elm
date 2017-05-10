@@ -4,3 +4,5 @@ import Proto.Session_create_response exposing (..)
 
 type Msg = Noop
            | SessionCreateResponseMsg SessionCreateResponse
+           | TokenReceived String
+           | LogoutButton
