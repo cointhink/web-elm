@@ -28,7 +28,7 @@ msg_recv response =
     case response.method of
       "SignupFormResponse" ->
         case decodeValue signupFormResponseDecoder response.object of
-          Ok o -> Splash.Msg.SignupResponse o
+          Ok formResponse -> Splash.Msg.SignupResponse formResponse
           Err reason -> Noop
       _ -> Noop
 

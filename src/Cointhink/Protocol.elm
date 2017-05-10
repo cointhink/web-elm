@@ -8,8 +8,6 @@ import Uuid.Barebones
 import Random.Pcg exposing (Seed, initialSeed, step)
 import String exposing (..)
 
-import Cointhink.Shared exposing (..)
-
 type alias WsResponse = { id : String, method: String, object : Json.Decode.Value }
 type alias WsRequest = { id : String, method: String, object: Json.Encode.Value }
 
@@ -19,3 +17,4 @@ idGen seed =
     (uuid, new_seed) = step Uuid.Barebones.uuidStringGenerator seed
   in
     (slice 19 36 uuid, new_seed)
+
