@@ -84,7 +84,7 @@ update msg model =
                 ws_send request
             False -> Cmd.none)
       Msg.SessionCreateResponseMsg response ->
-        ( { model | account = response.account }, Cmd.none )
+        ( { model | account = response.account }, Navigation.load "/dashboard" )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
