@@ -7,5 +7,9 @@ type alias Model = {
     ws_url: String,
     hasToken: Bool,
     account: Maybe Account,
-    seed: Seed
+    seed: Seed,
+    showUsercardMenu: Bool
   }
+
+defaultModel ws_url hasToken seed =
+  Model ws_url hasToken Nothing seed False

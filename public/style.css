@@ -7,7 +7,7 @@
   width: 10%;
 }
 
-.navbar .subnav {
+.navarea .navbar {
   display: flex;
   justify-content: space-around;
   color: white;
@@ -16,17 +16,17 @@
   font-size: 1em;
 }
 
-.navbar .subnav .list {
+.navarea .navbar .list {
   display: flex;
   justify-content: space-between;
   background-color: #555;
 }
 
-.navbar .subnav .list div {
+.navarea .navbar .list div {
   padding: 0 1em;
 }
 
-.navbar .navdisplay {
+.navarea .navbanner {
   display: flex;
   justify-content: space-between;
   color: white;
@@ -35,17 +35,39 @@
   font-size: 1em;
 }
 
-.navbar img {
+.usercard {
+  display: flex;
+}
+
+.usercard .menu-gone {
+  display: none;
+}
+
+.usercard .menu {
+  display: block;
+  position: absolute;
+  width: 5em;
+  top: 2em;
+  right: 2em;
+  background-color: #666;
+  text-align: center;
+}
+
+.usercard .arrowbox{
+  margin-top: 0.7em;
+  padding: 0 0.2em;
+}
+
+.navarea img {
   vertical-align: middle;
 }
 
-.navbar a {
+.navarea a {
   color: white;
   text-decoration: none;
 }
 
-.navbar .menuitem {
-}
+.navarea
 
 .littlelogo {
   height: 2em;
@@ -140,4 +162,14 @@
 
 .splash .error {
   color: red;
+}
+
+.arrow-down {
+  padding: 0 0.1em;
+  width: 0;
+  height: 0;
+  border-left: 0.4em solid transparent;
+  border-right: 0.4em solid transparent;
+
+  border-top: 0.4em solid #888;
 }

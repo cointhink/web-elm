@@ -6,3 +6,4 @@ type Msg = Noop
            | SessionCreateResponseMsg SessionCreateResponse
            | TokenReceived String
            | LogoutButton
+           | UsercardMenu

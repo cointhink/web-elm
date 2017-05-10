@@ -58,6 +58,8 @@ update msg model =
       ( (Debug.log "navbar token received. storing." model),  store_token token )
     Msg.LogoutButton ->
       ( { model | account = Nothing, hasToken = False }, Cmd.batch [clear_token, Navigation.load "/"] )
+    Msg.UsercardMenu ->
+      ( { model | showUsercardMenu = (if model.showUsercardMenu then False else True) }, Cmd.none )
 
 type alias Flags = { seed : Int,
                      ws : String,
@@ -83,7 +85,7 @@ init flags location =
             ws_send request
         Nothing -> Cmd.none
   in
-    ( Model flags.ws hasToken Nothing seed, newCmd )
+    ( defaultModel flags.ws hasToken seed, newCmd )
 
 fromUrl : Navigation.Location -> Msg
 fromUrl url =
