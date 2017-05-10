@@ -11,6 +11,12 @@ import Proto.Account as Account
 view : Model.Model -> Html Msg.Msg
 view model =
   div [ class "navbar" ]
+    [ navdisplay model,
+      subnav model
+    ]
+
+navdisplay model =
+  div [ class "navdisplay" ]
       [
         span [ class "menuitem" ]
              [
@@ -23,6 +29,7 @@ view model =
                userarea model
              ]
       ]
+
 
 userarea : Model.Model -> Html Msg.Msg
 userarea model =
@@ -49,3 +56,16 @@ usercard account =
       [ text account.email,
         div [ onClick Msg.LogoutButton ] [ text "logout" ]
       ]
+
+subnav model =
+  case model.account of
+    Just account ->
+      div [ class "subnav" ]
+          [
+            div [ class "list" ] [
+                div [] [text "Markets"],
+                div [] [text "Code"]
+              ]
+          ]
+    Nothing ->
+      span [] []

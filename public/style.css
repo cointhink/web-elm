@@ -7,7 +7,26 @@
   width: 10%;
 }
 
-.navbar {
+.navbar .subnav {
+  display: flex;
+  justify-content: space-around;
+  color: white;
+  background-color: #444;
+  padding: 0.5em 0.5em;
+  font-size: 1em;
+}
+
+.navbar .subnav .list {
+  display: flex;
+  justify-content: space-between;
+  background-color: #555;
+}
+
+.navbar .subnav .list div {
+  padding: 0 1em;
+}
+
+.navbar .navdisplay {
   display: flex;
   justify-content: space-between;
   color: white;
