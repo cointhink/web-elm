@@ -35,7 +35,7 @@ catchphrase =
 
 alreadLoggedIn =
     div [ class "catchphrase" ]
-        [ text "Already logged in." ]
+        [ text "Sending you to the next station..." ]
 
 
 steps =
