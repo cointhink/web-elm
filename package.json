@@ -2,6 +2,8 @@
   "name": "cointhink-web-elm",
   "version": "0.1.0",
   "dependencies": {
-    "elm": "^0.18.0"
+    "elm": "^0.18.0",
+    "elm-format": "^0.6.1-alpha",
+    "elm-oracle": "^1.1.1"
   }
 }
