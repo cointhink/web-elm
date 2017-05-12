@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cointhink: Cryptocoin Market Analysis</title>
   <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="js/util.js"></script>
   <script type="text/javascript" src="js/net.js"></script>
   <script type="text/javascript" src="js/elm-navbar.js"></script>
   <script type="text/javascript" src="js/elm-splash.js"></script>
@@ -20,11 +21,12 @@
     let ws_host = window.location.host.split(':')[0]
     let ws_port = ws_host == "localhost" ? ':8085' : ''
     let ws_url = ws_proto + '//' + ws_host + ws_port
+    let token = getParameterByName('token', document.location) || localStorage.getItem('token')
 
     let navbar = Elm.Navbar.embed(document.getElementById('navbar'),
                                   { seed: Math.floor(Math.random()*0xFFFFFFFF),
                                     ws: ws_url,
-                                    token: localStorage.getItem('token') })
+                                    token: token })
     let page = Elm.Splash.embed(document.getElementById('page'),
                                   { seed: Math.floor(Math.random()*0xFFFFFFFF) })
 
