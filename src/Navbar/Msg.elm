@@ -9,3 +9,5 @@ type Msg
     | TokenReceived String
     | LogoutButton
     | UsercardMenu
+    | SigninEmailDone
+    | SigninEmailChg String

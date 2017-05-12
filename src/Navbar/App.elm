@@ -13,6 +13,7 @@ import Navbar.Model exposing (..)
 import Proto.Session_create exposing (..)
 import Proto.Session_create_response exposing (..)
 import Proto.Signup_form_response exposing (..)
+import Proto.Signin_email exposing (..)
 import Proto.Account exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -79,6 +80,26 @@ update msg model =
     case msg of
         Msg.Noop ->
             ( model, Cmd.none )
+
+        Msg.SigninEmailChg email ->
+            let
+                signinEmail =
+                    model.signinEmail
+            in
+                ( { model | signinEmail = { signinEmail | email = email } }, Cmd.none )
+
+        Msg.SigninEmailDone ->
+            let
+                signinEmailEncoded =
+                    signinEmailEncoder model.signinEmail
+
+                ( uuid, seed ) =
+                    idGen model.seed
+
+                request =
+                    (Debug.log "ws_send" (WsRequest uuid "SigninEmail" signinEmailEncoded))
+            in
+                ( { model | seed = seed }, ws_send request )
 
         Msg.SessionCreateResponseMsg response ->
             ( { model | account = response.account }, Cmd.none )

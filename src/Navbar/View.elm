@@ -3,9 +3,11 @@ module Navbar.View exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Json.Decode
 import Navbar.Msg as Msg
 import Navbar.Model as Model
 import Proto.Account as Account
+import Proto.Signin_email exposing (..)
 
 
 view : Model.Model -> Html Msg.Msg
@@ -43,8 +45,13 @@ userarea model =
 
 
 loginForm =
-    Html.form []
-        [ Html.input [ placeholder "email" ] []
+    Html.form
+        [ onWithOptions
+            "submit"
+            { preventDefault = True, stopPropagation = False }
+            (Json.Decode.succeed Msg.SigninEmailDone)
+        ]
+        [ Html.input [ placeholder "email", onInput Msg.SigninEmailChg ] []
         , button [] [ text "Sign in" ]
         ]
 
