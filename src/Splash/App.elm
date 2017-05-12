@@ -129,7 +129,12 @@ update msg model =
             )
 
         Msg.SessionCreateResponseMsg response ->
-            ( { model | account = response.account }, Navigation.load "/dashboard" )
+            case response.ok of
+                True ->
+                    ( { model | account = response.account }, Navigation.load "/dashboard" )
+
+                False ->
+                    ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg

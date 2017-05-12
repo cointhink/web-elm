@@ -102,7 +102,12 @@ update msg model =
                 ( { model | seed = seed }, ws_send request )
 
         Msg.SessionCreateResponseMsg response ->
-            ( { model | account = response.account }, Cmd.none )
+            case response.ok of
+                False ->
+                    ( { model | hasToken = False }, Cmd.none )
+
+                True ->
+                    ( { model | account = response.account }, Cmd.none )
 
         Msg.TokenReceived token ->
             ( (Debug.log "navbar token received. storing." model), store_token token )
