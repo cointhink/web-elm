@@ -92,7 +92,10 @@ subnav model =
                         [ a [ href "/algorithms" ]
                             [ text "Algorithms" ]
                         ]
-                    , div [] [ text "Exchanges" ]
+                    , div []
+                        [ a [ href "/exchanges" ]
+                            [ text "Exchanges" ]
+                        ]
                     ]
                 ]
 
