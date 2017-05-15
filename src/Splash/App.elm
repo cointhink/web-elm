@@ -131,7 +131,7 @@ update msg model =
         Msg.SessionCreateResponseMsg response ->
             case response.ok of
                 True ->
-                    ( { model | account = response.account }, Navigation.load "/dashboard" )
+                    ( { model | account = response.account }, Navigation.load "/algorithms" )
 
                 False ->
                     ( model, Cmd.none )

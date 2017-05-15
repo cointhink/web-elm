@@ -1,13 +1,13 @@
-port module Dashboard.App exposing (app)
+port module Algorithms.App exposing (app)
 
 import Platform.Cmd exposing (Cmd)
 import String
 import Navigation
 import Json.Encode exposing (Value, encode, object, string)
 import Json.Decode exposing (decodeValue)
-import Dashboard.Msg as Msg exposing (..)
-import Dashboard.Model exposing (..)
-import Dashboard.View exposing (view)
+import Algorithms.Msg as Msg exposing (..)
+import Algorithms.Model exposing (..)
+import Algorithms.View exposing (view)
 import Proto.Account exposing (..)
 import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
@@ -65,10 +65,10 @@ init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
     let
         debug_flags =
-            (Debug.log "Dashboard init flags" flags)
+            (Debug.log "Algorithms init flags" flags)
 
         debug_location =
-            (Debug.log "Dashboard init location" location)
+            (Debug.log "Algorithms init location" location)
 
         mode =
             case location.hash of

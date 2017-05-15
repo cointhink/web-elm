@@ -1,7 +1,7 @@
-module Dashboard.Model exposing (..)
+module Algorithms.Model exposing (..)
 
 import String
-import Dashboard.Msg exposing (..)
+import Algorithms.Msg exposing (..)
 import Proto.Account exposing (..)
 import Random.Pcg exposing (Seed)
 

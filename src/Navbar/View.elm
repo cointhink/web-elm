@@ -88,8 +88,11 @@ subnav model =
         Just account ->
             div [ class "navbar" ]
                 [ div [ class "list" ]
-                    [ div [] [ text "Markets" ]
-                    , div [] [ text "Code" ]
+                    [ div []
+                        [ a [ href "/algorithms" ]
+                            [ text "Algorithms" ]
+                        ]
+                    , div [] [ text "Exchanges" ]
                     ]
                 ]
 

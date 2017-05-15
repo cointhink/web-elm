@@ -1,11 +1,11 @@
-module Dashboard.View exposing (view)
+module Algorithms.View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode
-import Dashboard.Msg exposing (..)
-import Dashboard.Model exposing (..)
+import Algorithms.Msg exposing (..)
+import Algorithms.Model exposing (..)
 
 
 view : Model -> Html Msg

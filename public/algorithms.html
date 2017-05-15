@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css">
   <script type="text/javascript" src="js/net.js"></script>
   <script type="text/javascript" src="js/elm-navbar.js"></script>
-  <script type="text/javascript" src="js/elm-dashboard.js"></script>
+  <script type="text/javascript" src="js/elm-algorithms.js"></script>
 </head>
 
 <body>
@@ -25,7 +25,7 @@
                                   { seed: Math.floor(Math.random()*0xFFFFFFFF),
                                     ws: ws_url,
                                     token: localStorage.getItem('token') })
-    let page = Elm.Dashboard.embed(document.getElementById('page'),
+    let page = Elm.Algorithms.embed(document.getElementById('page'),
                                   { seed: Math.floor(Math.random()*0xFFFFFFFF) })
 
     var ws = ws_init(ws_url, (m) => [navbar.ports.ws_recv.send(m),

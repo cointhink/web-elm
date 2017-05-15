@@ -1,4 +1,4 @@
-module Dashboard.Msg exposing (..)
+module Algorithms.Msg exposing (..)
 
 import Proto.Session_create_response exposing (..)
 
