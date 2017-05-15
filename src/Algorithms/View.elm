@@ -12,15 +12,25 @@ view : Model -> Html Msg
 view model =
     case model.account of
         Just account ->
-            welcome
+            algos
 
         Nothing ->
             plzlogin
 
 
-welcome =
-    div [ class "catchphrase" ]
-        [ text "Welcome to cointhink." ]
+algos =
+    div [ class "" ]
+        [ div [ class "centerblock" ] [ text "Your Algorithms" ]
+        , algoList
+        ]
+
+
+algoList =
+    div [ class "" ]
+        [ ul []
+            [ li [] [ text "one" ]
+            ]
+        ]
 
 
 plzlogin =
