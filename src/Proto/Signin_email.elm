@@ -9,7 +9,6 @@ import Protobuf exposing (..)
 
 import Json.Decode as JD
 import Json.Encode as JE
-import Proto.Account exposing (..)
 
 
 type alias SigninEmail =
