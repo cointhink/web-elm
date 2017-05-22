@@ -1,6 +1,7 @@
 module Navbar.Msg exposing (..)
 
 import Proto.Session_create_response exposing (..)
+import Proto.Signin_email_response exposing (..)
 
 
 type Msg
@@ -11,3 +12,4 @@ type Msg
     | UsercardMenu
     | SigninEmailDone
     | SigninEmailChg String
+    | SigninEmailResponseMsg SigninEmailResponse

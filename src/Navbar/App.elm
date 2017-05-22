@@ -14,6 +14,7 @@ import Proto.Session_create exposing (..)
 import Proto.Session_create_response exposing (..)
 import Proto.Signup_form_response exposing (..)
 import Proto.Signin_email exposing (..)
+import Proto.Signin_email_response exposing (..)
 import Proto.Account exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -71,6 +72,14 @@ msg_recv response =
                     Err reason ->
                         Noop
 
+            "SigninEmailResponse" ->
+                case decodeValue signinEmailResponseDecoder response.object of
+                    Ok response ->
+                        Msg.SigninEmailResponseMsg response
+
+                    Err reason ->
+                        Noop
+
             _ ->
                 Msg.Noop
 
@@ -80,6 +89,9 @@ update msg model =
     case msg of
         Msg.Noop ->
             ( model, Cmd.none )
+
+        Msg.SigninEmailResponseMsg signinEmailResponse ->
+            ( { model | signinEmailMessage = signinEmailResponse.message }, Cmd.none )
 
         Msg.SigninEmailChg email ->
             let

@@ -12,8 +12,9 @@ type alias Model =
     , seed : Seed
     , showUsercardMenu : Bool
     , signinEmail : SigninEmail
+    , signinEmailMessage : String
     }
 
 
 defaultModel ws_url hasToken seed =
-    Model ws_url hasToken Nothing seed False (SigninEmail "")
+    Model ws_url hasToken Nothing seed False (SigninEmail "") ""

@@ -41,10 +41,11 @@ userarea model =
             if model.hasToken then
                 text "-signing in-"
             else
-                loginForm
+                loginForm model
 
 
-loginForm =
+loginForm : Model.Model -> Html Msg.Msg
+loginForm model =
     Html.form
         [ onWithOptions
             "submit"
@@ -53,6 +54,7 @@ loginForm =
         ]
         [ Html.input [ placeholder "email", onInput Msg.SigninEmailChg ] []
         , button [] [ text "Sign in" ]
+        , text model.signinEmailMessage
         ]
 
 
