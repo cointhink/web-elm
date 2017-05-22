@@ -27,7 +27,7 @@ exchanges =
     div [ class "" ]
         [ div [ class "centerblock" ] [ text "Connected Exchanges" ]
         , exchangeList
-        , exchangeAdd
+        , exchangeAddButton
         ]
 
 
@@ -39,7 +39,7 @@ exchangeList =
         ]
 
 
-exchangeAdd =
+exchangeAddButton =
     div [ class "" ]
         [ button [ onClick Msg.ExchangeNew ] [ text "Add exchange" ] ]
 

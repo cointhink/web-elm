@@ -48,6 +48,15 @@ update msg model =
         Msg.Noop ->
             ( model, Cmd.none )
 
+        Msg.AlgorithmNewButton ->
+            ( { model | mode = ModeAdd }, Navigation.modifyUrl "#add" )
+
+        Msg.AlgorithmNew ->
+            ( { model | mode = ModeAdd }, Cmd.none )
+
+        Msg.AlgorithmUpdate ->
+            ( model, Cmd.none )
+
         Msg.SessionCreateResponseMsg response ->
             ( { model | account = response.account }, Cmd.none )
 
@@ -72,11 +81,11 @@ init flags location =
 
         mode =
             case location.hash of
-                "#signup" ->
-                    ModeSignup
+                "#add" ->
+                    ModeAdd
 
                 _ ->
-                    ModeSplash
+                    ModeList
     in
         ( defaultModel mode flags.seed, Cmd.none )
 
