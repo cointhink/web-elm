@@ -1,11 +1,11 @@
-module Algorithms.View exposing (view)
+module Schedules.View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode
-import Algorithms.Msg as Msg exposing (..)
-import Algorithms.Model exposing (..)
+import Schedules.Msg as Msg exposing (..)
+import Schedules.Model exposing (..)
 
 
 view : Model -> Html Msg
@@ -28,7 +28,7 @@ view model =
 
 algos =
     div [ class "" ]
-        [ div [ class "centerblock" ] [ text "Your Algorithms" ]
+        [ div [ class "centerblock" ] [ text "Your Schedules" ]
         , algoList
         , algoAddButton
         ]
@@ -44,7 +44,7 @@ algoList =
 
 algoAddButton =
     div [ class "" ]
-        [ button [ onClick Msg.AlgorithmNewButton ] [ text "Add algorithm" ] ]
+        [ button [ onClick Msg.AlgorithmNewButton ] [ text "Add schedule" ] ]
 
 
 algoNew model =
@@ -56,9 +56,12 @@ algoNew model =
                 { preventDefault = True, stopPropagation = False }
                 (Json.Decode.succeed Msg.AlgorithmUpdate)
             ]
-            [ div [] [ text "Add an algorithm" ]
+            [ div [] [ text "Schedule an algorithm" ]
             , fieldset [ disabled (False) ]
-                [ algoNewName
+                [ algoNewAlgorithm
+                , algoNewExchange
+                , algoNewMarket
+                , algoNewAmount
                 ]
             ]
         , button []
@@ -66,16 +69,61 @@ algoNew model =
                 (if False then
                     "Sending..."
                  else
-                    "Add"
+                    "Submit"
                 )
             ]
         ]
 
 
-algoNewName =
+algoNewExchange =
     div []
-        [ Html.label [ for "f_exchangecode" ] [ text "name: " ]
-        , Html.input [ for "f_code" ] []
+        [ Html.label [ for "f_exchange" ] [ text "Exchange: " ]
+        , Html.select [ for "f_exchange" ]
+            [ Html.option []
+                [ text "Testing" ]
+            , Html.option []
+                [ text "Coinbase" ]
+            , Html.option []
+                [ text "Poloniex" ]
+            ]
+        , Html.input
+            [ id "f_apikey"
+            , placeholder "API Key"
+            ]
+            []
+        ]
+
+
+algoNewMarket =
+    div []
+        [ Html.label [ for "f_market" ] [ text "Market: " ]
+        , Html.select [ for "f_market" ]
+            [ Html.option []
+                [ text "BTC/USD" ]
+            , Html.option []
+                [ text "ETH/USD" ]
+            ]
+        ]
+
+
+algoNewAmount =
+    div []
+        [ Html.label [ for "f_sched" ] [ text "Amount: " ]
+        , Html.input [ id "f_apikey", placeholder "USD" ] []
+        ]
+
+
+algoNewAlgorithm =
+    div []
+        [ Html.label [ for "f_sched" ] [ text "Algorithm: " ]
+        , Html.select [ id "f_sched" ]
+            [ Html.option []
+                [ text "BUY Weekly - Tuesday" ]
+            , Html.option []
+                [ text "BUY Weekly - Thursday" ]
+            , Html.option []
+                [ text "BUY Monthly" ]
+            ]
         ]
 
 

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cointhink: Cryptocoin Market Analysis</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="js/net.js"></script>
+  <script type="text/javascript" src="js/elm-Navbar.js"></script>
+  <script type="text/javascript" src="js/elm-Schedules.js"></script>
+</head>
+
+<body>
+  <div id='navbar'></div>
+  <div id='page'></div>
+
+  <script type="text/javascript">
+    let ws_proto = 'https:' == document.location.protocol ? 'wss:' : 'ws:'
+    let ws_host = window.location.host.split(':')[0]
+    let ws_port = ws_host == "localhost" ? ':8085' : ''
+    let ws_url = ws_proto + '//' + ws_host + ws_port + '/ws'
+
+    let navbar = Elm.Navbar.embed(document.getElementById('navbar'),
+                                  { seed: Math.floor(Math.random()*0xFFFFFFFF),
+                                    ws: ws_url,
+                                    token: localStorage.getItem('token') })
+    let page = Elm.Schedules.embed(document.getElementById('page'),
+                                  { seed: Math.floor(Math.random()*0xFFFFFFFF) })
+
+    var ws = ws_init(ws_url, (m) => [navbar.ports.ws_recv.send(m),
+                                     page.ports.ws_recv.send(m)])
+    navbar.ports.ws_send.subscribe(msg => ws_send(ws, msg))
+    navbar.ports.store_item.subscribe(msg => localStorage.setItem(msg.item, msg.value))
+    navbar.ports.remove_item.subscribe(msg => localStorage.removeItem(msg.item))
+    page.ports.ws_send.subscribe(msg => ws_send(ws, msg))
+  </script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-139014-10']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>

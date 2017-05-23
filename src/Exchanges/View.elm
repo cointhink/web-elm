@@ -74,7 +74,7 @@ exchangeNew model =
                 (if False then
                     "Sending..."
                  else
-                    "Submit"
+                    "Save"
                 )
             ]
         ]
