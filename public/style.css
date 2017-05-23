@@ -178,3 +178,10 @@
   margin: 1em;
 }
 
+.flexrow {
+  display: flex;
+}
+
+.algo-name {
+  width: 10em;
+}
