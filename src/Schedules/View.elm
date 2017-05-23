@@ -44,7 +44,7 @@ algoList =
 
 algoAddButton =
     div [ class "" ]
-        [ button [ onClick Msg.AlgorithmNewButton ] [ text "Add schedule" ] ]
+        [ button [ onClick Msg.ScheduleNewButton ] [ text "Add schedule" ] ]
 
 
 algoNew model =
@@ -54,7 +54,7 @@ algoNew model =
             , onWithOptions
                 "submit"
                 { preventDefault = True, stopPropagation = False }
-                (Json.Decode.succeed Msg.AlgorithmUpdate)
+                (Json.Decode.succeed Msg.ScheduleNew)
             ]
             [ div [] [ text "Schedule an algorithm" ]
             , fieldset [ disabled (False) ]
@@ -63,14 +63,14 @@ algoNew model =
                 , algoNewMarket
                 , algoNewAmount
                 ]
-            ]
-        , button []
-            [ text
-                (if False then
-                    "Sending..."
-                 else
-                    "Submit"
-                )
+            , button []
+                [ text
+                    (if False then
+                        "Sending..."
+                     else
+                        "Submit"
+                    )
+                ]
             ]
         ]
 
@@ -78,7 +78,10 @@ algoNew model =
 algoNewExchange =
     div []
         [ Html.label [ for "f_exchange" ] [ text "Exchange: " ]
-        , Html.select [ for "f_exchange" ]
+        , Html.select
+            [ for "f_exchange"
+            , onInput Msg.ScheduleNewExchange
+            ]
             [ Html.option []
                 [ text "Testing" ]
             , Html.option []
@@ -116,7 +119,10 @@ algoNewAmount =
 algoNewAlgorithm =
     div []
         [ Html.label [ for "f_sched" ] [ text "Algorithm: " ]
-        , Html.select [ id "f_sched" ]
+        , Html.select
+            [ id "f_sched"
+            , onInput Msg.ScheduleNewAlgorithm
+            ]
             [ Html.option []
                 [ text "BUY Weekly - Tuesday" ]
             , Html.option []
@@ -134,7 +140,7 @@ algoUpdate model =
             , onWithOptions
                 "submit"
                 { preventDefault = True, stopPropagation = False }
-                (Json.Decode.succeed Msg.AlgorithmUpdate)
+                (Json.Decode.succeed Msg.ScheduleUpdate)
             ]
             [ div [] [ text "Update the algorithm" ]
             , fieldset [ disabled (False) ]

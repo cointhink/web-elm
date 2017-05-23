@@ -49,32 +49,36 @@ update msg model =
         Msg.Noop ->
             ( model, Cmd.none )
 
-        Msg.AlgorithmNewButton ->
+        Msg.ScheduleNewButton ->
             ( { model | mode = ModeAdd }, Navigation.modifyUrl "#add" )
 
-        Msg.AlgorithmUpdate ->
+        Msg.ScheduleNewExchange value ->
+            ( model, Cmd.none )
+
+        Msg.ScheduleNewAlgorithm value ->
+            ( model, Cmd.none )
+
+        Msg.ScheduleUpdate ->
             ( model, Cmd.none )
 
         Msg.SessionCreateResponseMsg response ->
             ( { model | account = response.account }, Cmd.none )
 
-        Msg.AlgorithmNew ->
-            case model.scheduleCreate of
-                Just scheduleCreate ->
-                    let
-                        signupFormEncoded =
-                            scheduleCreateEncoder scheduleCreate
+        Msg.ScheduleNew ->
+            let
+                item =
+                    ScheduleCreate "" (Just model.schedule)
 
-                        ( uuid, seed ) =
-                            idGen model.seed
+                itemEncoded =
+                    scheduleCreateEncoder item
 
-                        request =
-                            (Debug.log "ws_send" (WsRequest uuid "SignupForm" signupFormEncoded))
-                    in
-                        ( { model | seed = seed }, ws_send request )
+                ( uuid, seed ) =
+                    idGen model.seed
 
-                Nothing ->
-                    ( model, Cmd.none )
+                request =
+                    (Debug.log "ws_send" (WsRequest uuid "ScheduleCreate" itemEncoded))
+            in
+                ( { model | seed = seed }, ws_send request )
 
 
 subscriptions : Model -> Sub Msg

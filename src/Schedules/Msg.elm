@@ -12,6 +12,8 @@ type Mode
 type Msg
     = Noop
     | SessionCreateResponseMsg SessionCreateResponse
-    | AlgorithmNewButton
-    | AlgorithmNew
-    | AlgorithmUpdate
+    | ScheduleNewButton
+    | ScheduleNew
+    | ScheduleNewExchange String
+    | ScheduleNewAlgorithm String
+    | ScheduleUpdate

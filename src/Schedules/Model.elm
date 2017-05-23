@@ -3,7 +3,7 @@ module Schedules.Model exposing (..)
 import String
 import Schedules.Msg exposing (..)
 import Proto.Account exposing (..)
-import Proto.Schedule_create exposing (..)
+import Proto.Schedule exposing (..)
 import Random.Pcg exposing (Seed)
 
 
@@ -11,7 +11,7 @@ type alias Model =
     { account : Maybe Account
     , mode : Mode
     , seed : Seed
-    , scheduleCreate : Maybe ScheduleCreate
+    , schedule : Schedule
     }
 
 
@@ -21,4 +21,4 @@ defaultModel mode seed =
         Nothing
         mode
         (Random.Pcg.initialSeed seed)
-        Nothing
+        (Schedule "" "" "" "")
