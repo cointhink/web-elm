@@ -15,7 +15,9 @@ function ws_init(url, receive) {
 
 function ws_send(ws, msg) {
   if (ws.readyState == 1) {
-    ws.send(JSON.stringify(msg))
+    msg.token = localStorage.getItem('token')
+    let json = JSON.stringify(msg)
+    ws.send(json)
   } else {
     console.log('buffering', msg)
     ws_buffer.push(msg)
