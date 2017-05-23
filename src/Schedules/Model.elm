@@ -21,4 +21,4 @@ defaultModel mode seed =
         Nothing
         mode
         (Random.Pcg.initialSeed seed)
-        (Schedule "" "" "" "")
+        (Schedule "" "" "noop" "")

@@ -49,13 +49,17 @@ update msg model =
         Msg.Noop ->
             ( model, Cmd.none )
 
-        Msg.ScheduleNewButton ->
+        Msg.ScheduleAdd ->
             ( { model | mode = ModeAdd }, Navigation.modifyUrl "#add" )
 
-        Msg.ScheduleNewExchange value ->
-            ( model, Cmd.none )
-
         Msg.ScheduleNewAlgorithm value ->
+            let
+                item =
+                    model.schedule
+            in
+                ( { model | schedule = { item | algorithmId = value } }, Cmd.none )
+
+        Msg.ScheduleNewExchange value ->
             ( model, Cmd.none )
 
         Msg.ScheduleUpdate ->

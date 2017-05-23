@@ -14,19 +14,19 @@ view model =
         Just account ->
             case model.mode of
                 Msg.ModeList ->
-                    algos
+                    items
 
                 Msg.ModeAdd ->
-                    algoNew model
+                    itemNew model
 
                 Msg.ModeUpdate ->
-                    algoUpdate model
+                    itemUpdate model
 
         Nothing ->
             plzlogin
 
 
-algos =
+items =
     div [ class "" ]
         [ div [ class "centerblock" ] [ text "Your Schedules" ]
         , algoList
@@ -44,10 +44,10 @@ algoList =
 
 algoAddButton =
     div [ class "" ]
-        [ button [ onClick Msg.ScheduleNewButton ] [ text "Add schedule" ] ]
+        [ button [ onClick Msg.ScheduleAdd ] [ text "Add schedule" ] ]
 
 
-algoNew model =
+itemNew model =
     div [ class "algorithm-add" ]
         [ Html.form
             [ class ""
@@ -58,7 +58,7 @@ algoNew model =
             ]
             [ div [] [ text "Schedule an algorithm" ]
             , fieldset [ disabled (False) ]
-                [ algoNewAlgorithm
+                [ algoNewAlgorithm model
                 , algoNewExchange
                 , algoNewMarket
                 , algoNewAmount
@@ -116,24 +116,33 @@ algoNewAmount =
         ]
 
 
-algoNewAlgorithm =
+algoNewAlgorithm model =
     div []
         [ Html.label [ for "f_sched" ] [ text "Algorithm: " ]
         , Html.select
             [ id "f_sched"
             , onInput Msg.ScheduleNewAlgorithm
             ]
-            [ Html.option []
+            [ Html.option
+                [ selected (model.schedule.algorithmId == "buy-weekly-tue")
+                , value "buy-weekly-tue"
+                ]
                 [ text "BUY Weekly - Tuesday" ]
-            , Html.option []
+            , Html.option
+                [ selected (model.schedule.algorithmId == "buy-weekly-wed")
+                , value "buy-weekly-wed"
+                ]
                 [ text "BUY Weekly - Thursday" ]
-            , Html.option []
+            , Html.option
+                [ selected (model.schedule.algorithmId == "buy-monthly")
+                , value "buy-monthly"
+                ]
                 [ text "BUY Monthly" ]
             ]
         ]
 
 
-algoUpdate model =
+itemUpdate model =
     div [ class "algorithm-add" ]
         [ Html.form
             [ class ""
