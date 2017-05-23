@@ -13,6 +13,7 @@ import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
 import Proto.Session_create exposing (..)
 import Proto.Session_create_response exposing (..)
+import Proto.Schedule_create exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -51,14 +52,29 @@ update msg model =
         Msg.AlgorithmNewButton ->
             ( { model | mode = ModeAdd }, Navigation.modifyUrl "#add" )
 
-        Msg.AlgorithmNew ->
-            ( { model | mode = ModeAdd }, Cmd.none )
-
         Msg.AlgorithmUpdate ->
             ( model, Cmd.none )
 
         Msg.SessionCreateResponseMsg response ->
             ( { model | account = response.account }, Cmd.none )
+
+        Msg.AlgorithmNew ->
+            case model.scheduleCreate of
+                Just scheduleCreate ->
+                    let
+                        signupFormEncoded =
+                            scheduleCreateEncoder scheduleCreate
+
+                        ( uuid, seed ) =
+                            idGen model.seed
+
+                        request =
+                            (Debug.log "ws_send" (WsRequest uuid "SignupForm" signupFormEncoded))
+                    in
+                        ( { model | seed = seed }, ws_send request )
+
+                Nothing ->
+                    ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg

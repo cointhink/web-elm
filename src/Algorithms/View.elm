@@ -56,42 +56,12 @@ algoNew model =
                 { preventDefault = True, stopPropagation = False }
                 (Json.Decode.succeed Msg.AlgorithmUpdate)
             ]
-            [ div [] [ text "Setup a new algorithm" ]
+            [ div [] [ text "Schedule an algorithm" ]
             , fieldset [ disabled (False) ]
-                [ Html.label [ for "f_exchange" ] [ text "Exchange: " ]
-                , Html.select [ for "f_exchange" ]
-                    [ Html.option []
-                        [ text "Coinbase" ]
-                    , Html.option []
-                        [ text "Poloniex" ]
-                    ]
-                , Html.input
-                    [ id "f_apikey"
-                    , placeholder "API Key"
-                    ]
-                    []
-                , div []
-                    [ Html.label [ for "f_market" ] [ text "Market: " ]
-                    , Html.select [ for "f_market" ]
-                        [ Html.option []
-                            [ text "BTC/USD" ]
-                        , Html.option []
-                            [ text "ETH/USD" ]
-                        ]
-                    ]
-                , div []
-                    [ Html.label [ for "f_sched" ] [ text "Amount: " ]
-                    , Html.input [ id "f_apikey", placeholder "USD" ] []
-                    ]
-                , div []
-                    [ Html.label [ for "f_sched" ] [ text "Schedule: " ]
-                    , Html.select [ id "f_sched" ]
-                        [ Html.option []
-                            [ text "Weekly" ]
-                        , Html.option []
-                            [ text "Monthly" ]
-                        ]
-                    ]
+                [ algoNewAlgorithm
+                , algoNewExchange
+                , algoNewMarket
+                , algoNewAmount
                 ]
             ]
         , button []
@@ -101,6 +71,58 @@ algoNew model =
                  else
                     "Add"
                 )
+            ]
+        ]
+
+
+algoNewExchange =
+    div []
+        [ Html.label [ for "f_exchange" ] [ text "Exchange: " ]
+        , Html.select [ for "f_exchange" ]
+            [ Html.option []
+                [ text "Testing" ]
+            , Html.option []
+                [ text "Coinbase" ]
+            , Html.option []
+                [ text "Poloniex" ]
+            ]
+        , Html.input
+            [ id "f_apikey"
+            , placeholder "API Key"
+            ]
+            []
+        ]
+
+
+algoNewMarket =
+    div []
+        [ Html.label [ for "f_market" ] [ text "Market: " ]
+        , Html.select [ for "f_market" ]
+            [ Html.option []
+                [ text "BTC/USD" ]
+            , Html.option []
+                [ text "ETH/USD" ]
+            ]
+        ]
+
+
+algoNewAmount =
+    div []
+        [ Html.label [ for "f_sched" ] [ text "Amount: " ]
+        , Html.input [ id "f_apikey", placeholder "USD" ] []
+        ]
+
+
+algoNewAlgorithm =
+    div []
+        [ Html.label [ for "f_sched" ] [ text "Algorithm: " ]
+        , Html.select [ id "f_sched" ]
+            [ Html.option []
+                [ text "BUY Weekly - Tuesday" ]
+            , Html.option []
+                [ text "BUY Weekly - Thursday" ]
+            , Html.option []
+                [ text "BUY Monthly" ]
             ]
         ]
 
