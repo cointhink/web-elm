@@ -99,7 +99,18 @@ update msg model =
                     { model | schedule_add_req_id = Nothing }
             in
                 if response.ok then
-                    ( { model_ | mode = ModeList }, Navigation.modifyUrl "#" )
+                    let
+                        ( postSeed, id, cmd ) =
+                            apiCall
+                                (ScheduleList "")
+                                "ScheduleList"
+                                scheduleListEncoder
+                                model_.seed
+                                ws_send
+                    in
+                        ( { model_ | seed = postSeed, mode = ModeList }
+                        , Cmd.batch [ Navigation.modifyUrl "#", cmd ]
+                        )
                 else
                     ( model_, Cmd.none )
 
