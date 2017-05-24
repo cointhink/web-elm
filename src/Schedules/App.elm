@@ -13,9 +13,10 @@ import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
 import Proto.Session_create exposing (..)
 import Proto.Session_create_response exposing (..)
-import Proto.Schedule_create_response exposing (..)
 import Proto.Schedule_create exposing (..)
+import Proto.Schedule_create_response exposing (..)
 import Proto.Schedule_list exposing (..)
+import Proto.Schedule_list_response exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -34,20 +35,25 @@ msg_recv response =
     in
         case response.method of
             "SessionCreateResponse" ->
-                case decodeValue sessionCreateResponseDecoder response.object of
-                    Ok response ->
-                        Msg.SessionCreateResponseMsg response
-
-                    Err reason ->
-                        Noop
+                wsDecode
+                    sessionCreateResponseDecoder
+                    response.object
+                    Msg.SessionCreateResponseMsg
+                    Noop
 
             "ScheduleCreateResponse" ->
-                case decodeValue scheduleCreateResponseDecoder response.object of
-                    Ok response ->
-                        Msg.ScheduleCreateResponseMsg response
+                wsDecode
+                    scheduleCreateResponseDecoder
+                    response.object
+                    Msg.ScheduleCreateResponseMsg
+                    Noop
 
-                    Err reason ->
-                        Noop
+            "ScheduleListResponse" ->
+                wsDecode
+                    scheduleListResponseDecoder
+                    response.object
+                    Msg.ScheduleListResponseMsg
+                    Noop
 
             _ ->
                 Noop
@@ -113,6 +119,9 @@ update msg model =
                         )
                 else
                     ( model_, Cmd.none )
+
+        Msg.ScheduleListResponseMsg response ->
+            ( { model | schedules = response.schedules }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg

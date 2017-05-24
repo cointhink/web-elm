@@ -14,7 +14,7 @@ view model =
         Just account ->
             case model.mode of
                 Msg.ModeList ->
-                    items
+                    items model.schedules
 
                 Msg.ModeAdd ->
                     itemNew model
@@ -26,19 +26,21 @@ view model =
             plzlogin
 
 
-items =
+items schedules =
     div [ class "" ]
         [ div [ class "centerblock" ] [ text "Your Schedules" ]
-        , algoList
+        , algoList schedules
         , algoAddButton
         ]
 
 
-algoList =
+algoList schedules =
     div [ class "" ]
         [ ul []
-            [ li [] [ text "one" ]
-            ]
+            (List.map
+                (\s -> li [] [ text "one" ])
+                schedules
+            )
         ]
 
 

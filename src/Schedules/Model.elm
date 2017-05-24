@@ -13,6 +13,7 @@ type alias Model =
     , seed : Seed
     , schedule : Schedule
     , schedule_add_req_id : Maybe String
+    , schedules : List Schedule
     }
 
 
@@ -24,6 +25,7 @@ defaultModel seed mode =
         (Random.Pcg.initialSeed seed)
         (Schedule "" "" "noop" "")
         Nothing
+        []
 
 
 isFormSent : Model -> Bool

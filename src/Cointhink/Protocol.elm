@@ -3,7 +3,7 @@ port module Cointhink.Protocol exposing (..)
 -- elm modules
 
 import Json.Encode exposing (object, encode, string, int)
-import Json.Decode exposing (decodeString, field, array, map2, map3, map5, value, list)
+import Json.Decode exposing (decodeValue, decodeString, field, array, map2, map3, map5, value, list)
 import WebSocket
 import Uuid.Barebones
 import Random.Pcg exposing (Seed, initialSeed, step)
@@ -46,3 +46,12 @@ apiCall item itemName itemEncoder seed ws_send =
             (Debug.log "ws_send" (WsRequest uuid itemName itemEncoded))
     in
         ( newSeed, uuid, ws_send request )
+
+
+wsDecode decoder payload okMsg errMsg =
+    case decodeValue decoder payload of
+        Ok response ->
+            okMsg response
+
+        Err reason ->
+            errMsg
