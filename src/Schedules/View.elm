@@ -48,7 +48,7 @@ algoAddButton =
 
 
 itemNew model =
-    div [ class "algorithm-add" ]
+    div [ class "item-add" ]
         [ Html.form
             [ class ""
             , onWithOptions
@@ -82,18 +82,13 @@ algoNewExchange =
             [ for "f_exchange"
             , onInput Msg.ScheduleNewExchange
             ]
-            [ Html.option []
-                [ text "Testing" ]
-            , Html.option []
+            [ Html.option [ value "simulation" ]
+                [ text "Simulation Exchange" ]
+            , Html.option [ value "coinbase" ]
                 [ text "Coinbase" ]
-            , Html.option []
+            , Html.option [ value "poloniex" ]
                 [ text "Poloniex" ]
             ]
-        , Html.input
-            [ id "f_apikey"
-            , placeholder "API Key"
-            ]
-            []
         ]
 
 
@@ -111,8 +106,8 @@ algoNewMarket =
 
 algoNewAmount =
     div []
-        [ Html.label [ for "f_sched" ] [ text "Amount: " ]
-        , Html.input [ id "f_apikey", placeholder "USD" ] []
+        [ Html.label [ for "f_amount" ] [ text "Amount: $" ]
+        , Html.input [ id "f_amount", class "usd", placeholder "USD" ] []
         ]
 
 
@@ -123,14 +118,15 @@ algoNewAlgorithm model =
             [ id "f_sched"
             , onInput Msg.ScheduleNewAlgorithm
             ]
-            [ Html.option
+            [ Html.option [ selected (model.schedule.algorithmId == "noop") ] [ text "- Select Algorithm -" ]
+            , Html.option
                 [ selected (model.schedule.algorithmId == "buy-weekly-tue")
                 , value "buy-weekly-tue"
                 ]
                 [ text "BUY Weekly - Tuesday" ]
             , Html.option
-                [ selected (model.schedule.algorithmId == "buy-weekly-wed")
-                , value "buy-weekly-wed"
+                [ selected (model.schedule.algorithmId == "buy-weekly-thur")
+                , value "buy-weekly-thur"
                 ]
                 [ text "BUY Weekly - Thursday" ]
             , Html.option

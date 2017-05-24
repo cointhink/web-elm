@@ -53,7 +53,9 @@ msg_recv : WsResponse -> Msg
 msg_recv response =
     let
         debug =
-            Debug.log "navbar ws_resp" response
+            ""
+
+        --Debug.log "navbar ws_resp" response
     in
         case response.method of
             "SignupFormResponse" ->
