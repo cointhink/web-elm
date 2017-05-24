@@ -25,3 +25,24 @@ idGen seed =
             step Uuid.Barebones.uuidStringGenerator seed
     in
         ( slice 19 36 uuid, new_seed )
+
+
+apiCall :
+    item
+    -> String
+    -> (item -> Json.Encode.Value)
+    -> Seed
+    -> (WsRequest -> Cmd msg)
+    -> ( Seed, String, Cmd msg )
+apiCall item itemName itemEncoder seed ws_send =
+    let
+        itemEncoded =
+            itemEncoder item
+
+        ( uuid, newSeed ) =
+            idGen seed
+
+        request =
+            (Debug.log "ws_send" (WsRequest uuid itemName itemEncoded))
+    in
+        ( newSeed, uuid, ws_send request )

@@ -1,6 +1,7 @@
 module Schedules.Msg exposing (..)
 
 import Proto.Session_create_response exposing (..)
+import Proto.Schedule_create_response exposing (..)
 
 
 type Mode
@@ -17,3 +18,4 @@ type Msg
     | ScheduleNewExchange String
     | ScheduleNewAlgorithm String
     | ScheduleUpdate
+    | ScheduleCreateResponseMsg ScheduleCreateResponse

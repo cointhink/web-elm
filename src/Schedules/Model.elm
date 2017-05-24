@@ -12,13 +12,25 @@ type alias Model =
     , mode : Mode
     , seed : Seed
     , schedule : Schedule
+    , schedule_add_req_id : Maybe String
     }
 
 
-defaultModel : Mode -> Int -> Model
-defaultModel mode seed =
+defaultModel : Int -> Mode -> Model
+defaultModel seed mode =
     Model
         Nothing
         mode
         (Random.Pcg.initialSeed seed)
         (Schedule "" "" "noop" "")
+        Nothing
+
+
+isFormSent : Model -> Bool
+isFormSent model =
+    case model.schedule_add_req_id of
+        Just id ->
+            True
+
+        Nothing ->
+            False

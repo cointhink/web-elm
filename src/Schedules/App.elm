@@ -13,7 +13,9 @@ import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
 import Proto.Session_create exposing (..)
 import Proto.Session_create_response exposing (..)
+import Proto.Schedule_create_response exposing (..)
 import Proto.Schedule_create exposing (..)
+import Proto.Schedule_list exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -35,6 +37,14 @@ msg_recv response =
                 case decodeValue sessionCreateResponseDecoder response.object of
                     Ok response ->
                         Msg.SessionCreateResponseMsg response
+
+                    Err reason ->
+                        Noop
+
+            "ScheduleCreateResponse" ->
+                case decodeValue scheduleCreateResponseDecoder response.object of
+                    Ok response ->
+                        Msg.ScheduleCreateResponseMsg response
 
                     Err reason ->
                         Noop
@@ -73,16 +83,25 @@ update msg model =
                 item =
                     ScheduleCreate "" (Just model.schedule)
 
-                itemEncoded =
-                    scheduleCreateEncoder item
-
-                ( uuid, seed ) =
-                    idGen model.seed
-
-                request =
-                    (Debug.log "ws_send" (WsRequest uuid "ScheduleCreate" itemEncoded))
+                ( postSeed, id, cmd ) =
+                    apiCall
+                        item
+                        "ScheduleCreate"
+                        scheduleCreateEncoder
+                        model.seed
+                        ws_send
             in
-                ( { model | seed = seed }, ws_send request )
+                ( { model | seed = postSeed }, cmd )
+
+        Msg.ScheduleCreateResponseMsg response ->
+            let
+                model_ =
+                    { model | schedule_add_req_id = Nothing }
+            in
+                if response.ok then
+                    ( { model_ | mode = ModeList }, Navigation.modifyUrl "#" )
+                else
+                    ( model_, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -103,15 +122,31 @@ init flags location =
         debug_location =
             (Debug.log "Schedules init location" location)
 
-        mode =
-            case location.hash of
-                "#add" ->
-                    ModeAdd
+        ( postModel, postCmd ) =
+            let
+                seededModel =
+                    defaultModel flags.seed
+            in
+                case location.hash of
+                    "#add" ->
+                        ( seededModel ModeAdd, Cmd.none )
 
-                _ ->
-                    ModeList
+                    _ ->
+                        let
+                            modedSeededModel =
+                                seededModel ModeList
+
+                            ( postSeed, id, cmd ) =
+                                apiCall
+                                    (ScheduleList "")
+                                    "ScheduleList"
+                                    scheduleListEncoder
+                                    modedSeededModel.seed
+                                    ws_send
+                        in
+                            ( { modedSeededModel | seed = postSeed }, cmd )
     in
-        ( defaultModel mode flags.seed, Cmd.none )
+        ( postModel, postCmd )
 
 
 fromUrl : Navigation.Location -> Msg

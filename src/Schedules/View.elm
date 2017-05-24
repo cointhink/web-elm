@@ -65,7 +65,7 @@ itemNew model =
                 ]
             , button []
                 [ text
-                    (if False then
+                    (if isFormSent model then
                         "Sending..."
                      else
                         "Submit"
@@ -139,7 +139,7 @@ algoNewAlgorithm model =
 
 
 itemUpdate model =
-    div [ class "algorithm-add" ]
+    div [ class "item-update" ]
         [ Html.form
             [ class ""
             , onWithOptions
@@ -147,14 +147,9 @@ itemUpdate model =
                 { preventDefault = True, stopPropagation = False }
                 (Json.Decode.succeed Msg.ScheduleUpdate)
             ]
-            [ div [] [ text "Update the algorithm" ]
+            [ div [] [ text "Update the " ]
             , fieldset [ disabled (False) ]
-                [ Html.textarea
-                    [ id "f_code"
-                    , placeholder "Code"
-                    ]
-                    []
-                ]
+                []
             ]
         , button []
             [ text
