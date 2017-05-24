@@ -30,7 +30,8 @@ algos =
     div [ class "" ]
         [ div [ class "centerblock" ] [ text "Your Algorithms" ]
         , algoList
-        , algoAddButton
+
+        --, algoAddButton
         ]
 
 
