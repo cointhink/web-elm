@@ -22,17 +22,17 @@ type alias Schedule =
 scheduleDecoder : JD.Decoder Schedule
 scheduleDecoder =
     JD.lazy <| \_ -> decode Schedule
-        |> required "id" JD.string ""
-        |> required "accountId" JD.string ""
-        |> required "algorithmId" JD.string ""
-        |> required "status" JD.string ""
+        |> required "Id" JD.string ""
+        |> required "AccountId" JD.string ""
+        |> required "AlgorithmId" JD.string ""
+        |> required "Status" JD.string ""
 
 
 scheduleEncoder : Schedule -> JE.Value
 scheduleEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "id" JE.string "" v.id)
-        , (requiredFieldEncoder "accountId" JE.string "" v.accountId)
-        , (requiredFieldEncoder "algorithmId" JE.string "" v.algorithmId)
-        , (requiredFieldEncoder "status" JE.string "" v.status)
+        [ (requiredFieldEncoder "Id" JE.string "" v.id)
+        , (requiredFieldEncoder "AccountId" JE.string "" v.accountId)
+        , (requiredFieldEncoder "AlgorithmId" JE.string "" v.algorithmId)
+        , (requiredFieldEncoder "Status" JE.string "" v.status)
         ]

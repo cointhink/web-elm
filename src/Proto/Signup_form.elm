@@ -21,13 +21,13 @@ type alias SignupForm =
 signupFormDecoder : JD.Decoder SignupForm
 signupFormDecoder =
     JD.lazy <| \_ -> decode SignupForm
-        |> optional "account" accountDecoder
-        |> required "thing" JD.string ""
+        |> optional "Account" accountDecoder
+        |> required "Thing" JD.string ""
 
 
 signupFormEncoder : SignupForm -> JE.Value
 signupFormEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (optionalEncoder "account" accountEncoder v.account)
-        , (requiredFieldEncoder "thing" JE.string "" v.thing)
+        [ (optionalEncoder "Account" accountEncoder v.account)
+        , (requiredFieldEncoder "Thing" JE.string "" v.thing)
         ]

@@ -24,7 +24,7 @@ scheduleListResponseDecoder =
     JD.lazy <| \_ -> decode ScheduleListResponse
         |> required "Ok" JD.bool False
         |> required "Message" JD.string ""
-        |> repeated "schedules" scheduleDecoder
+        |> repeated "Schedules" scheduleDecoder
 
 
 scheduleListResponseEncoder : ScheduleListResponse -> JE.Value
@@ -32,5 +32,5 @@ scheduleListResponseEncoder v =
     JE.object <| List.filterMap identity <|
         [ (requiredFieldEncoder "Ok" JE.bool False v.ok)
         , (requiredFieldEncoder "Message" JE.string "" v.message)
-        , (repeatedFieldEncoder "schedules" scheduleEncoder v.schedules)
+        , (repeatedFieldEncoder "Schedules" scheduleEncoder v.schedules)
         ]

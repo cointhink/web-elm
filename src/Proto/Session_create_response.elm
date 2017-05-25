@@ -22,12 +22,12 @@ sessionCreateResponseDecoder : JD.Decoder SessionCreateResponse
 sessionCreateResponseDecoder =
     JD.lazy <| \_ -> decode SessionCreateResponse
         |> required "Ok" JD.bool False
-        |> optional "account" accountDecoder
+        |> optional "Account" accountDecoder
 
 
 sessionCreateResponseEncoder : SessionCreateResponse -> JE.Value
 sessionCreateResponseEncoder v =
     JE.object <| List.filterMap identity <|
         [ (requiredFieldEncoder "Ok" JE.bool False v.ok)
-        , (optionalEncoder "account" accountEncoder v.account)
+        , (optionalEncoder "Account" accountEncoder v.account)
         ]

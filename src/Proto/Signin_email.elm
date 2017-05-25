@@ -19,11 +19,11 @@ type alias SigninEmail =
 signinEmailDecoder : JD.Decoder SigninEmail
 signinEmailDecoder =
     JD.lazy <| \_ -> decode SigninEmail
-        |> required "email" JD.string ""
+        |> required "Email" JD.string ""
 
 
 signinEmailEncoder : SigninEmail -> JE.Value
 signinEmailEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "email" JE.string "" v.email)
+        [ (requiredFieldEncoder "Email" JE.string "" v.email)
         ]

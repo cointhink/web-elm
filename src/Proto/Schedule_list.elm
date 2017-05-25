@@ -3,10 +3,10 @@
 -- https://github.com/tiziano88/elm-protobuf
 -- source file: proto/schedule_list.proto
 
+
 module Proto.Schedule_list exposing (..)
 
 import Protobuf exposing (..)
-
 import Json.Decode as JD
 import Json.Encode as JE
 
@@ -18,12 +18,15 @@ type alias ScheduleList =
 
 scheduleListDecoder : JD.Decoder ScheduleList
 scheduleListDecoder =
-    JD.lazy <| \_ -> decode ScheduleList
-        |> required "filterAccountId" JD.string ""
+    JD.lazy <|
+        \_ ->
+            decode ScheduleList
+                |> required "filterAccountId" JD.string ""
 
 
 scheduleListEncoder : ScheduleList -> JE.Value
 scheduleListEncoder v =
-    JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "filterAccountId" JE.string "" v.filterAccountId)
-        ]
+    JE.object <|
+        List.filterMap identity <|
+            [ (requiredFieldEncoder "filterAccountId" JE.string "" v.filterAccountId)
+            ]

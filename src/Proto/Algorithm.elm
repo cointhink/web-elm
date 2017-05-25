@@ -22,17 +22,17 @@ type alias Algorithm =
 algorithmDecoder : JD.Decoder Algorithm
 algorithmDecoder =
     JD.lazy <| \_ -> decode Algorithm
-        |> required "id" JD.string ""
-        |> required "accountId" JD.string ""
-        |> required "status" JD.string ""
-        |> required "code" JD.string ""
+        |> required "Id" JD.string ""
+        |> required "AccountId" JD.string ""
+        |> required "Status" JD.string ""
+        |> required "Code" JD.string ""
 
 
 algorithmEncoder : Algorithm -> JE.Value
 algorithmEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "id" JE.string "" v.id)
-        , (requiredFieldEncoder "accountId" JE.string "" v.accountId)
-        , (requiredFieldEncoder "status" JE.string "" v.status)
-        , (requiredFieldEncoder "code" JE.string "" v.code)
+        [ (requiredFieldEncoder "Id" JE.string "" v.id)
+        , (requiredFieldEncoder "AccountId" JE.string "" v.accountId)
+        , (requiredFieldEncoder "Status" JE.string "" v.status)
+        , (requiredFieldEncoder "Code" JE.string "" v.code)
         ]

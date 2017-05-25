@@ -21,15 +21,15 @@ type alias Account =
 accountDecoder : JD.Decoder Account
 accountDecoder =
     JD.lazy <| \_ -> decode Account
-        |> required "email" JD.string ""
-        |> required "username" JD.string ""
-        |> required "fullname" JD.string ""
+        |> required "Email" JD.string ""
+        |> required "Username" JD.string ""
+        |> required "Fullname" JD.string ""
 
 
 accountEncoder : Account -> JE.Value
 accountEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "email" JE.string "" v.email)
-        , (requiredFieldEncoder "username" JE.string "" v.username)
-        , (requiredFieldEncoder "fullname" JE.string "" v.fullname)
+        [ (requiredFieldEncoder "Email" JE.string "" v.email)
+        , (requiredFieldEncoder "Username" JE.string "" v.username)
+        , (requiredFieldEncoder "Fullname" JE.string "" v.fullname)
         ]
