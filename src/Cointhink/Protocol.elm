@@ -54,4 +54,8 @@ wsDecode decoder payload okMsg errMsg =
             okMsg response
 
         Err reason ->
-            errMsg
+            let
+                debug =
+                    Debug.log "wsDecode error" reason
+            in
+                errMsg

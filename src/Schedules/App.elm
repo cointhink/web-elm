@@ -56,7 +56,7 @@ msg_recv response =
                     Noop
 
             _ ->
-                Noop
+                (Debug.log "Unknown ws_resp method" Noop)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

@@ -1,8 +1,8 @@
 all: build
 
-npm: ./node_modules/.bin/elm
+install: ./node_modules/.bin/elm
 	npm install
-	./node_modules/.bin/elm-package install
+	./node_modules/.bin/elm-package install -y
 
 build: src/*elm
 	for elmFile in $^ ; do \

@@ -1,7 +1,5 @@
 port module Navbar.App exposing (app)
 
--- elm modules
-
 import Platform.Cmd exposing (Cmd)
 import Navigation
 import Json.Encode

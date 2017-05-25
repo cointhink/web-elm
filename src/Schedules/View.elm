@@ -38,7 +38,7 @@ algoList schedules =
     div [ class "" ]
         [ ul []
             (List.map
-                (\s -> li [] [ text "one" ])
+                (\s -> li [] [ text s.status ])
                 schedules
             )
         ]
