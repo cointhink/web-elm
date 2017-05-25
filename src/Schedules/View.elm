@@ -35,10 +35,15 @@ items schedules =
 
 
 algoList schedules =
-    div [ class "" ]
+    div [ class "list-schedules" ]
         [ ul []
             (List.map
-                (\s -> li [] [ text s.status ])
+                (\s ->
+                    li [ class "list-row" ]
+                        [ div [ class "list-algorithm-algo" ] [ text s.algorithmId ]
+                        , div [ class "list-algorithm-status" ] [ text s.status ]
+                        ]
+                )
                 schedules
             )
         ]

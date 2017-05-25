@@ -189,3 +189,17 @@
 .item-add .usd {
   width: 3em;
 }
+
+.list-row {
+  display: flex;
+}
+
+.list-row .list-algorithm-algo {
+  width: 10em;
+}
+
+.list-schedules {
+  background-color: #eee;
+  width: 90%;
+  margin: auto;
+}
