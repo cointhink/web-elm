@@ -3,7 +3,7 @@ module Schedules.View exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Json.Decode
+import Json.Decode as JD
 import Schedules.Msg as Msg exposing (..)
 import Schedules.Model exposing (..)
 
@@ -42,6 +42,13 @@ algoList schedules =
                     li [ class "list-row" ]
                         [ div [ class "list-algorithm-algo" ] [ text s.algorithmId ]
                         , div [ class "list-algorithm-status" ] [ text s.status ]
+                        , div [ class "list-algorithm-exchange" ]
+                            [ text
+                                (Result.withDefault
+                                    "?"
+                                    (JD.decodeString (JD.field "Exchange" JD.string) s.initialState)
+                                )
+                            ]
                         ]
                 )
                 schedules
@@ -61,7 +68,7 @@ itemNew model =
             , onWithOptions
                 "submit"
                 { preventDefault = True, stopPropagation = False }
-                (Json.Decode.succeed Msg.ScheduleNew)
+                (JD.succeed Msg.ScheduleNew)
             ]
             [ div [] [ text "Schedule an algorithm" ]
             , fieldset [ disabled (False) ]
@@ -180,7 +187,7 @@ itemUpdate model =
             , onWithOptions
                 "submit"
                 { preventDefault = True, stopPropagation = False }
-                (Json.Decode.succeed Msg.ScheduleUpdate)
+                (JD.succeed Msg.ScheduleUpdate)
             ]
             [ div [] [ text "Update the " ]
             , fieldset [ disabled (False) ]

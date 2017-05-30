@@ -198,6 +198,14 @@
   width: 10em;
 }
 
+.list-row .list-algorithm-status {
+  width: 10em;
+}
+
+.list-row .list-algorithm-exchange {
+  width: 10em;
+}
+
 .list-schedules {
   background-color: #eee;
   width: 90%;
