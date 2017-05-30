@@ -75,8 +75,26 @@ update msg model =
             in
                 ( { model | schedule = { item | algorithmId = value } }, Cmd.none )
 
-        Msg.ScheduleNewExchange value ->
-            ( model, Cmd.none )
+        Msg.ScheduleSelectExchange value ->
+            let
+                state =
+                    model.schedule_state
+            in
+                ( { model | schedule_state = { state | exchange = value } }, Cmd.none )
+
+        Msg.ScheduleSelectMarket value ->
+            let
+                state =
+                    model.schedule_state
+            in
+                ( { model | schedule_state = { state | market = value } }, Cmd.none )
+
+        Msg.ScheduleSelectAmount value ->
+            let
+                state =
+                    model.schedule_state
+            in
+                ( { model | schedule_state = { state | amount = value } }, Cmd.none )
 
         Msg.ScheduleUpdate ->
             ( model, Cmd.none )
@@ -86,8 +104,14 @@ update msg model =
 
         Msg.ScheduleNew ->
             let
+                schedule =
+                    model.schedule
+
+                scheduleWithState =
+                    { schedule | initialState = encode 0 (scheduleStateEncoder model.schedule_state) }
+
                 item =
-                    ScheduleCreate "" (Just model.schedule)
+                    ScheduleCreate (Just scheduleWithState)
 
                 ( postSeed, id, cmd ) =
                     apiCall

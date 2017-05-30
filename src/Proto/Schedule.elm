@@ -16,6 +16,7 @@ type alias Schedule =
     , accountId : String -- 2
     , algorithmId : String -- 3
     , status : String -- 4
+    , initialState : String -- 5
     }
 
 
@@ -26,6 +27,7 @@ scheduleDecoder =
         |> required "AccountId" JD.string ""
         |> required "AlgorithmId" JD.string ""
         |> required "Status" JD.string ""
+        |> required "InitialState" JD.string ""
 
 
 scheduleEncoder : Schedule -> JE.Value
@@ -35,4 +37,5 @@ scheduleEncoder v =
         , (requiredFieldEncoder "AccountId" JE.string "" v.accountId)
         , (requiredFieldEncoder "AlgorithmId" JE.string "" v.algorithmId)
         , (requiredFieldEncoder "Status" JE.string "" v.status)
+        , (requiredFieldEncoder "InitialState" JE.string "" v.initialState)
         ]

@@ -66,8 +66,8 @@ itemNew model =
             [ div [] [ text "Schedule an algorithm" ]
             , fieldset [ disabled (False) ]
                 [ algoNewAlgorithm model
-                , algoNewExchange
-                , algoNewMarket
+                , algoNewExchange model
+                , algoNewMarket model
                 , algoNewAmount
                 ]
             , button []
@@ -82,37 +82,65 @@ itemNew model =
         ]
 
 
-algoNewExchange =
+algoNewExchange model =
     div []
         [ Html.label [ for "f_exchange" ] [ text "Exchange: " ]
         , Html.select
             [ for "f_exchange"
-            , onInput Msg.ScheduleNewExchange
+            , onInput Msg.ScheduleSelectExchange
             ]
-            [ Html.option [ value "simulation" ]
+            [ Html.option [ selected (model.schedule_state.exchange == ""), value "" ]
+                [ text "- Select Exchange -" ]
+            , Html.option
+                [ selected (model.schedule_state.exchange == "simulation")
+                , value "simulation"
+                ]
                 [ text "Simulation Exchange" ]
-            , Html.option [ value "coinbase" ]
+            , Html.option
+                [ selected (model.schedule_state.exchange == "coinbase")
+                , value "coinbase"
+                ]
                 [ text "Coinbase" ]
-            , Html.option [ value "poloniex" ]
+            , Html.option
+                [ selected (model.schedule_state.exchange == "poloniex")
+                , value "poloniex"
+                ]
                 [ text "Poloniex" ]
             ]
         ]
 
 
-algoNewMarket =
+algoNewMarket model =
     div []
         [ Html.label [ for "f_market" ] [ text "Market: " ]
-        , Html.select [ for "f_market" ]
-            [ Html.option []
+        , Html.select
+            [ for "f_market"
+            , onInput Msg.ScheduleSelectMarket
+            ]
+            [ Html.option
+                [ selected (model.schedule_state.market == "")
+                , value ""
+                ]
+                [ text "- Select Market -" ]
+            , Html.option
+                [ selected (model.schedule_state.market == "btc/usd")
+                , value "btc/usd"
+                ]
                 [ text "BTC/USD" ]
-            , Html.option []
+            , Html.option
+                [ selected (model.schedule_state.market == "eth/usd")
+                , value "eth/usd"
+                ]
                 [ text "ETH/USD" ]
             ]
         ]
 
 
 algoNewAmount =
-    div []
+    div
+        [ for "f_market"
+        , onInput Msg.ScheduleSelectAmount
+        ]
         [ Html.label [ for "f_amount" ] [ text "Amount: $" ]
         , Html.input [ id "f_amount", class "usd", placeholder "USD" ] []
         ]

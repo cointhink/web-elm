@@ -13,21 +13,18 @@ import Proto.Schedule exposing (..)
 
 
 type alias ScheduleCreate =
-    { token : String -- 1
-    , schedule : Maybe Schedule -- 2
+    { schedule : Maybe Schedule -- 2
     }
 
 
 scheduleCreateDecoder : JD.Decoder ScheduleCreate
 scheduleCreateDecoder =
     JD.lazy <| \_ -> decode ScheduleCreate
-        |> required "Token" JD.string ""
         |> optional "Schedule" scheduleDecoder
 
 
 scheduleCreateEncoder : ScheduleCreate -> JE.Value
 scheduleCreateEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "Token" JE.string "" v.token)
-        , (optionalEncoder "Schedule" scheduleEncoder v.schedule)
+        [ (optionalEncoder "Schedule" scheduleEncoder v.schedule)
         ]

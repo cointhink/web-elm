@@ -16,7 +16,9 @@ type Msg
     | SessionCreateResponseMsg SessionCreateResponse
     | ScheduleAdd
     | ScheduleNew
-    | ScheduleNewExchange String
+    | ScheduleSelectExchange String
+    | ScheduleSelectMarket String
+    | ScheduleSelectAmount String
     | ScheduleNewAlgorithm String
     | ScheduleUpdate
     | ScheduleCreateResponseMsg ScheduleCreateResponse
