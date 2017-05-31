@@ -33,9 +33,9 @@ page model =
 
 items schedules =
     div [ class "" ]
-        [ div [ class "centerblock" ] [ text "Your Schedules" ]
+        [ algoAddButton
+        , div [ class "centerblock" ] [ text "Your Schedules" ]
         , algoList schedules
-        , algoAddButton
         ]
 
 
@@ -62,8 +62,8 @@ algoList schedules =
 
 
 algoAddButton =
-    div [ class "" ]
-        [ button [ onClick Msg.ScheduleAdd ] [ text "Add schedule" ] ]
+    div [ class "floatAdd" ]
+        [ button [ onClick Msg.ScheduleAdd ] [ text "+" ] ]
 
 
 itemNew model =

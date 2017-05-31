@@ -20,6 +20,11 @@ footer {
   vertical-align: middle;
 }
 
+.floatAdd {
+  float: right;
+  margin-right: 2em;
+}
+
 .navarea .navbar {
   display: flex;
   justify-content: space-around;
