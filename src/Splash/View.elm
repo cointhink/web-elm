@@ -7,10 +7,15 @@ import Json.Decode
 import Splash.Msg as Msg exposing (..)
 import Splash.Model exposing (..)
 import Proto.Signup_form_response exposing (..)
+import Cointhink.Views exposing (..)
 
 
 view : Model -> Html Msg
 view model =
+    Cointhink.Views.mainView (page model)
+
+
+page model =
     let
         page_parts =
             case model.mode of

@@ -6,10 +6,15 @@ import Html.Events exposing (..)
 import Json.Decode
 import Algorithms.Msg as Msg exposing (..)
 import Algorithms.Model exposing (..)
+import Cointhink.Views exposing (..)
 
 
 view : Model -> Html Msg
 view model =
+    Cointhink.Views.mainView (page model)
+
+
+page model =
     case model.account of
         Just account ->
             case model.mode of
@@ -28,7 +33,7 @@ view model =
 
 algos =
     div [ class "" ]
-        [ div [ class "centerblock" ] [ text "Your Algorithms" ]
+        [ div [ class "centerblock" ] [ text "Available Algorithms" ]
         , algoList
 
         --, algoAddButton
@@ -43,18 +48,21 @@ algoList =
                     [ span [ class "algo-name" ] [ text "Weekly-Tue" ]
                     , span [] [ text "Cointhink" ]
                     ]
+                , div [] [ text "Execute a buy order on each Tuesday." ]
                 ]
             , li []
                 [ div [ class "flexrow" ]
                     [ span [ class "algo-name" ] [ text "Weekly-Thur" ]
                     , span [] [ text "Cointhink" ]
                     ]
+                , div [] [ text "Execute a buy order on each Thursday." ]
                 ]
             , li []
                 [ div [ class "flexrow" ]
                     [ span [ class "algo-name" ] [ text "Monthly" ]
                     , span [] [ text "Cointhink" ]
                     ]
+                , div [] [ text "Execute a buy order once a month." ]
                 ]
             ]
         ]

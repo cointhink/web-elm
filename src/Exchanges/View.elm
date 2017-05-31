@@ -6,10 +6,15 @@ import Html.Events exposing (..)
 import Json.Decode
 import Exchanges.Msg as Msg
 import Exchanges.Model exposing (..)
+import Cointhink.Views exposing (..)
 
 
 view : Model -> Html Msg.Msg
 view model =
+    Cointhink.Views.mainView (page model)
+
+
+page model =
     case model.account of
         Just account ->
             case model.mode of
@@ -41,7 +46,7 @@ exchangeList =
 
 exchangeAddButton =
     div [ class "" ]
-        [ button [ onClick Msg.ExchangeNew ] [ text "Add exchange" ] ]
+        [ button [ onClick Msg.ExchangeNew ] [ text "Connect an exchange" ] ]
 
 
 exchangeNew model =

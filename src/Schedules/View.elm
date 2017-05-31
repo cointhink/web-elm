@@ -6,10 +6,15 @@ import Html.Events exposing (..)
 import Json.Decode as JD
 import Schedules.Msg as Msg exposing (..)
 import Schedules.Model exposing (..)
+import Cointhink.Views exposing (..)
 
 
 view : Model -> Html Msg
 view model =
+    Cointhink.Views.mainView (page model)
+
+
+page model =
     case model.account of
         Just account ->
             case model.mode of

@@ -2,6 +2,14 @@
   text-align: center
 }
 
+footer {
+  color: white;
+  background-color: #444;
+  text-align: center;
+  margin: 4em 1em 0;
+  padding: 0.5em 0;
+}
+
 .biglogo {
   margin: 2em 0em;
   width: 10%;
