@@ -16,6 +16,10 @@ footer {
   width: 10%;
 }
 
+.logolink {
+  vertical-align: middle;
+}
+
 .navarea .navbar {
   display: flex;
   justify-content: space-around;

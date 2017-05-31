@@ -22,7 +22,7 @@ navbanner model =
     div [ class "navbanner" ]
         [ span []
             [ img [ class "littlelogo", src "assets/logo.svg" ] []
-            , a [ href "/" ]
+            , a [ class "logolink", href "/" ]
                 [ text "Cointhink" ]
             ]
         , span []
