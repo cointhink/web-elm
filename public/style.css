@@ -253,3 +253,11 @@ footer {
   padding: 1em;
   margin: 1em;
 }
+
+.list-schedules-running .list-row-back {
+  background-color: green;
+}
+
+.list-schedules-stopped .list-row-back {
+  background-color: red;
+}

@@ -40,27 +40,43 @@ items schedules =
 
 
 algoList schedules =
-    div [ class "list-schedules" ]
-        [ ul []
-            (List.map
-                (\s ->
-                    li [ class "list-row" ]
-                        [ div [ class "list-algorithm-algo" ] [ text s.algorithmId ]
-                        , div [ class "list-algorithm-status" ] [ text s.status ]
-                        , div [ class "list-algorithm-exchange" ]
-                            [ text (pluckField "Exchange" s.initialState) ]
-                        , div [ class "list-algorithm-market" ]
-                            [ text (pluckField "Market" s.initialState) ]
-                        , div [ class "list-algorithm-amount" ]
-                            [ text ("$" ++ (pluckField "Amount" s.initialState)) ]
-                        , div [ class "list-algorithm-controls" ]
-                            [ button [] [ text "start" ] ]
-                        , div [ class "list-algorithm-admin" ]
-                            [ a [ href "" ] [ text "x" ] ]
-                        ]
-                )
-                schedules
-            )
+    let
+        activeSchedules =
+            List.filter (\s -> s.status == "running") schedules
+
+        inactiveSchedules =
+            List.filter (\s -> s.status == "stopped") schedules
+    in
+        div [ class "list-schedules" ]
+            [ div [ class "list-schedules-running" ]
+                [ ul []
+                    (List.map algoListRow activeSchedules)
+                ]
+            , div [ class "list-schedules-stopped" ]
+                [ ul []
+                    (List.map algoListRow inactiveSchedules)
+                ]
+            ]
+
+
+algoListRow s =
+    div [ class "list-row-back" ]
+        [ li [ class "list-row" ]
+            [ div [ class "list-algorithm-algo" ]
+                [ text s.algorithmId ]
+            , div [ class "list-algorithm-status" ]
+                [ text s.status ]
+            , div [ class "list-algorithm-exchange" ]
+                [ text (pluckField "Exchange" s.initialState) ]
+            , div [ class "list-algorithm-market" ]
+                [ text (pluckField "Market" s.initialState) ]
+            , div [ class "list-algorithm-amount" ]
+                [ text ("$" ++ (pluckField "Amount" s.initialState)) ]
+            , div [ class "list-algorithm-controls" ]
+                [ button [] [ text "start" ] ]
+            , div [ class "list-algorithm-admin" ]
+                [ a [ href "" ] [ text "x" ] ]
+            ]
         ]
 
 
