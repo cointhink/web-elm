@@ -39,7 +39,7 @@ exchanges =
 exchangeList =
     div [ class "" ]
         [ ul []
-            [ li [] [ text "one" ]
+            [ li [] [ text "simulation exchange" ]
             ]
         ]
 

@@ -20,6 +20,7 @@ type Msg
     | ScheduleSelectMarket String
     | ScheduleSelectAmount String
     | ScheduleNewAlgorithm String
+    | ScheduleStart String
     | ScheduleUpdate
     | ScheduleCreateResponseMsg ScheduleCreateResponse
     | ScheduleListResponseMsg ScheduleListResponse
