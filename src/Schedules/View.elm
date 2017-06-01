@@ -53,6 +53,10 @@ algoList schedules =
                             [ text (pluckField "Market" s.initialState) ]
                         , div [ class "list-algorithm-amount" ]
                             [ text ("$" ++ (pluckField "Amount" s.initialState)) ]
+                        , div [ class "list-algorithm-controls" ]
+                            [ button [] [ text "start" ] ]
+                        , div [ class "list-algorithm-admin" ]
+                            [ a [ href "" ] [ text "x" ] ]
                         ]
                 )
                 schedules

@@ -210,6 +210,7 @@ footer {
 
 .list-row {
   display: flex;
+  justify-content: right;
 }
 
 .list-row .list-algorithm-algo {
@@ -233,8 +234,22 @@ footer {
   text-align: right;
 }
 
+.list-row .list-algorithm-controls {
+  width: 5em;
+  margin: 0 1em;
+}
+
+.list-row .list-algorithm-admin {
+  margin: 0 1em;
+}
+
 .list-schedules {
-  background-color: #eee;
   width: 90%;
   margin: auto;
+}
+
+.list-schedules li {
+  background-color: #eee;
+  padding: 1em;
+  margin: 1em;
 }
