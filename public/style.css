@@ -261,3 +261,17 @@ footer {
 .list-schedules-stopped .list-row-back {
   background-color: red;
 }
+
+.algo-list li {
+  list-style: none;
+  padding: 0.5em;
+}
+
+.algo-list .algo-name {
+  font-size: 120%;
+  font-family: monospace;
+}
+
+.algo-list .algo-description {
+  padding-left: 1em;
+}
