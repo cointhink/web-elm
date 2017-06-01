@@ -224,6 +224,15 @@ footer {
   width: 10em;
 }
 
+.list-row .list-algorithm-market {
+  width: 10em;
+}
+
+.list-row .list-algorithm-amount {
+  width: 10em;
+  text-align: right;
+}
+
 .list-schedules {
   background-color: #eee;
   width: 90%;

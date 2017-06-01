@@ -48,17 +48,23 @@ algoList schedules =
                         [ div [ class "list-algorithm-algo" ] [ text s.algorithmId ]
                         , div [ class "list-algorithm-status" ] [ text s.status ]
                         , div [ class "list-algorithm-exchange" ]
-                            [ text
-                                (Result.withDefault
-                                    "?"
-                                    (JD.decodeString (JD.field "Exchange" JD.string) s.initialState)
-                                )
-                            ]
+                            [ text (pluckField "Exchange" s.initialState) ]
+                        , div [ class "list-algorithm-market" ]
+                            [ text (pluckField "Market" s.initialState) ]
+                        , div [ class "list-algorithm-amount" ]
+                            [ text ("$" ++ (pluckField "Amount" s.initialState)) ]
                         ]
                 )
                 schedules
             )
         ]
+
+
+pluckField name object =
+    (Result.withDefault
+        "?"
+        (JD.decodeString (JD.field name JD.string) object)
+    )
 
 
 algoAddButton =
