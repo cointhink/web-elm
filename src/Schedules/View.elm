@@ -4,9 +4,11 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as JD
+import Json.Encode as JE
 import Schedules.Msg as Msg exposing (..)
 import Schedules.Model exposing (..)
 import Cointhink.Views exposing (..)
+import Proto.Schedule exposing (..)
 
 
 view : Model -> Html Msg
@@ -39,13 +41,14 @@ items schedules =
         ]
 
 
+algoList : List Schedule -> Html Msg
 algoList schedules =
     let
         activeSchedules =
-            List.filter (\s -> s.status == "running") schedules
+            List.filter (\s -> s.status == Schedule_Running) schedules
 
         inactiveSchedules =
-            List.filter (\s -> s.status == "stopped") schedules
+            List.filter (\s -> s.status == Schedule_Stopped) schedules
     in
         div [ class "list-schedules" ]
             [ div [ class "list-schedules-running" ]
@@ -59,13 +62,14 @@ algoList schedules =
             ]
 
 
+algoListRow : Schedule -> Html Msg
 algoListRow s =
     div [ class "list-row-back" ]
         [ li [ class "list-row" ]
             [ div [ class "list-algorithm-algo" ]
                 [ text s.algorithmId ]
             , div [ class "list-algorithm-status" ]
-                [ text s.status ]
+                [ text (Result.withDefault "?" (JD.decodeString JD.string (JE.encode 0 (schedule_StatesEncoder s.status)))) ]
             , div [ class "list-algorithm-exchange" ]
                 [ text (pluckField "Exchange" s.initialState) ]
             , div [ class "list-algorithm-market" ]
@@ -94,6 +98,7 @@ algoAddButton =
         [ button [ onClick Msg.ScheduleAdd ] [ text "+" ] ]
 
 
+itemNew : Model -> Html Msg
 itemNew model =
     div [ class "item-add" ]
         [ Html.form

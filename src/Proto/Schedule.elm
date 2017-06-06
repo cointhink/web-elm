@@ -15,9 +15,14 @@ type alias Schedule =
     { id : String -- 1
     , accountId : String -- 2
     , algorithmId : String -- 3
-    , status : String -- 4
+    , status : Schedule_States -- 4
     , initialState : String -- 5
     }
+
+
+type Schedule_States
+    = Schedule_Stopped -- 0
+    | Schedule_Running -- 1
 
 
 scheduleDecoder : JD.Decoder Schedule
@@ -26,8 +31,29 @@ scheduleDecoder =
         |> required "Id" JD.string ""
         |> required "AccountId" JD.string ""
         |> required "AlgorithmId" JD.string ""
-        |> required "Status" JD.string ""
+        |> required "Status" schedule_StatesDecoder schedule_StatesDefault
         |> required "InitialState" JD.string ""
+
+
+schedule_StatesDecoder : JD.Decoder Schedule_States
+schedule_StatesDecoder =
+    let
+        lookup s =
+            case s of
+                "stopped" ->
+                    Schedule_Stopped
+
+                "running" ->
+                    Schedule_Running
+
+                _ ->
+                    Schedule_Stopped
+    in
+        JD.map lookup JD.string
+
+
+schedule_StatesDefault : Schedule_States
+schedule_StatesDefault = Schedule_Stopped
 
 
 scheduleEncoder : Schedule -> JE.Value
@@ -36,6 +62,21 @@ scheduleEncoder v =
         [ (requiredFieldEncoder "Id" JE.string "" v.id)
         , (requiredFieldEncoder "AccountId" JE.string "" v.accountId)
         , (requiredFieldEncoder "AlgorithmId" JE.string "" v.algorithmId)
-        , (requiredFieldEncoder "Status" JE.string "" v.status)
+        , (requiredFieldEncoder "Status" schedule_StatesEncoder schedule_StatesDefault v.status)
         , (requiredFieldEncoder "InitialState" JE.string "" v.initialState)
         ]
+
+
+schedule_StatesEncoder : Schedule_States -> JE.Value
+schedule_StatesEncoder v =
+    let
+        lookup s =
+            case s of
+                Schedule_Stopped ->
+                    "stopped"
+
+                Schedule_Running ->
+                    "running"
+
+    in
+        JE.string <| lookup v
