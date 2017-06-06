@@ -43,33 +43,18 @@ items schedules =
 
 algoList : List Schedule -> Html Msg
 algoList schedules =
-    let
-        activeSchedules =
-            List.filter (\s -> s.status == Schedule_Running) schedules
-
-        inactiveSchedules =
-            List.filter (\s -> s.status == Schedule_Stopped) schedules
-    in
-        div [ class "list-schedules" ]
-            [ div [ class "list-schedules-running" ]
-                [ ul []
-                    (List.map algoListRow activeSchedules)
-                ]
-            , div [ class "list-schedules-stopped" ]
-                [ ul []
-                    (List.map algoListRow inactiveSchedules)
-                ]
-            ]
+    div [ class "list-schedules" ]
+        (List.map algoListRow schedules)
 
 
 algoListRow : Schedule -> Html Msg
 algoListRow s =
-    div [ class "list-row-back" ]
+    div [ class ("list-row-back " ++ (algoListClasses s)) ]
         [ li [ class "list-row" ]
             [ div [ class "list-algorithm-algo" ]
                 [ text s.algorithmId ]
             , div [ class "list-algorithm-status" ]
-                [ text (Result.withDefault "?" (JD.decodeString JD.string (JE.encode 0 (schedule_StatesEncoder s.status)))) ]
+                [ text (schedule_StatesNames s.status) ]
             , div [ class "list-algorithm-exchange" ]
                 [ text (pluckField "Exchange" s.initialState) ]
             , div [ class "list-algorithm-market" ]
@@ -84,6 +69,18 @@ algoListRow s =
                 [ a [ href "" ] [ text "x" ] ]
             ]
         ]
+
+
+algoListClasses s =
+    case s.status of
+        Schedule_Unknown ->
+            "list-schedules-unknown"
+
+        Schedule_Stopped ->
+            "list-schedules-stopped"
+
+        Schedule_Running ->
+            "list-schedules-running"
 
 
 pluckField name object =

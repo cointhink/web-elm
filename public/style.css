@@ -254,12 +254,16 @@ footer {
   margin: 1em;
 }
 
-.list-schedules-running .list-row-back {
+.list-schedules-running  {
   background-color: green;
 }
 
-.list-schedules-stopped .list-row-back {
+.list-schedules-stopped  {
   background-color: red;
+}
+
+.list-schedules-unknown  {
+  background-color: grey;
 }
 
 .algo-list li {
