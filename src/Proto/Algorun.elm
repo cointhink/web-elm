@@ -15,7 +15,8 @@ type alias Algorun =
     { id : String -- 1
     , algorithmId : String -- 2
     , accountId : String -- 3
-    , status : String -- 4
+    , scheduleId : String -- 4
+    , status : String -- 5
     }
 
 
@@ -25,6 +26,7 @@ algorunDecoder =
         |> required "Id" JD.string ""
         |> required "AlgorithmId" JD.string ""
         |> required "AccountId" JD.string ""
+        |> required "ScheduleId" JD.string ""
         |> required "Status" JD.string ""
 
 
@@ -34,5 +36,6 @@ algorunEncoder v =
         [ (requiredFieldEncoder "Id" JE.string "" v.id)
         , (requiredFieldEncoder "AlgorithmId" JE.string "" v.algorithmId)
         , (requiredFieldEncoder "AccountId" JE.string "" v.accountId)
+        , (requiredFieldEncoder "ScheduleId" JE.string "" v.scheduleId)
         , (requiredFieldEncoder "Status" JE.string "" v.status)
         ]
