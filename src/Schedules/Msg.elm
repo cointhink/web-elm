@@ -21,6 +21,7 @@ type Msg
     | ScheduleSelectAmount String
     | ScheduleNewAlgorithm String
     | ScheduleStart String
+    | ScheduleStop String
     | ScheduleUpdate
     | ScheduleCreateResponseMsg ScheduleCreateResponse
     | ScheduleListResponseMsg ScheduleListResponse

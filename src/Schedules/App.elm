@@ -18,6 +18,7 @@ import Proto.Schedule_create_response exposing (..)
 import Proto.Schedule_list exposing (..)
 import Proto.Schedule_list_response exposing (..)
 import Proto.Schedule_start exposing (..)
+import Proto.Schedule_stop exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -110,6 +111,21 @@ update msg model =
                         item
                         "ScheduleStart"
                         scheduleStartEncoder
+                        model.seed
+                        ws_send
+            in
+                ( { model | seed = postSeed }, cmd )
+
+        Msg.ScheduleStop scheduleId ->
+            let
+                item =
+                    Proto.Schedule_stop.ScheduleStop scheduleId
+
+                ( postSeed, id, cmd ) =
+                    apiCall
+                        item
+                        "ScheduleStop"
+                        scheduleStopEncoder
                         model.seed
                         ws_send
             in

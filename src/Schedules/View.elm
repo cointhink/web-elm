@@ -66,7 +66,7 @@ algoListRow s =
                     [ text "start" ]
                 ]
             , div [ class "list-algorithm-admin" ]
-                [ a [ href "" ] [ text "x" ] ]
+                [ a [ onClick (Msg.ScheduleStop s.id), href "#" ] [ text "x" ] ]
             ]
         ]
 
