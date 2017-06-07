@@ -41,19 +41,19 @@ schedule_StatesDecoder =
     let
         lookup s =
             case s of
-                0 ->
+                "unknown" ->
                     Schedule_Unknown
 
-                1 ->
+                "stopped" ->
                     Schedule_Stopped
 
-                2 ->
+                "running" ->
                     Schedule_Running
 
                 _ ->
                     Schedule_Unknown
     in
-        JD.map lookup JD.int
+        JD.map lookup JD.string
 
 
 schedule_StatesDefault : Schedule_States
@@ -77,27 +77,13 @@ schedule_StatesEncoder v =
         lookup s =
             case s of
                 Schedule_Unknown ->
-                    0
+                    "unknown"
 
                 Schedule_Stopped ->
-                    1
+                    "stopped"
 
                 Schedule_Running ->
-                    2
+                    "running"
 
     in
-        JE.int <| lookup v
-
-
-schedule_StatesNames : Schedule_States -> String
-schedule_StatesNames v =
-    case v of
-        Schedule_Unknown ->
-            "unknown"
-
-        Schedule_Stopped ->
-            "stopped"
-
-        Schedule_Running ->
-            "running"
-
+        JE.string <| lookup v

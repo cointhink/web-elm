@@ -38,16 +38,16 @@ signupFormResponse_ReasonsDecoder =
     let
         lookup s =
             case s of
-                0 ->
+                "EMAIL_ALERT" ->
                     SignupFormResponse_EmailAlert
 
-                1 ->
+                "USERNAME_ALERT" ->
                     SignupFormResponse_UsernameAlert
 
                 _ ->
                     SignupFormResponse_EmailAlert
     in
-        JD.map lookup JD.int
+        JD.map lookup JD.string
 
 
 signupFormResponse_ReasonsDefault : SignupFormResponse_Reasons
@@ -70,21 +70,10 @@ signupFormResponse_ReasonsEncoder v =
         lookup s =
             case s of
                 SignupFormResponse_EmailAlert ->
-                    0
+                    "EMAIL_ALERT"
 
                 SignupFormResponse_UsernameAlert ->
-                    1
+                    "USERNAME_ALERT"
 
     in
-        JE.int <| lookup v
-
-
-signupFormResponse_ReasonsNames : SignupFormResponse_Reasons -> String
-signupFormResponse_ReasonsNames v =
-    case v of
-        SignupFormResponse_EmailAlert ->
-            "EMAIL_ALERT"
-
-        SignupFormResponse_UsernameAlert ->
-            "USERNAME_ALERT"
-
+        JE.string <| lookup v

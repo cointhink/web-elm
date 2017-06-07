@@ -54,7 +54,7 @@ algoListRow s =
             [ div [ class "list-algorithm-algo" ]
                 [ text s.algorithmId ]
             , div [ class "list-algorithm-status" ]
-                [ text (schedule_StatesNames s.status) ]
+                [ text "s.status" ]
             , div [ class "list-algorithm-exchange" ]
                 [ text (pluckField "Exchange" s.initialState) ]
             , div [ class "list-algorithm-market" ]
