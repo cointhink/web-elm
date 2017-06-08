@@ -1,25 +1,40 @@
+"use strict"
 var ws_buffer = []
+var _ws_connecting = false
+var _ws_url, _ws_receive, _ws_socket
 function ws_init(url, receive) {
-  let ws = new WebSocket(url)
-  console.log('opening', url)
-  ws.onopen = function (event) {
+  _ws_url = url
+  _ws_receive = receive
+  ws_connect()
+}
+
+function ws_connect() {
+  _ws_socket = new WebSocket(_ws_url)
+  _ws_connecting = true
+  console.log('opening', _ws_url)
+  _ws_socket.onopen = function (event) {
     //console.log('onopen', event)
+    _ws_connecting = false
     ws_buffer.forEach(msg => {console.log('replaying buffer', msg); ws_send(ws, msg)})
+    ws_buffer = []
   }
-  ws.onmessage = (event) => {
+  _ws_socket.onmessage = (event) => {
     let o = JSON.parse(event.data)
-    receive(o)
+    _ws_receive(o)
   }
   return ws
 }
 
 function ws_send(ws, msg) {
-  if (ws.readyState == 1) {
+  if (_ws_socket.readyState == 1) {
     msg.token = localStorage.getItem('token')
     let json = JSON.stringify(msg)
-    ws.send(json)
+    _ws_socket.send(json)
   } else {
     console.log('buffering', msg)
     ws_buffer.push(msg)
+    if(_ws_connecting == false) {
+      ws_connect()
+    }
   }
 }
