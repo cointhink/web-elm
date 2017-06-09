@@ -62,9 +62,20 @@ algoListRow s =
             , div [ class "list-algorithm-amount" ]
                 [ text ("$" ++ (pluckField "Amount" s.initialState)) ]
             , div [ class "list-algorithm-controls" ]
-                [ button [ onClick (Msg.ScheduleStart s.id) ]
-                    [ text "start" ]
-                ]
+                ((case s.status of
+                    Schedule_Stopped ->
+                        button [ onClick (Msg.ScheduleStart s.id) ]
+                            [ text "start" ]
+
+                    Schedule_Running ->
+                        button [ onClick (Msg.ScheduleStop s.id) ]
+                            [ text "stop" ]
+
+                    Schedule_Unknown ->
+                        text "?"
+                 )
+                    :: []
+                )
             , div [ class "list-algorithm-admin" ]
                 [ a [ onClick (Msg.ScheduleStop s.id), href "#" ] [ text "x" ] ]
             ]

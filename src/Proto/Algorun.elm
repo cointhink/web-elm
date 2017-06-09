@@ -20,6 +20,13 @@ type alias Algorun =
     }
 
 
+type Algorun_States
+    = Algorun_Unknown -- 0
+    | Algorun_Stopped -- 1
+    | Algorun_Running -- 2
+    | Algorun_Deleted -- 3
+
+
 algorunDecoder : JD.Decoder Algorun
 algorunDecoder =
     JD.lazy <| \_ -> decode Algorun
@@ -28,6 +35,33 @@ algorunDecoder =
         |> required "AccountId" JD.string ""
         |> required "ScheduleId" JD.string ""
         |> required "Status" JD.string ""
+
+
+algorun_StatesDecoder : JD.Decoder Algorun_States
+algorun_StatesDecoder =
+    let
+        lookup s =
+            case s of
+                "unknown" ->
+                    Algorun_Unknown
+
+                "stopped" ->
+                    Algorun_Stopped
+
+                "running" ->
+                    Algorun_Running
+
+                "deleted" ->
+                    Algorun_Deleted
+
+                _ ->
+                    Algorun_Unknown
+    in
+        JD.map lookup JD.string
+
+
+algorun_StatesDefault : Algorun_States
+algorun_StatesDefault = Algorun_Unknown
 
 
 algorunEncoder : Algorun -> JE.Value
@@ -39,3 +73,24 @@ algorunEncoder v =
         , (requiredFieldEncoder "ScheduleId" JE.string "" v.scheduleId)
         , (requiredFieldEncoder "Status" JE.string "" v.status)
         ]
+
+
+algorun_StatesEncoder : Algorun_States -> JE.Value
+algorun_StatesEncoder v =
+    let
+        lookup s =
+            case s of
+                Algorun_Unknown ->
+                    "unknown"
+
+                Algorun_Stopped ->
+                    "stopped"
+
+                Algorun_Running ->
+                    "running"
+
+                Algorun_Deleted ->
+                    "deleted"
+
+    in
+        JE.string <| lookup v
