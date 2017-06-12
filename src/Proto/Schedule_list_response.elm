@@ -9,13 +9,13 @@ import Protobuf exposing (..)
 
 import Json.Decode as JD
 import Json.Encode as JE
-import Proto.Schedule exposing (..)
+import Proto.Schedule_run exposing (..)
 
 
 type alias ScheduleListResponse =
     { ok : Bool -- 1
     , message : String -- 2
-    , schedules : List Schedule -- 3
+    , schedules : List ScheduleRun -- 3
     }
 
 
@@ -24,7 +24,7 @@ scheduleListResponseDecoder =
     JD.lazy <| \_ -> decode ScheduleListResponse
         |> required "Ok" JD.bool False
         |> required "Message" JD.string ""
-        |> repeated "Schedules" scheduleDecoder
+        |> repeated "Schedules" scheduleRunDecoder
 
 
 scheduleListResponseEncoder : ScheduleListResponse -> JE.Value
@@ -32,5 +32,5 @@ scheduleListResponseEncoder v =
     JE.object <| List.filterMap identity <|
         [ (requiredFieldEncoder "Ok" JE.bool False v.ok)
         , (requiredFieldEncoder "Message" JE.string "" v.message)
-        , (repeatedFieldEncoder "Schedules" scheduleEncoder v.schedules)
+        , (repeatedFieldEncoder "Schedules" scheduleRunEncoder v.schedules)
         ]

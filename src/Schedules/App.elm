@@ -177,7 +177,7 @@ update msg model =
                     ( model_, Cmd.none )
 
         Msg.ScheduleListResponseMsg response ->
-            ( { model | schedules = response.schedules }, Cmd.none )
+            ( { model | schedule_runs = response.schedules }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg

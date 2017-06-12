@@ -4,6 +4,7 @@ import String
 import Schedules.Msg exposing (..)
 import Proto.Account exposing (..)
 import Proto.Schedule exposing (..)
+import Proto.Schedule_run exposing (..)
 import Random.Pcg exposing (Seed)
 import Json.Encode as JE
 
@@ -15,7 +16,7 @@ type alias Model =
     , schedule : Schedule
     , schedule_add_req_id : Maybe String
     , schedule_state : ScheduleState
-    , schedules : List Schedule
+    , schedule_runs : List ScheduleRun
     }
 
 

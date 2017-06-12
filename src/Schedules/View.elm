@@ -9,6 +9,7 @@ import Schedules.Msg as Msg exposing (..)
 import Schedules.Model exposing (..)
 import Cointhink.Views exposing (..)
 import Proto.Schedule exposing (..)
+import Proto.Schedule_run exposing (..)
 
 
 view : Model -> Html Msg
@@ -21,7 +22,7 @@ page model =
         Just account ->
             case model.mode of
                 Msg.ModeList ->
-                    items model.schedules
+                    items model.schedule_runs
 
                 Msg.ModeAdd ->
                     itemNew model
@@ -33,28 +34,56 @@ page model =
             plzlogin
 
 
-items schedules =
+items schedule_runs =
     div [ class "" ]
         [ algoAddButton
         , div [ class "centerblock" ] [ text "Your Schedules" ]
-        , algoList schedules
+        , algoList schedule_runs
         ]
 
 
-algoList : List Schedule -> Html Msg
-algoList schedules =
+algoList : List ScheduleRun -> Html Msg
+algoList schedule_runs =
     div [ class "list-schedules" ]
-        (List.map algoListRow schedules)
+        (List.map algoListRow schedule_runs)
 
 
-algoListRow : Schedule -> Html Msg
-algoListRow s =
-    div [ class ("list-row-back " ++ (algoListClasses s)) ]
+algoListRow : ScheduleRun -> Html Msg
+algoListRow sr =
+    case sr.schedule of
+        Just s ->
+            algoListHtml s sr.run
+
+        Nothing ->
+            text "list err"
+
+
+algoListHtml s runMaybe =
+    div [ class ("list-row-back " ++ (algoListClasses s.status)) ]
         [ li [ class "list-row" ]
             [ div [ class "list-algorithm-algo" ]
                 [ text s.algorithmId ]
             , div [ class "list-algorithm-status" ]
-                [ text "s.status" ]
+                [ text
+                    ((case s.status of
+                        Schedule_Stopped ->
+                            "stopped"
+
+                        Schedule_Running ->
+                            "running"
+
+                        Schedule_Unknown ->
+                            "unknown"
+                     )
+                        ++ (case runMaybe of
+                                Just run ->
+                                    "/" ++ run.status
+
+                                Nothing ->
+                                    ""
+                           )
+                    )
+                ]
             , div [ class "list-algorithm-exchange" ]
                 [ text (pluckField "Exchange" s.initialState) ]
             , div [ class "list-algorithm-market" ]
@@ -82,8 +111,9 @@ algoListRow s =
         ]
 
 
-algoListClasses s =
-    case s.status of
+algoListClasses : Schedule_States -> String
+algoListClasses status =
+    case status of
         Schedule_Unknown ->
             "list-schedules-unknown"
 
