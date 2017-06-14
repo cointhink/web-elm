@@ -16,9 +16,11 @@ import Proto.Session_create_response exposing (..)
 import Proto.Schedule_create exposing (..)
 import Proto.Schedule_create_response exposing (..)
 import Proto.Schedule_list exposing (..)
+import Proto.Schedule_list_partial exposing (..)
 import Proto.Schedule_list_response exposing (..)
 import Proto.Schedule_start exposing (..)
 import Proto.Schedule_stop exposing (..)
+import Proto.Schedule_run exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -55,6 +57,13 @@ msg_recv response =
                     scheduleListResponseDecoder
                     response.object
                     Msg.ScheduleListResponseMsg
+                    Noop
+
+            "ScheduleListPartial" ->
+                wsDecode
+                    scheduleListPartialDecoder
+                    response.object
+                    Msg.ScheduleListPartialMsg
                     Noop
 
             _ ->
@@ -178,6 +187,36 @@ update msg model =
 
         Msg.ScheduleListResponseMsg response ->
             ( { model | schedule_runs = response.schedules }, Cmd.none )
+
+        Msg.ScheduleListPartialMsg listPartial ->
+            let
+                updatedRuns =
+                    List.map (replace listPartial.scheduleRun) model.schedule_runs
+            in
+                ( { model | schedule_runs = updatedRuns }, Cmd.none )
+
+
+replace : Maybe ScheduleRun -> ScheduleRun -> ScheduleRun
+replace replacement existing =
+    case replacement of
+        Just r1 ->
+            case existing.schedule of
+                Just rs1 ->
+                    case existing.schedule of
+                        Just es1 ->
+                            if rs1.id == es1.id then
+                                r1
+                            else
+                                existing
+
+                        Nothing ->
+                            existing
+
+                Nothing ->
+                    existing
+
+        Nothing ->
+            existing
 
 
 subscriptions : Model -> Sub Msg

@@ -3,6 +3,7 @@ module Schedules.Msg exposing (..)
 import Proto.Session_create_response exposing (..)
 import Proto.Schedule_create_response exposing (..)
 import Proto.Schedule_list_response exposing (..)
+import Proto.Schedule_list_partial exposing (..)
 
 
 type Mode
@@ -25,3 +26,4 @@ type Msg
     | ScheduleUpdate
     | ScheduleCreateResponseMsg ScheduleCreateResponse
     | ScheduleListResponseMsg ScheduleListResponse
+    | ScheduleListPartialMsg ScheduleListPartial

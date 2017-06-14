@@ -29,6 +29,11 @@ defaultModel mode seed =
         Nothing
 
 
+blankAccount : Account
+blankAccount =
+    Account "" "" "" ""
+
+
 isFormSent : Model -> Bool
 isFormSent model =
     String.length model.signup_req_id > 0

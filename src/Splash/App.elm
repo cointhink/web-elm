@@ -65,7 +65,7 @@ update msg model =
                     model.signup
 
                 account =
-                    Maybe.withDefault (Account "" "" "") signup.account
+                    Maybe.withDefault blankAccount signup.account
             in
                 ( { model | signup = { signup | account = (Just { account | email = email }) } }
                 , Cmd.none
@@ -77,7 +77,7 @@ update msg model =
                     model.signup
 
                 account =
-                    Maybe.withDefault (Account "" "" "") signup.account
+                    Maybe.withDefault blankAccount signup.account
             in
                 ( { model | signup = { signup | account = (Just { account | fullname = fullname }) } }
                 , Cmd.none
@@ -89,7 +89,7 @@ update msg model =
                     model.signup
 
                 account =
-                    Maybe.withDefault (Account "" "" "") signup.account
+                    Maybe.withDefault blankAccount signup.account
             in
                 ( { model | signup = { signup | account = (Just { account | username = username }) } }
                 , Cmd.none

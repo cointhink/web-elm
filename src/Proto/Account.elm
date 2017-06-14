@@ -12,15 +12,17 @@ import Json.Encode as JE
 
 
 type alias Account =
-    { email : String -- 1
-    , username : String -- 2
-    , fullname : String -- 3
+    { id : String -- 1
+    , email : String -- 2
+    , username : String -- 3
+    , fullname : String -- 4
     }
 
 
 accountDecoder : JD.Decoder Account
 accountDecoder =
     JD.lazy <| \_ -> decode Account
+        |> required "Id" JD.string ""
         |> required "Email" JD.string ""
         |> required "Username" JD.string ""
         |> required "Fullname" JD.string ""
@@ -29,7 +31,8 @@ accountDecoder =
 accountEncoder : Account -> JE.Value
 accountEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "Email" JE.string "" v.email)
+        [ (requiredFieldEncoder "Id" JE.string "" v.id)
+        , (requiredFieldEncoder "Email" JE.string "" v.email)
         , (requiredFieldEncoder "Username" JE.string "" v.username)
         , (requiredFieldEncoder "Fullname" JE.string "" v.fullname)
         ]
