@@ -10,6 +10,7 @@ import Schedules.Model exposing (..)
 import Cointhink.Views exposing (..)
 import Proto.Schedule exposing (..)
 import Proto.Schedule_run exposing (..)
+import Proto.Algorun exposing (..)
 
 
 view : Model -> Html Msg
@@ -59,18 +60,18 @@ algoListRow sr =
 
 
 algoListHtml s runMaybe =
-    div [ class ("list-row-back " ++ (algoListClasses s.status)) ]
+    div [ class ("list-row-back " ++ (algoListClasses s.status runMaybe)) ]
         [ li [ class "list-row" ]
             [ div [ class "list-algorithm-algo" ]
                 [ text s.algorithmId ]
             , div [ class "list-algorithm-status" ]
                 [ text
                     ((case s.status of
-                        Schedule_Stopped ->
-                            "stopped"
+                        Schedule_Disabled ->
+                            "disabled"
 
-                        Schedule_Running ->
-                            "running"
+                        Schedule_Enabled ->
+                            "enabled"
 
                         Schedule_Unknown ->
                             "unknown"
@@ -92,11 +93,11 @@ algoListHtml s runMaybe =
                 [ text ("$" ++ (pluckField "Amount" s.initialState)) ]
             , div [ class "list-algorithm-controls" ]
                 ((case s.status of
-                    Schedule_Stopped ->
+                    Schedule_Disabled ->
                         button [ onClick (Msg.ScheduleStart s.id) ]
                             [ text "start" ]
 
-                    Schedule_Running ->
+                    Schedule_Enabled ->
                         button [ onClick (Msg.ScheduleStop s.id) ]
                             [ text "stop" ]
 
@@ -111,17 +112,29 @@ algoListHtml s runMaybe =
         ]
 
 
-algoListClasses : Schedule_States -> String
-algoListClasses status =
-    case status of
-        Schedule_Unknown ->
-            "list-schedules-unknown"
+algoListClasses : Schedule_States -> Maybe Algorun -> String
+algoListClasses status runMaybe =
+    let
+        runName =
+            case runMaybe of
+                Just run ->
+                    run.status
 
-        Schedule_Stopped ->
-            "list-schedules-stopped"
+                Nothing ->
+                    ""
 
-        Schedule_Running ->
-            "list-schedules-running"
+        statusName =
+            case status of
+                Schedule_Unknown ->
+                    "list-schedules-unknown"
+
+                Schedule_Disabled ->
+                    "list-schedules-disabled"
+
+                Schedule_Enabled ->
+                    "list-schedules-enabled"
+    in
+        statusName ++ "-" ++ runName
 
 
 pluckField name object =
@@ -179,16 +192,17 @@ algoNewExchange model =
                 , value "simulation"
                 ]
                 [ text "Simulation Exchange" ]
-            , Html.option
-                [ selected (model.schedule_state.exchange == "coinbase")
-                , value "coinbase"
-                ]
-                [ text "Coinbase" ]
-            , Html.option
-                [ selected (model.schedule_state.exchange == "poloniex")
-                , value "poloniex"
-                ]
-                [ text "Poloniex" ]
+
+            --, Html.option
+            --    [ selected (model.schedule_state.exchange == "coinbase")
+            --    , value "coinbase"
+            --    ]
+            --    [ text "Coinbase" ]
+            --, Html.option
+            --    [ selected (model.schedule_state.exchange == "poloniex")
+            --    , value "poloniex"
+            --    ]
+            --    [ text "Poloniex" ]
             ]
         ]
 

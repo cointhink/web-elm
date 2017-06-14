@@ -32,7 +32,8 @@ exchanges =
     div [ class "" ]
         [ div [ class "centerblock" ] [ text "Connected Exchanges" ]
         , exchangeList
-        , exchangeAddButton
+
+        --, exchangeAddButton
         ]
 
 

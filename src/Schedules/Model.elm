@@ -42,7 +42,7 @@ defaultModel seed mode =
         Nothing
         mode
         (Random.Pcg.initialSeed seed)
-        (Schedule "" "" "noop" Schedule_Stopped "{}")
+        (Schedule "" "" "noop" Schedule_Unknown "{}")
         Nothing
         (ScheduleState "" "" "")
         []

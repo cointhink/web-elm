@@ -22,8 +22,8 @@ type alias Schedule =
 
 type Schedule_States
     = Schedule_Unknown -- 0
-    | Schedule_Stopped -- 1
-    | Schedule_Running -- 2
+    | Schedule_Disabled -- 1
+    | Schedule_Enabled -- 2
 
 
 scheduleDecoder : JD.Decoder Schedule
@@ -44,11 +44,11 @@ schedule_StatesDecoder =
                 "unknown" ->
                     Schedule_Unknown
 
-                "stopped" ->
-                    Schedule_Stopped
+                "disabled" ->
+                    Schedule_Disabled
 
-                "running" ->
-                    Schedule_Running
+                "enabled" ->
+                    Schedule_Enabled
 
                 _ ->
                     Schedule_Unknown
@@ -79,11 +79,11 @@ schedule_StatesEncoder v =
                 Schedule_Unknown ->
                     "unknown"
 
-                Schedule_Stopped ->
-                    "stopped"
+                Schedule_Disabled ->
+                    "disabled"
 
-                Schedule_Running ->
-                    "running"
+                Schedule_Enabled ->
+                    "enabled"
 
     in
         JE.string <| lookup v
