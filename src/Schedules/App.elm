@@ -200,7 +200,7 @@ replace : Maybe ScheduleRun -> ScheduleRun -> ScheduleRun
 replace replacement existing =
     case replacement of
         Just r1 ->
-            case existing.schedule of
+            case r1.schedule of
                 Just rs1 ->
                     case existing.schedule of
                         Just es1 ->
