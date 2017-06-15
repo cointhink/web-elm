@@ -20,6 +20,7 @@ import Proto.Schedule_list_partial exposing (..)
 import Proto.Schedule_list_response exposing (..)
 import Proto.Schedule_start exposing (..)
 import Proto.Schedule_stop exposing (..)
+import Proto.Schedule_delete exposing (..)
 import Proto.Schedule_run exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
@@ -194,6 +195,24 @@ update msg model =
                     List.map (replace listPartial.scheduleRun) model.schedule_runs
             in
                 ( { model | schedule_runs = updatedRuns }, Cmd.none )
+
+        Msg.ScheduleDelete scheduleId ->
+            let
+                item =
+                    Proto.Schedule_delete.ScheduleDelete scheduleId
+
+                ( postSeed, id, cmd ) =
+                    apiCall
+                        item
+                        "ScheduleDelete"
+                        scheduleDeleteEncoder
+                        model.seed
+                        ws_send
+            in
+                ( { model | seed = postSeed }, cmd )
+
+        Msg.ScheduleDeleteResponseMsg response ->
+            ( model, Cmd.none )
 
 
 replace : Maybe ScheduleRun -> ScheduleRun -> ScheduleRun

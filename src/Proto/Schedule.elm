@@ -24,6 +24,7 @@ type Schedule_States
     = Schedule_Unknown -- 0
     | Schedule_Disabled -- 1
     | Schedule_Enabled -- 2
+    | Schedule_Deleted -- 3
 
 
 scheduleDecoder : JD.Decoder Schedule
@@ -49,6 +50,9 @@ schedule_StatesDecoder =
 
                 "enabled" ->
                     Schedule_Enabled
+
+                "deleted" ->
+                    Schedule_Deleted
 
                 _ ->
                     Schedule_Unknown
@@ -84,6 +88,9 @@ schedule_StatesEncoder v =
 
                 Schedule_Enabled ->
                     "enabled"
+
+                Schedule_Deleted ->
+                    "deleted"
 
     in
         JE.string <| lookup v

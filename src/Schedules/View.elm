@@ -73,6 +73,9 @@ algoListHtml s runMaybe =
                         Schedule_Enabled ->
                             "enabled"
 
+                        Schedule_Deleted ->
+                            "deleted"
+
                         Schedule_Unknown ->
                             "unknown"
                      )
@@ -101,13 +104,16 @@ algoListHtml s runMaybe =
                         button [ onClick (Msg.ScheduleStop s.id) ]
                             [ text "stop" ]
 
+                    Schedule_Deleted ->
+                        text "?"
+
                     Schedule_Unknown ->
                         text "?"
                  )
                     :: []
                 )
             , div [ class "list-algorithm-admin" ]
-                [ a [ onClick (Msg.ScheduleStop s.id), href "#" ] [ text "x" ] ]
+                [ a [ onClick (Msg.ScheduleDelete s.id), href "#" ] [ text "x" ] ]
             ]
         ]
 
@@ -126,6 +132,9 @@ algoListClasses status runMaybe =
         statusName =
             case status of
                 Schedule_Unknown ->
+                    "list-schedules-unknown"
+
+                Schedule_Deleted ->
                     "list-schedules-unknown"
 
                 Schedule_Disabled ->
