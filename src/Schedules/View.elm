@@ -159,7 +159,7 @@ itemNew model =
                 { preventDefault = True, stopPropagation = False }
                 (JD.succeed Msg.ScheduleNew)
             ]
-            [ div [] [ text "Schedule an algorithm" ]
+            [ div [ class "centerblock" ] [ text "Run an algorithm" ]
             , fieldset [ disabled (False) ]
                 [ algoNewAlgorithm model
                 , algoNewExchange model

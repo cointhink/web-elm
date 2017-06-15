@@ -204,6 +204,11 @@ footer {
   width: 10em;
 }
 
+.item-add {
+  margin: auto;
+  width: 80%;
+}
+
 .item-add .usd {
   width: 3em;
 }
