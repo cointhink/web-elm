@@ -22,6 +22,7 @@ import Proto.Schedule_start exposing (..)
 import Proto.Schedule_stop exposing (..)
 import Proto.Schedule_delete exposing (..)
 import Proto.Schedule_run exposing (..)
+import Proto.Schedule exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -193,8 +194,11 @@ update msg model =
             let
                 updatedRuns =
                     List.map (replace listPartial.scheduleRun) model.schedule_runs
+
+                afterDelete =
+                    List.filter filterDelete updatedRuns
             in
-                ( { model | schedule_runs = updatedRuns }, Cmd.none )
+                ( { model | schedule_runs = afterDelete }, Cmd.none )
 
         Msg.ScheduleDelete scheduleId ->
             let
@@ -236,6 +240,15 @@ replace replacement existing =
 
         Nothing ->
             existing
+
+
+filterDelete scheduleRun =
+    case scheduleRun.schedule of
+        Just schedule ->
+            schedule.status /= Schedule_Deleted
+
+        Nothing ->
+            False
 
 
 subscriptions : Model -> Sub Msg
