@@ -22,9 +22,12 @@ type alias Algorun =
 
 type Algorun_States
     = Algorun_Unknown -- 0
-    | Algorun_Stopped -- 1
-    | Algorun_Running -- 2
-    | Algorun_Deleted -- 3
+    | Algorun_Building -- 1
+    | Algorun_Starting -- 2
+    | Algorun_Running -- 3
+    | Algorun_Stopped -- 4
+    | Algorun_Destroying -- 5
+    | Algorun_Deleted -- 6
 
 
 algorunDecoder : JD.Decoder Algorun
@@ -45,11 +48,20 @@ algorun_StatesDecoder =
                 "unknown" ->
                     Algorun_Unknown
 
-                "stopped" ->
-                    Algorun_Stopped
+                "building" ->
+                    Algorun_Building
+
+                "starting" ->
+                    Algorun_Starting
 
                 "running" ->
                     Algorun_Running
+
+                "stopped" ->
+                    Algorun_Stopped
+
+                "destroying" ->
+                    Algorun_Destroying
 
                 "deleted" ->
                     Algorun_Deleted
@@ -83,11 +95,20 @@ algorun_StatesEncoder v =
                 Algorun_Unknown ->
                     "unknown"
 
-                Algorun_Stopped ->
-                    "stopped"
+                Algorun_Building ->
+                    "building"
+
+                Algorun_Starting ->
+                    "starting"
 
                 Algorun_Running ->
                     "running"
+
+                Algorun_Stopped ->
+                    "stopped"
+
+                Algorun_Destroying ->
+                    "destroying"
 
                 Algorun_Deleted ->
                     "deleted"

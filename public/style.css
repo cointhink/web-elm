@@ -259,8 +259,12 @@ footer {
   margin: 1em;
 }
 
-.list-schedules-enabled-stopped  {
+.list-schedules-enabled-starting  {
   background-color: #070;
+}
+
+.list-schedules-enabled-running  {
+  background-color: #0A0;
 }
 
 .list-schedules-disabled-  {
