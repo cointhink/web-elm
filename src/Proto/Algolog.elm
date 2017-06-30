@@ -12,16 +12,20 @@ import Json.Encode as JE
 
 
 type alias Algolog =
-    { algorithmId : String -- 1
-    , level : String -- 2
-    , message : String -- 3
+    { id : String -- 1
+    , algorunId : String -- 2
+    , event : String -- 3
+    , level : String -- 4
+    , message : String -- 5
     }
 
 
 algologDecoder : JD.Decoder Algolog
 algologDecoder =
     JD.lazy <| \_ -> decode Algolog
-        |> required "AlgorithmId" JD.string ""
+        |> required "Id" JD.string ""
+        |> required "AlgorunId" JD.string ""
+        |> required "Event" JD.string ""
         |> required "Level" JD.string ""
         |> required "Message" JD.string ""
 
@@ -29,7 +33,9 @@ algologDecoder =
 algologEncoder : Algolog -> JE.Value
 algologEncoder v =
     JE.object <| List.filterMap identity <|
-        [ (requiredFieldEncoder "AlgorithmId" JE.string "" v.algorithmId)
+        [ (requiredFieldEncoder "Id" JE.string "" v.id)
+        , (requiredFieldEncoder "AlgorunId" JE.string "" v.algorunId)
+        , (requiredFieldEncoder "Event" JE.string "" v.event)
         , (requiredFieldEncoder "Level" JE.string "" v.level)
         , (requiredFieldEncoder "Message" JE.string "" v.message)
         ]
