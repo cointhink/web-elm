@@ -241,7 +241,7 @@ update msg model =
                 ( postSeed, id, cmd ) =
                     apiCall
                         item
-                        "AlgologLIst"
+                        "AlgologList"
                         algologListEncoder
                         model.seed
                         ws_send
