@@ -2,6 +2,8 @@ module Schedules.Model exposing (..)
 
 import String
 import Schedules.Msg exposing (..)
+import Proto.Algolog exposing (..)
+import Proto.Algorun exposing (..)
 import Proto.Account exposing (..)
 import Proto.Schedule exposing (..)
 import Proto.Schedule_run exposing (..)
@@ -17,6 +19,8 @@ type alias Model =
     , schedule_add_req_id : Maybe String
     , schedule_state : ScheduleState
     , schedule_runs : List ScheduleRun
+    , algorun : Algorun
+    , algorun_logs : List Algolog
     }
 
 
@@ -27,17 +31,8 @@ type alias ScheduleState =
     }
 
 
-scheduleStateEncoder : ScheduleState -> JE.Value
-scheduleStateEncoder item =
-    JE.object
-        [ ( "Exchange", JE.string item.exchange )
-        , ( "Market", JE.string item.market )
-        , ( "Amount", JE.string item.amount )
-        ]
-
-
-defaultModel : Int -> Mode -> Model
-defaultModel seed mode =
+defaultModel : Int -> Mode -> Algorun -> Model
+defaultModel seed mode algorun =
     Model
         Nothing
         mode
@@ -46,6 +41,22 @@ defaultModel seed mode =
         Nothing
         (ScheduleState "" "" "")
         []
+        algorun
+        []
+
+
+defaultAlgorun : String -> Algorun
+defaultAlgorun id =
+    Algorun id "" "" "" "" ""
+
+
+scheduleStateEncoder : ScheduleState -> JE.Value
+scheduleStateEncoder item =
+    JE.object
+        [ ( "Exchange", JE.string item.exchange )
+        , ( "Market", JE.string item.market )
+        , ( "Amount", JE.string item.amount )
+        ]
 
 
 isFormSent : Model -> Bool

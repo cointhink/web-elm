@@ -11,6 +11,7 @@ import Cointhink.Views exposing (..)
 import Proto.Schedule exposing (..)
 import Proto.Schedule_run exposing (..)
 import Proto.Algorun exposing (..)
+import Proto.Algolog exposing (..)
 
 
 view : Model -> Html Msg
@@ -30,6 +31,9 @@ page model =
 
                 Msg.ModeUpdate ->
                     itemUpdate model
+
+                Msg.ModeView ->
+                    itemView model
 
         Nothing ->
             plzlogin
@@ -63,7 +67,28 @@ algoListHtml s runMaybe =
     div [ class ("list-row-back " ++ (algoListClasses s.status runMaybe)) ]
         [ li [ class "list-row" ]
             [ div [ class "list-algorithm-algo" ]
-                [ text s.algorithmId ]
+                [ a
+                    [ onClick
+                        (Msg.Algolog
+                            (case runMaybe of
+                                Just run ->
+                                    run.id
+
+                                Nothing ->
+                                    ""
+                            )
+                        )
+                    , class
+                        (case runMaybe of
+                            Just run ->
+                                "href"
+
+                            Nothing ->
+                                ""
+                        )
+                    ]
+                    [ text s.algorithmId ]
+                ]
             , div [ class "list-algorithm-status" ]
                 [ text
                     ((case s.status of
@@ -306,6 +331,30 @@ itemUpdate model =
                     "Submit"
                 )
             ]
+        ]
+
+
+itemView : Model -> Html Msg
+itemView model =
+    div [ class "item-view" ]
+        [ div []
+            [ text
+                model.algorun.id
+            ]
+        , div [ class "algolog-list" ]
+            (div [] [ text "Log" ]
+                :: (List.map
+                        algologRow
+                        model.algorun_logs
+                   )
+            )
+        ]
+
+
+algologRow : Algolog -> Html Msg
+algologRow log =
+    div []
+        [ text log.message
         ]
 
 

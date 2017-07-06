@@ -5,12 +5,14 @@ import Proto.Schedule_create_response exposing (..)
 import Proto.Schedule_delete_response exposing (..)
 import Proto.Schedule_list_response exposing (..)
 import Proto.Schedule_list_partial exposing (..)
+import Proto.Algolog exposing (..)
 
 
 type Mode
     = ModeList
     | ModeAdd
     | ModeUpdate
+    | ModeView
 
 
 type Msg
@@ -30,3 +32,5 @@ type Msg
     | ScheduleCreateResponseMsg ScheduleCreateResponse
     | ScheduleListResponseMsg ScheduleListResponse
     | ScheduleListPartialMsg ScheduleListPartial
+    | AlgologMsg Algolog
+    | Algolog String

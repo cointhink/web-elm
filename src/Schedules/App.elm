@@ -8,6 +8,7 @@ import Json.Decode exposing (decodeValue)
 import Schedules.Msg as Msg exposing (..)
 import Schedules.Model exposing (..)
 import Schedules.View exposing (view)
+import Proto.Algolog exposing (..)
 import Proto.Account exposing (..)
 import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
@@ -66,6 +67,13 @@ msg_recv response =
                     scheduleListPartialDecoder
                     response.object
                     Msg.ScheduleListPartialMsg
+                    Noop
+
+            "Algolog" ->
+                wsDecode
+                    algologDecoder
+                    response.object
+                    Msg.AlgologMsg
                     Noop
 
             _ ->
@@ -218,6 +226,18 @@ update msg model =
         Msg.ScheduleDeleteResponseMsg response ->
             ( model, Cmd.none )
 
+        Msg.AlgologMsg algolog ->
+            ( { model | algorun_logs = algolog :: model.algorun_logs }, Cmd.none )
+
+        Msg.Algolog algologId ->
+            let
+                modelAlgorun =
+                    model.algorun
+            in
+                ( { model | mode = ModeView, algorun = { modelAlgorun | id = algologId } }
+                , Navigation.modifyUrl ("#view/" ++ algologId)
+                )
+
 
 replace : Maybe ScheduleRun -> ScheduleRun -> ScheduleRun
 replace replacement existing =
@@ -273,15 +293,41 @@ init flags location =
             let
                 seededModel =
                     defaultModel flags.seed
+
+                words =
+                    String.split "/" location.hash
+
+                hashword =
+                    case List.head words of
+                        Just word ->
+                            word
+
+                        Nothing ->
+                            ""
             in
-                case location.hash of
+                case hashword of
                     "#add" ->
-                        ( seededModel ModeAdd, Cmd.none )
+                        ( seededModel ModeAdd (defaultAlgorun ""), Cmd.none )
+
+                    "#view" ->
+                        let
+                            headIdSlice =
+                                List.reverse (List.take 2 words)
+
+                            headId =
+                                case List.head headIdSlice of
+                                    Just id ->
+                                        id
+
+                                    Nothing ->
+                                        ""
+                        in
+                            ( seededModel ModeView (defaultAlgorun headId), Cmd.none )
 
                     _ ->
                         let
                             modedSeededModel =
-                                seededModel ModeList
+                                seededModel ModeList (defaultAlgorun "")
 
                             ( postSeed, id, cmd ) =
                                 apiCall

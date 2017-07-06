@@ -25,6 +25,11 @@ footer {
   margin-right: 2em;
 }
 
+.href {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .navarea .navbar {
   display: flex;
   justify-content: space-around;
@@ -291,4 +296,8 @@ footer {
 
 .algo-list .algo-description {
   padding-left: 1em;
+}
+
+.algolog-list {
+  background-color: #eee;
 }
