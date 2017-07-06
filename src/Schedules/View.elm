@@ -69,7 +69,7 @@ algoListHtml s runMaybe =
             [ div [ class "list-algorithm-algo" ]
                 [ a
                     [ onClick
-                        (Msg.Algolog
+                        (Msg.AlgorunView
                             (case runMaybe of
                                 Just run ->
                                     run.id

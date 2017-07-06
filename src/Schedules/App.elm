@@ -9,6 +9,7 @@ import Schedules.Msg as Msg exposing (..)
 import Schedules.Model exposing (..)
 import Schedules.View exposing (view)
 import Proto.Algolog exposing (..)
+import Proto.Algolog_list exposing (..)
 import Proto.Account exposing (..)
 import Proto.Signup_form exposing (..)
 import Proto.Signup_form_response exposing (..)
@@ -229,13 +230,31 @@ update msg model =
         Msg.AlgologMsg algolog ->
             ( { model | algorun_logs = algolog :: model.algorun_logs }, Cmd.none )
 
-        Msg.Algolog algologId ->
+        Msg.AlgorunView algorunId ->
             let
                 modelAlgorun =
                     model.algorun
+
+                item =
+                    Proto.Algolog_list.AlgologList algorunId
+
+                ( postSeed, id, cmd ) =
+                    apiCall
+                        item
+                        "AlgologLIst"
+                        algologListEncoder
+                        model.seed
+                        ws_send
             in
-                ( { model | mode = ModeView, algorun = { modelAlgorun | id = algologId } }
-                , Navigation.modifyUrl ("#view/" ++ algologId)
+                ( { model
+                    | mode = ModeView
+                    , algorun = { modelAlgorun | id = algorunId }
+                    , seed = postSeed
+                  }
+                , Cmd.batch
+                    [ Navigation.modifyUrl ("#view/" ++ algorunId)
+                    , cmd
+                    ]
                 )
 
 

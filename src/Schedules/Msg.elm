@@ -33,4 +33,4 @@ type Msg
     | ScheduleListResponseMsg ScheduleListResponse
     | ScheduleListPartialMsg ScheduleListPartial
     | AlgologMsg Algolog
-    | Algolog String
+    | AlgorunView String
