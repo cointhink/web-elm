@@ -298,6 +298,10 @@ footer {
   padding-left: 1em;
 }
 
+.algolog-list-head {
+  background-color: #ddd;
+}
+
 .algolog-list {
   background-color: #eee;
 }

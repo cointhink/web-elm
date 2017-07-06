@@ -337,7 +337,7 @@ itemUpdate model =
 itemView : Model -> Html Msg
 itemView model =
     div [ class "item-view" ]
-        [ div []
+        [ div [ class "algolog-list-head" ]
             [ text
                 model.algorun.id
             ]
