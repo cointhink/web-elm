@@ -310,7 +310,7 @@ init flags location =
     in
         case List.head words of
             Just word ->
-                case (Debug.log "parsing word" word) of
+                case word of
                     "#add" ->
                         ( defaultModel firstSeed ModeAdd (defaultAlgorun ""), Cmd.none )
 

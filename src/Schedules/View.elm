@@ -353,8 +353,10 @@ itemView model =
 
 algologRow : Algolog -> Html Msg
 algologRow log =
-    div []
-        [ text log.message
+    div [ class "algolog-row" ]
+        [ div [ class "algolog-createdat" ] [ time [ datetime log.createdAt ] [] ]
+        , div [ class "algolog-level" ] [ text log.level ]
+        , div [] [ text log.message ]
         ]
 
 

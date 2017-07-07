@@ -305,3 +305,15 @@ footer {
 .algolog-list {
   background-color: #eee;
 }
+
+.algolog-row {
+  display: flex;
+}
+
+.algolog-level {
+  width: 3em;
+}
+
+.algolog-createdat {
+  width: 3em;
+}
