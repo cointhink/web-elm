@@ -12,6 +12,7 @@ import Proto.Schedule exposing (..)
 import Proto.Schedule_run exposing (..)
 import Proto.Algorun exposing (..)
 import Proto.Algolog exposing (..)
+import Date.Extra as Date
 
 
 view : Model -> Html Msg
@@ -354,7 +355,17 @@ itemView model =
 algologRow : Algolog -> Html Msg
 algologRow log =
     div [ class "algolog-row" ]
-        [ div [ class "algolog-createdat" ] [ time [ datetime log.createdAt ] [] ]
+        [ div [ class "algolog-createdat" ]
+            [ time [ datetime log.createdAt ]
+                [ (case Date.fromIsoString log.createdAt of
+                    Just time ->
+                        text (Date.toFormattedString "M-d h:m" time)
+
+                    Nothing ->
+                        text "?"
+                  )
+                ]
+            ]
         , div [ class "algolog-level" ] [ text log.level ]
         , div [] [ text log.message ]
         ]
