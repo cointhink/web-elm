@@ -236,7 +236,7 @@ update msg model =
                     model.algorun
 
                 item =
-                    Proto.Algolog_list.AlgologList algorunId
+                    AlgologList algorunId
 
                 ( postSeed, id, cmd ) =
                     apiCall
@@ -302,63 +302,64 @@ type alias Flags =
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
     let
-        debug_flags =
-            (Debug.log "Schedules init flags" flags)
+        firstSeed =
+            birdSeed flags.seed
 
-        debug_location =
-            (Debug.log "Schedules init location" location)
-
-        ( postModel, postCmd ) =
-            let
-                seededModel =
-                    defaultModel flags.seed
-
-                words =
-                    String.split "/" location.hash
-
-                hashword =
-                    case List.head words of
-                        Just word ->
-                            word
-
-                        Nothing ->
-                            ""
-            in
-                case hashword of
+        words =
+            String.split "/" location.hash
+    in
+        case List.head words of
+            Just word ->
+                case (Debug.log "parsing word" word) of
                     "#add" ->
-                        ( seededModel ModeAdd (defaultAlgorun ""), Cmd.none )
+                        ( defaultModel firstSeed ModeAdd (defaultAlgorun ""), Cmd.none )
 
                     "#view" ->
                         let
-                            headIdSlice =
+                            wordsSlice =
                                 List.reverse (List.take 2 words)
 
-                            headId =
-                                case List.head headIdSlice of
+                            ( runId, ( postPostSeed, apiId, cmd ) ) =
+                                case List.head wordsSlice of
                                     Just id ->
-                                        id
+                                        let
+                                            theRest =
+                                                apiCall
+                                                    (AlgologList id)
+                                                    "AlgologList"
+                                                    algologListEncoder
+                                                    firstSeed
+                                                    ws_send
+                                        in
+                                            ( id, theRest )
 
                                     Nothing ->
-                                        ""
+                                        ( "", ( firstSeed, "", Cmd.none ) )
                         in
-                            ( seededModel ModeView (defaultAlgorun headId), Cmd.none )
+                            ( defaultModel postPostSeed ModeView (defaultAlgorun runId), cmd )
 
                     _ ->
-                        let
-                            modedSeededModel =
-                                seededModel ModeList (defaultAlgorun "")
+                        doTheList firstSeed
 
-                            ( postSeed, id, cmd ) =
-                                apiCall
-                                    (ScheduleList "")
-                                    "ScheduleList"
-                                    scheduleListEncoder
-                                    modedSeededModel.seed
-                                    ws_send
-                        in
-                            ( { modedSeededModel | seed = postSeed }, cmd )
+            Nothing ->
+                doTheList firstSeed
+
+
+doTheList : Seed -> ( Model, Cmd Msg )
+doTheList firstSeed =
+    let
+        modedSeededModel =
+            defaultModel firstSeed ModeList (defaultAlgorun "")
+
+        ( postSeed, id, cmd ) =
+            apiCall
+                (ScheduleList "")
+                "ScheduleList"
+                scheduleListEncoder
+                modedSeededModel.seed
+                ws_send
     in
-        ( postModel, postCmd )
+        ( { modedSeededModel | seed = postSeed }, cmd )
 
 
 fromUrl : Navigation.Location -> Msg
