@@ -51,9 +51,7 @@ msg_recv : WsResponse -> Msg
 msg_recv response =
     let
         debug =
-            ""
-
-        --Debug.log "navbar ws_resp" response
+            Debug.log "navbar ws_resp" response
     in
         case response.method of
             "SignupFormResponse" ->
@@ -80,6 +78,9 @@ msg_recv response =
                     Err reason ->
                         Noop
 
+            "ERROR" ->
+                Msg.NetworkErr
+
             _ ->
                 Msg.Noop
 
@@ -89,6 +90,9 @@ update msg model =
     case msg of
         Msg.Noop ->
             ( model, Cmd.none )
+
+        Msg.NetworkErr ->
+            ( { model | hasToken = False }, Cmd.none )
 
         Msg.SigninEmailResponseMsg signinEmailResponse ->
             ( { model | signinEmailMessage = signinEmailResponse.message }, Cmd.none )

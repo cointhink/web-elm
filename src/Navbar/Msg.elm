@@ -13,3 +13,4 @@ type Msg
     | SigninEmailDone
     | SigninEmailChg String
     | SigninEmailResponseMsg SigninEmailResponse
+    | NetworkErr
