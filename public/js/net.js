@@ -32,14 +32,14 @@ function ws_connect () {
 }
 
 function ws_send (ws, msgLower) {
-  // capital hack
+  // protobuf json keyname hack
   var msg = {}
   Object.keys(msgLower).forEach(key => {
     var upperKey = key.charAt(0).toUpperCase() + key.slice(1)
     msg[upperKey] = msgLower[key]
   })
   msg.Object['@type'] = 'type.googleapis.com/proto.' + msg.Method
-  console.log('ws_send cAP ', msg)
+  console.log('ws_send', msg)
   if (_ws_socket.readyState == 1) {
     msg.Token = localStorage.getItem('token')
     let json = JSON.stringify(msg)
