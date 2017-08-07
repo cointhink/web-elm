@@ -25,7 +25,7 @@ function ws_connect () {
   }
 
   _ws_socket.onerror = (event) => {
-    _ws_receive({id: "0", method: "ERROR", object: {code: "OPENERR"}})
+    _ws_receive({id: "0", method: "WsOpenFail", object: {}})
   }
 
   return ws

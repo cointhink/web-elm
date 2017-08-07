@@ -7,6 +7,7 @@ import Random.Pcg exposing (Seed)
 
 type alias Model =
     { ws_url : String
+    , netFail : Bool
     , hasToken : Bool
     , account : Maybe Account
     , seed : Seed
@@ -17,4 +18,4 @@ type alias Model =
 
 
 defaultModel ws_url hasToken seed =
-    Model ws_url hasToken Nothing seed False (SigninEmail "") ""
+    Model ws_url False hasToken Nothing seed False (SigninEmail "") ""

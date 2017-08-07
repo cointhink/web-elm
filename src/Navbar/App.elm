@@ -78,8 +78,8 @@ msg_recv response =
                     Err reason ->
                         Noop
 
-            "ERROR" ->
-                Msg.NetworkErr
+            "WsOpenFail" ->
+                Msg.WsOpenFail
 
             _ ->
                 Msg.Noop
@@ -91,8 +91,8 @@ update msg model =
         Msg.Noop ->
             ( model, Cmd.none )
 
-        Msg.NetworkErr ->
-            ( { model | hasToken = False }, Cmd.none )
+        Msg.WsOpenFail ->
+            ( { model | netFail = True }, Cmd.none )
 
         Msg.SigninEmailResponseMsg signinEmailResponse ->
             ( { model | signinEmailMessage = signinEmailResponse.message }, Cmd.none )

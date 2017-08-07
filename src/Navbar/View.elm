@@ -38,7 +38,9 @@ userarea model =
             usercard account model.showUsercardMenu
 
         Nothing ->
-            if model.hasToken then
+            if model.netFail then
+                text "-network fail-"
+            else if model.hasToken then
                 text "-signing in-"
             else
                 loginForm model
