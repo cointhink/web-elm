@@ -373,4 +373,5 @@ algologRow log =
 
 plzlogin =
     div [ class "catchphrase" ]
-        [ text "Login to begin." ]
+        [-- text "Login to begin."
+        ]

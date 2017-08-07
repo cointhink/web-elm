@@ -136,4 +136,5 @@ algoUpdate model =
 
 plzlogin =
     div [ class "catchphrase" ]
-        [ text "Login to begin." ]
+        [--text "Login to begin."
+        ]
