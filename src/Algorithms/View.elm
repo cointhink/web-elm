@@ -53,10 +53,10 @@ algoList model =
 algorithmRow algorithm =
     li []
         [ div [ class "flexrow" ]
-            [ span [ class "algo-name" ] [ text "Weekly-Tue" ]
+            [ span [ class "algo-name" ] [ text algorithm.id ]
             , span [ class "algo-owner" ] [ text "Cointhink" ]
             ]
-        , div [ class "algo-description" ] [ text "Issue a buy order on each Tuesday." ]
+        , div [ class "algo-description" ] [ text algorithm.description ]
         ]
 
 

@@ -15,6 +15,7 @@ import Proto.Session_create exposing (..)
 import Proto.Session_create_response exposing (..)
 import Proto.Schedule_create exposing (..)
 import Proto.Algorithm_list exposing (..)
+import Proto.Algorithm_list_response exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -29,13 +30,21 @@ msg_recv : WsResponse -> Msg
 msg_recv response =
     let
         debug =
-            Debug.log "splash ws_resp" response
+            Debug.log "algorithms ws_resp" response
     in
         case response.method of
             "SessionCreateResponse" ->
                 case decodeValue sessionCreateResponseDecoder response.object of
                     Ok response ->
                         Msg.SessionCreateResponseMsg response
+
+                    Err reason ->
+                        Noop
+
+            "AlgorithmListResponse" ->
+                case decodeValue algorithmListResponseDecoder response.object of
+                    Ok response ->
+                        Msg.AlgorithmListResponseMsg response
 
                     Err reason ->
                         Noop
