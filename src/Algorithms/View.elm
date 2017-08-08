@@ -19,7 +19,7 @@ page model =
         Just account ->
             case model.mode of
                 Msg.ModeList ->
-                    algos
+                    algos model
 
                 Msg.ModeAdd ->
                     algoNew model
@@ -31,40 +31,32 @@ page model =
             plzlogin
 
 
-algos =
+algos model =
     div [ class "" ]
         [ div [ class "centerblock" ] [ text "Available Algorithms" ]
-        , algoList
+        , algoList model
 
         --, algoAddButton
         ]
 
 
-algoList =
+algoList model =
     div [ class "algo-list" ]
         [ ul []
-            [ li []
-                [ div [ class "flexrow" ]
-                    [ span [ class "algo-name" ] [ text "Weekly-Tue" ]
-                    , span [ class "algo-owner" ] [ text "Cointhink" ]
-                    ]
-                , div [ class "algo-description" ] [ text "Issue a buy order on each Tuesday." ]
-                ]
-            , li []
-                [ div [ class "flexrow" ]
-                    [ span [ class "algo-name" ] [ text "Weekly-Thur" ]
-                    , span [ class "algo-owner" ] [ text "Cointhink" ]
-                    ]
-                , div [ class "algo-description" ] [ text "Issue a buy order on each Thursday." ]
-                ]
-            , li []
-                [ div [ class "flexrow" ]
-                    [ span [ class "algo-name" ] [ text "Monthly" ]
-                    , span [ class "algo-owner" ] [ text "Cointhink" ]
-                    ]
-                , div [ class "algo-description" ] [ text "Issue a buy order once a month." ]
-                ]
+            (List.map
+                algorithmRow
+                model.algorithms
+            )
+        ]
+
+
+algorithmRow algorithm =
+    li []
+        [ div [ class "flexrow" ]
+            [ span [ class "algo-name" ] [ text "Weekly-Tue" ]
+            , span [ class "algo-owner" ] [ text "Cointhink" ]
             ]
+        , div [ class "algo-description" ] [ text "Issue a buy order on each Tuesday." ]
         ]
 
 
