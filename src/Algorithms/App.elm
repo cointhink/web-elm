@@ -14,6 +14,7 @@ import Proto.Signup_form_response exposing (..)
 import Proto.Session_create exposing (..)
 import Proto.Session_create_response exposing (..)
 import Proto.Schedule_create exposing (..)
+import Proto.Algorithm_list exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -49,6 +50,22 @@ update msg model =
         Msg.Noop ->
             ( model, Cmd.none )
 
+        Msg.AppInit ->
+            if model.mode == ModeList then
+                let
+                    algorithmListEncoded =
+                        algorithmListEncoder (AlgorithmList "")
+
+                    ( uuid, seed ) =
+                        idGen model.seed
+
+                    request =
+                        (Debug.log "ws_send" (WsRequest uuid "AlgorithmList" algorithmListEncoded))
+                in
+                    ( { model | seed = seed }, ws_send request )
+            else
+                ( (Debug.log "appinit" model), Cmd.none )
+
         Msg.AlgorithmNewButton ->
             ( { model | mode = ModeAdd }, Navigation.modifyUrl "#add" )
 
@@ -57,6 +74,9 @@ update msg model =
 
         Msg.SessionCreateResponseMsg response ->
             ( { model | account = response.account }, Cmd.none )
+
+        Msg.AlgorithmListResponseMsg response ->
+            ( { model | algorithms = response.algorithms }, Cmd.none )
 
         Msg.AlgorithmNew ->
             case model.scheduleCreate of
@@ -103,7 +123,7 @@ init flags location =
                 _ ->
                     ModeList
     in
-        ( defaultModel mode flags.seed, Cmd.none )
+        update Msg.AppInit (defaultModel mode flags.seed)
 
 
 fromUrl : Navigation.Location -> Msg
