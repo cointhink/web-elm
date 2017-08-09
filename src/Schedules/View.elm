@@ -231,6 +231,7 @@ algoNewExchange model =
             , Html.option
                 [ selected (model.schedule_state.exchange == "simulation")
                 , value "simulation"
+                , selected True
                 ]
                 [ text "Simulation Exchange" ]
 
@@ -287,27 +288,7 @@ algoNewAmount =
 algoNewAlgorithm model =
     div []
         [ Html.label [ for "f_sched" ] [ text "Algorithm: " ]
-        , Html.select
-            [ id "f_sched"
-            , onInput Msg.ScheduleNewAlgorithm
-            ]
-            [ Html.option [ selected (model.schedule.algorithmId == "noop") ] [ text "- Select Algorithm -" ]
-            , Html.option
-                [ selected (model.schedule.algorithmId == "buy-weekly-tue")
-                , value "buy-weekly-tue"
-                ]
-                [ text "BUY Weekly - Tuesday" ]
-            , Html.option
-                [ selected (model.schedule.algorithmId == "buy-weekly-thur")
-                , value "buy-weekly-thur"
-                ]
-                [ text "BUY Weekly - Thursday" ]
-            , Html.option
-                [ selected (model.schedule.algorithmId == "buy-monthly")
-                , value "buy-monthly"
-                ]
-                [ text "BUY Monthly" ]
-            ]
+        , text model.schedule.algorithmId
         ]
 
 

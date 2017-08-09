@@ -31,13 +31,13 @@ type alias ScheduleState =
     }
 
 
-defaultModel : Seed -> Mode -> Algorun -> Model
-defaultModel seed mode algorun =
+defaultModel : Seed -> Mode -> Schedule -> Algorun -> Model
+defaultModel seed mode schedule algorun =
     Model
         Nothing
         mode
         seed
-        (Schedule "" "" "noop" Schedule_Unknown "{}")
+        schedule
         Nothing
         (ScheduleState "" "" "")
         []
@@ -50,8 +50,17 @@ birdSeed intSeed =
     Random.Pcg.initialSeed intSeed
 
 
-defaultAlgorun : String -> Algorun
-defaultAlgorun id =
+blankSchedule =
+    Schedule "" "" "noop" Schedule_Unknown "{}"
+
+
+scheduleWithAlgoId : String -> Schedule
+scheduleWithAlgoId algoId =
+    Schedule "" "" algoId Schedule_Unknown "{}"
+
+
+blankAlgorun : String -> Algorun
+blankAlgorun id =
     Algorun id "" "" "" "" ""
 
 

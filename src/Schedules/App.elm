@@ -312,7 +312,24 @@ init flags location =
             Just word ->
                 case word of
                     "#add" ->
-                        ( defaultModel firstSeed ModeAdd (defaultAlgorun ""), Cmd.none )
+                        let
+                            algoIdMaybe =
+                                List.head (List.drop 1 (String.split "=" location.search))
+
+                            schedule =
+                                case algoIdMaybe of
+                                    Just algoId ->
+                                        (scheduleWithAlgoId algoId)
+
+                                    _ ->
+                                        blankSchedule
+                        in
+                            ( defaultModel firstSeed
+                                ModeAdd
+                                schedule
+                                (blankAlgorun "")
+                            , Cmd.none
+                            )
 
                     "#view" ->
                         let
@@ -336,7 +353,12 @@ init flags location =
                                     Nothing ->
                                         ( "", ( firstSeed, "", Cmd.none ) )
                         in
-                            ( defaultModel postPostSeed ModeView (defaultAlgorun runId), cmd )
+                            ( defaultModel postPostSeed
+                                ModeView
+                                blankSchedule
+                                (blankAlgorun runId)
+                            , cmd
+                            )
 
                     _ ->
                         doTheList firstSeed
@@ -349,7 +371,7 @@ doTheList : Seed -> ( Model, Cmd Msg )
 doTheList firstSeed =
     let
         modedSeededModel =
-            defaultModel firstSeed ModeList (defaultAlgorun "")
+            defaultModel firstSeed ModeList blankSchedule (blankAlgorun "")
 
         ( postSeed, id, cmd ) =
             apiCall
