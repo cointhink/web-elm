@@ -289,6 +289,10 @@ footer {
   padding: 0.5em;
 }
 
+.algo-list button {
+  margin-right: 0.5em;
+}
+
 .algo-list .algo-name {
   font-size: 120%;
   font-family: monospace;
@@ -316,4 +320,8 @@ footer {
 
 .algolog-createdat {
   width: 6em;
+}
+
+button {
+  border-top: 0px;
 }

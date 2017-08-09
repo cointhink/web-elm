@@ -18,3 +18,4 @@ type Msg
     | AlgorithmNew
     | AlgorithmUpdate
     | AlgorithmListResponseMsg AlgorithmListResponse
+    | ScheduleAddButton String

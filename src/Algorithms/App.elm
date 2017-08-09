@@ -55,7 +55,7 @@ msg_recv response =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case (Debug.log "splash update" msg) of
+    case (Debug.log "algorithms update" msg) of
         Msg.Noop ->
             ( model, Cmd.none )
 
@@ -104,6 +104,13 @@ update msg model =
 
                 Nothing ->
                     ( model, Cmd.none )
+
+        Msg.ScheduleAddButton data ->
+            let
+                newUrl =
+                    "/schedules?ex=" ++ (Debug.log "addbtn" data) ++ "#add"
+            in
+                ( model, Navigation.load newUrl )
 
 
 subscriptions : Model -> Sub Msg

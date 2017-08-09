@@ -39,7 +39,7 @@ msg_recv : WsResponse -> Msg
 msg_recv response =
     let
         debug =
-            Debug.log "splash ws_resp" response
+            Debug.log "schedules ws_resp" response
     in
         case response.method of
             "SessionCreateResponse" ->
@@ -83,7 +83,7 @@ msg_recv response =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case (Debug.log "splash update" msg) of
+    case (Debug.log "schedules update" msg) of
         Msg.Noop ->
             ( model, Cmd.none )
 

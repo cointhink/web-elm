@@ -53,7 +53,8 @@ algoList model =
 algorithmRow algorithm =
     li []
         [ div [ class "flexrow" ]
-            [ span [ class "algo-name" ] [ text algorithm.id ]
+            [ button [ onClick (Msg.ScheduleAddButton algorithm.id) ] [ text "+" ]
+            , span [ class "algo-name" ] [ text algorithm.id ]
             , span [ class "algo-owner" ] [ text "Cointhink" ]
             ]
         , div [ class "algo-description" ] [ text algorithm.description ]
