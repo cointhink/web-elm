@@ -14,14 +14,13 @@ function ws_connect () {
   _ws_connecting = true
   console.log('opening', _ws_url)
   _ws_socket.onopen = function (event) {
-    // console.log('onopen', event)
     _ws_connecting = false
-    ws_buffer.forEach(msg => { console.log('replaying buffer', msg); ws_send(ws, msg) })
-    ws_buffer = []
+    ws_drain()
   }
   _ws_socket.onmessage = (event) => {
     let o = JSON.parse(event.data)
     _ws_receive(o)
+    ws_drain()
   }
 
   _ws_socket.onerror = (event) => {
@@ -29,6 +28,19 @@ function ws_connect () {
   }
 
   return ws
+}
+
+
+function ws_drain() {
+  if (ws_buffer.length > 0) {
+    var orig_len = ws_buffer.length
+    var msg = ws_buffer.shift()
+    console.log('replaying buffer (len %d)', orig_len, msg);
+    ws_send(ws, msg)
+    if(msg.Method != "SessionCreate") {
+      ws_drain()
+    }
+  }
 }
 
 function ws_send (ws, msgLower) {
