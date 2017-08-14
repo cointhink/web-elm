@@ -364,7 +364,7 @@ fromUrl : Navigation.Location -> Msg
 fromUrl url =
     let
         debug_url =
-            (Debug.log "fromUrl" url)
+            (Debug.log "fromUrl (always noop)" url)
     in
         Msg.Noop
 
