@@ -41,7 +41,7 @@ function ws_drain() {
     var msg = ws_buffer.shift()
     console.log('ws.js replaying buffer (len %d)', orig_len, msg);
     ws_send(ws, msg)
-    if(msg.Method = "SessionCreate") {
+    if(msg.Method == "SessionCreate") {
       _ws_authenticating = true
     } else {
       ws_drain()
