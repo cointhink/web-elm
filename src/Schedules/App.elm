@@ -252,7 +252,7 @@ update msg model =
                     , seed = postSeed
                   }
                 , Cmd.batch
-                    [ Navigation.modifyUrl ("#view/" ++ algorunId)
+                    [ Navigation.newUrl ("#view/" ++ algorunId)
                     , cmd
                     ]
                 )
