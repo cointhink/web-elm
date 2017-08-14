@@ -87,15 +87,12 @@ update msg model =
         Msg.Noop ->
             ( model, Cmd.none )
 
-        Msg.ScheduleAdd ->
-            ( { model | mode = ModeAdd }, Navigation.modifyUrl "#add" )
-
         Msg.ScheduleNewAlgorithm aId ->
             let
                 item =
                     model.schedule
             in
-                ( { model | schedule = { item | algorithmId = aId } }, Cmd.none )
+                ( { model | mode = ModeAdd, schedule = { item | algorithmId = aId } }, Cmd.none )
 
         Msg.ScheduleSelectExchange value ->
             let
@@ -182,19 +179,26 @@ update msg model =
             in
                 if response.ok then
                     let
-                        ( postSeed, id, cmd ) =
-                            apiCall
-                                (ScheduleList "")
-                                "ScheduleList"
-                                scheduleListEncoder
-                                model_.seed
-                                ws_send
+                        ( subModel, cmd ) =
+                            update Msg.ScheduleRequest model_
                     in
-                        ( { model_ | seed = postSeed, mode = ModeList }
+                        ( { subModel | mode = ModeList }
                         , Cmd.batch [ Navigation.modifyUrl "#", cmd ]
                         )
                 else
                     ( model_, Cmd.none )
+
+        Msg.ScheduleRequest ->
+            let
+                ( postSeed, id, cmd ) =
+                    apiCall
+                        (ScheduleList "")
+                        "ScheduleList"
+                        scheduleListEncoder
+                        model.seed
+                        ws_send
+            in
+                ( { model | seed = postSeed }, cmd )
 
         Msg.ScheduleListResponseMsg response ->
             ( { model | schedule_runs = response.schedules }, Cmd.none )
@@ -313,7 +317,7 @@ init flags location =
                 update msg firstModel
 
             Nothing ->
-                doTheList firstModel
+                update Msg.ScheduleRequest firstModel
 
 
 routerUrl : Model -> Navigation.Location -> Maybe Msg
@@ -354,20 +358,6 @@ routerUrl model location =
 
             Nothing ->
                 Nothing
-
-
-doTheList : Model -> ( Model, Cmd Msg )
-doTheList model =
-    let
-        ( postSeed, id, cmd ) =
-            apiCall
-                (ScheduleList "")
-                "ScheduleList"
-                scheduleListEncoder
-                model.seed
-                ws_send
-    in
-        ( { model | seed = postSeed }, cmd )
 
 
 fromUrl : Navigation.Location -> Msg

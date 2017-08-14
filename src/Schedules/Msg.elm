@@ -18,8 +18,8 @@ type Mode
 type Msg
     = Noop
     | SessionCreateResponseMsg SessionCreateResponse
-    | ScheduleAdd
     | ScheduleNew
+    | ScheduleRequest
     | ScheduleSelectExchange String
     | ScheduleSelectMarket String
     | ScheduleSelectAmount String

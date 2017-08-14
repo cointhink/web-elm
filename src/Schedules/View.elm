@@ -42,8 +42,7 @@ page model =
 
 items schedule_runs =
     div [ class "" ]
-        [ algoAddButton
-        , div [ class "centerblock" ] [ text "Your Schedules" ]
+        [ div [ class "centerblock" ] [ text "Your Schedules" ]
         , algoList schedule_runs
         ]
 
@@ -183,11 +182,6 @@ pluckField name object =
         "?"
         (JD.decodeString (JD.field name JD.string) object)
     )
-
-
-algoAddButton =
-    div [ class "floatAdd" ]
-        [ button [ onClick Msg.ScheduleAdd ] [ text "+" ] ]
 
 
 itemNew : Model -> Html Msg
