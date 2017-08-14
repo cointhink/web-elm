@@ -90,12 +90,12 @@ update msg model =
         Msg.ScheduleAdd ->
             ( { model | mode = ModeAdd }, Navigation.modifyUrl "#add" )
 
-        Msg.ScheduleNewAlgorithm value ->
+        Msg.ScheduleNewAlgorithm aId ->
             let
                 item =
                     model.schedule
             in
-                ( { model | schedule = { item | algorithmId = value } }, Cmd.none )
+                ( { model | schedule = { item | algorithmId = aId } }, Cmd.none )
 
         Msg.ScheduleSelectExchange value ->
             let
@@ -305,6 +305,20 @@ init flags location =
         firstSeed =
             birdSeed flags.seed
 
+        firstModel =
+            defaultModel firstSeed ModeList blankSchedule (blankAlgorun "")
+    in
+        case routerUrl firstModel location of
+            Just msg ->
+                update msg firstModel
+
+            Nothing ->
+                doTheList firstModel
+
+
+routerUrl : Model -> Navigation.Location -> Maybe Msg
+routerUrl model location =
+    let
         words =
             String.split "/" location.hash
     in
@@ -315,73 +329,45 @@ init flags location =
                         let
                             algoIdMaybe =
                                 List.head (List.drop 1 (String.split "=" location.search))
-
-                            schedule =
-                                case algoIdMaybe of
-                                    Just algoId ->
-                                        (scheduleWithAlgoId algoId)
-
-                                    _ ->
-                                        blankSchedule
                         in
-                            ( defaultModel firstSeed
-                                ModeAdd
-                                schedule
-                                (blankAlgorun "")
-                            , Cmd.none
-                            )
+                            case algoIdMaybe of
+                                Just algoId ->
+                                    Just (Msg.ScheduleNewAlgorithm algoId)
+
+                                _ ->
+                                    Nothing
 
                     "#view" ->
                         let
                             wordsSlice =
                                 List.reverse (List.take 2 words)
-
-                            ( runId, ( postPostSeed, apiId, cmd ) ) =
-                                case List.head wordsSlice of
-                                    Just id ->
-                                        let
-                                            theRest =
-                                                apiCall
-                                                    (AlgologList id)
-                                                    "AlgologList"
-                                                    algologListEncoder
-                                                    firstSeed
-                                                    ws_send
-                                        in
-                                            ( id, theRest )
-
-                                    Nothing ->
-                                        ( "", ( firstSeed, "", Cmd.none ) )
                         in
-                            ( defaultModel postPostSeed
-                                ModeView
-                                blankSchedule
-                                (blankAlgorun runId)
-                            , cmd
-                            )
+                            case List.head wordsSlice of
+                                Just id ->
+                                    Just (Msg.AlgorunView id)
+
+                                Nothing ->
+                                    Nothing
 
                     _ ->
-                        doTheList firstSeed
+                        Nothing
 
             Nothing ->
-                doTheList firstSeed
+                Nothing
 
 
-doTheList : Seed -> ( Model, Cmd Msg )
-doTheList firstSeed =
+doTheList : Model -> ( Model, Cmd Msg )
+doTheList model =
     let
-        modedSeededModel =
-            defaultModel firstSeed ModeList blankSchedule (blankAlgorun "")
-
         ( postSeed, id, cmd ) =
             apiCall
                 (ScheduleList "")
                 "ScheduleList"
                 scheduleListEncoder
-                modedSeededModel.seed
+                model.seed
                 ws_send
     in
-        ( { modedSeededModel | seed = postSeed }, cmd )
+        ( { model | seed = postSeed }, cmd )
 
 
 fromUrl : Navigation.Location -> Msg
