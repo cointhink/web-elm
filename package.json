@@ -4,6 +4,7 @@
   "dependencies": {
     "elm": "^0.18.0",
     "elm-format": "^0.6.1-alpha",
-    "elm-oracle": "^1.1.1"
+    "elm-oracle": "^1.1.1",
+    "feather-icons"
   }
 }
