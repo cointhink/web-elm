@@ -229,9 +229,9 @@ algoNewFields model =
                     ""
     in
         if firstNamePart == "signal" then
-            algoNewAmount :: baseFields
-        else
             baseFields
+        else
+            baseFields ++ (algoNewAmount :: [])
 
 
 algoNewExchange model =
