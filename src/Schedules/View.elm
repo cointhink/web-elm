@@ -196,12 +196,7 @@ itemNew model =
                 (JD.succeed Msg.ScheduleNew)
             ]
             [ div [ class "centerblock" ] [ text "Run an algorithm" ]
-            , fieldset [ disabled (False) ]
-                [ algoNewAlgorithm model
-                , algoNewExchange model
-                , algoNewMarket model
-                , algoNewAmount
-                ]
+            , fieldset [ disabled (False) ] (algoNewFields model)
             , button []
                 [ text
                     (if isFormSent model then
@@ -212,6 +207,31 @@ itemNew model =
                 ]
             ]
         ]
+
+
+algoNewFields model =
+    let
+        baseFields =
+            [ algoNewAlgorithm model
+            , algoNewExchange model
+            , algoNewMarket model
+            ]
+
+        nameParts =
+            String.split "-" model.schedule.id
+
+        firstNamePart =
+            case List.head nameParts of
+                Just part ->
+                    part
+
+                Nothing ->
+                    ""
+    in
+        if firstNamePart == "signal" then
+            algoNewAmount :: baseFields
+        else
+            baseFields
 
 
 algoNewExchange model =
