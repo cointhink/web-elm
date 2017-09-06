@@ -232,7 +232,13 @@ update msg model =
             ( model, Cmd.none )
 
         Msg.AlgologMsg algolog ->
-            ( { model | algorun_logs = algolog :: model.algorun_logs }, Cmd.none )
+            ( { model
+                | algorun_logs =
+                    (algolog :: model.algorun_logs)
+                        |> List.sortWith logDateOrder
+              }
+            , Cmd.none
+            )
 
         Msg.AlgorunView algorunId ->
             let
@@ -260,6 +266,19 @@ update msg model =
                     , cmd
                     ]
                 )
+
+
+logDateOrder : Algolog -> Algolog -> Order
+logDateOrder a b =
+    case compare a.createdAt b.createdAt of
+        LT ->
+            GT
+
+        GT ->
+            LT
+
+        EQ ->
+            EQ
 
 
 replace : Maybe ScheduleRun -> ScheduleRun -> ScheduleRun
