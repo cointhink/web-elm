@@ -119,7 +119,7 @@ algoListHtml s runMaybe =
             , div [ class "list-algorithm-market" ]
                 [ text (pluckField "Market" s.initialState) ]
             , div [ class "list-algorithm-amount" ]
-                [ text ("$" ++ (pluckField "Amount" s.initialState)) ]
+                [ amountFormat s.initialState ]
             , div [ class "list-algorithm-controls" ]
                 ((case s.status of
                     Schedule_Disabled ->
@@ -148,6 +148,20 @@ algoListHtml s runMaybe =
                 )
             ]
         ]
+
+
+amountFormat state =
+    let
+        amount =
+            pluckField "Amount" state
+
+        label =
+            if String.length amount > 0 then
+                ("$" ++ amount)
+            else
+                ""
+    in
+        text label
 
 
 algoListClasses : Schedule_States -> Maybe Algorun -> String
