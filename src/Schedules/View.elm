@@ -218,7 +218,7 @@ algoNewFields model =
             ]
 
         nameParts =
-            String.split "-" model.schedule.id
+            String.split "-" model.schedule.algorithmId
 
         firstNamePart =
             case List.head nameParts of
