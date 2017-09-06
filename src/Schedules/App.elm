@@ -42,6 +42,9 @@ msg_recv response =
             Debug.log "schedules ws_resp" response
     in
         case response.method of
+            "Noop" ->
+                Noop
+
             "SessionCreateResponse" ->
                 wsDecode
                     sessionCreateResponseDecoder
@@ -78,7 +81,7 @@ msg_recv response =
                     Noop
 
             _ ->
-                (Debug.log "Unknown ws_resp method" Noop)
+                Noop
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

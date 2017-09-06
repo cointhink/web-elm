@@ -30,6 +30,9 @@ msg_recv response =
             Debug.log "splash ws_resp" response
     in
         case response.method of
+            "Noop" ->
+                Noop
+
             "SignupFormResponse" ->
                 case decodeValue signupFormResponseDecoder response.object of
                     Ok formResponse ->
