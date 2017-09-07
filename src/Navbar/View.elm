@@ -39,7 +39,7 @@ userarea model =
 
         Nothing ->
             if model.netFail then
-                text "-network fail-"
+                text "-connection failed-"
             else if model.hasToken then
                 text "-signing in-"
             else
