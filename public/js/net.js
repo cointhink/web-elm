@@ -28,12 +28,12 @@ function ws_connect () {
   }
 
   _ws_socket.onerror = (event) => {
-    _ws_receive({id: "0", method: "WsOpenFail", object: {}})
+    _ws_receive({id: "0", method: "WebsocketFail", object: "- Connection Error -"})
   }
 
   _ws_socket.onclose = (e)=>{
     if(e.code != 1000) {
-      _ws_receive({id: "0", method: "WsOpenFail", object: {}})
+      _ws_receive({id: "0", method: "WebsocketFail", object: "- Connection Lost -"})
       // reconnect
     }
   }

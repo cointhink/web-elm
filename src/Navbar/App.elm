@@ -3,7 +3,7 @@ port module Navbar.App exposing (app)
 import Platform.Cmd exposing (Cmd)
 import Navigation
 import Json.Encode
-import Json.Decode exposing (decodeValue)
+import Json.Decode exposing (decodeValue, decodeString)
 import Cointhink.Protocol exposing (..)
 import Navbar.View exposing (view)
 import Navbar.Msg as Msg exposing (..)
@@ -78,8 +78,13 @@ msg_recv response =
                     Err reason ->
                         Noop
 
-            "WsOpenFail" ->
-                Msg.WsOpenFail
+            "WebsocketFail" ->
+                case decodeValue Json.Decode.string response.object of
+                    Ok msg ->
+                        Msg.WebsocketFail msg
+
+                    Err reason ->
+                        Noop
 
             _ ->
                 Msg.Noop
@@ -91,8 +96,8 @@ update msg model =
         Msg.Noop ->
             ( model, Cmd.none )
 
-        Msg.WsOpenFail ->
-            ( { model | netFail = True }, Cmd.none )
+        Msg.WebsocketFail msg ->
+            ( { model | netFail = Just msg }, Cmd.none )
 
         Msg.SigninEmailResponseMsg signinEmailResponse ->
             ( { model | signinEmailMessage = signinEmailResponse.message }, Cmd.none )

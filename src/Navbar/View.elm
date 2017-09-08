@@ -33,15 +33,18 @@ navbanner model =
 
 userarea : Model.Model -> Html Msg.Msg
 userarea model =
-    case model.account of
-        Just account ->
-            usercard account model.showUsercardMenu
+    case model.netFail of
+        Just msg ->
+            text msg
 
         Nothing ->
-            if model.netFail then
-                text "-connection failed-"
-            else if model.hasToken then
-                text "-signing in-"
+            if model.hasToken then
+                case model.account of
+                    Just account ->
+                        usercard account model.showUsercardMenu
+
+                    Nothing ->
+                        text "-signing in-"
             else
                 loginForm model
 
