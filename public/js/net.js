@@ -31,6 +31,12 @@ function ws_connect () {
     _ws_receive({id: "0", method: "WsOpenFail", object: {}})
   }
 
+  _ws_socket.onclose = (e)=>{
+    if(e.code != 1000) {
+      _ws_receive({id: "0", method: "WsOpenFail", object: {}})
+      // reconnect
+    }
+  }
   return ws
 }
 
