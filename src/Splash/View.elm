@@ -35,7 +35,7 @@ page model =
 
 catchphrase =
     div [ class "catchphrase" ]
-        [ text "Buy cryptocoins on your schedule." ]
+        [ text "Cryptocoin Price Alerts" ]
 
 
 alreadLoggedIn =
@@ -45,9 +45,10 @@ alreadLoggedIn =
 
 steps =
     div [ class "steps" ]
-        [ div [] [ text "1. Connect your exchange account" ]
-        , div [] [ text "2. Set a purchasing schedule" ]
-        , div [] [ text "3. Have Bitcoins and other cryptocoins purchased automatically" ]
+        [ div [] [ text "1. Create an account" ]
+        , div [] [ text "2. Select an alert algorithm" ]
+        , div [] [ text "3. Select a coin to watch (BTC or ETH)" ]
+        , div [] [ text "4. Get price notices in email" ]
         ]
 
 
@@ -67,7 +68,7 @@ signup model =
             [ div [] [ text "Create a new account" ]
             , fieldset [ disabled (isFormSent model) ]
                 [ Html.input
-                    [ placeholder "Full Name"
+                    [ placeholder "Name"
                     , autofocus True
                     , onInput Msg.SignupFullname
                     ]
