@@ -48,7 +48,7 @@ steps =
         [ div [] [ text "1. Create an account" ]
         , div [] [ text "2. Select an alert algorithm" ]
         , div [] [ text "3. Select a coin to watch (BTC or ETH)" ]
-        , div [] [ text "4. Get price notices in email" ]
+        , div [] [ text "4. Get price alerts in email" ]
         ]
 
 
