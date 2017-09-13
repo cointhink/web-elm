@@ -72,7 +72,7 @@ creditRow account =
         [ div [ class "list-row-back list-schedules-notice" ]
             [ div [ class "list-row list-row-ad" ]
                 [ div [ class "list-row-ad-text" ]
-                    [ text ("Unused schedule credits: " ++ "0" ++ ".") ]
+                    [ text ("Unused schedule credits: " ++ (toString account.scheduleCredits) ++ ".") ]
                 , div [ class "list-row-ad-pay" ]
                     [ button [ onClick Msg.StripePay ]
                         [ text "Add a schedule credit for $2" ]
