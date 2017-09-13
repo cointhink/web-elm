@@ -12,6 +12,7 @@ import Proto.Schedule exposing (..)
 import Proto.Schedule_run exposing (..)
 import Proto.Algorun exposing (..)
 import Proto.Algolog exposing (..)
+import Proto.Account exposing (..)
 import Date.Extra
 import Date.Format
 
@@ -26,7 +27,7 @@ page model =
         Just account ->
             case model.mode of
                 Msg.ModeList ->
-                    items model.schedule_runs
+                    items model.schedule_runs account
 
                 Msg.ModeAdd ->
                     itemNew model
@@ -41,19 +42,18 @@ page model =
             plzlogin
 
 
-items schedule_runs =
+items schedule_runs account =
     div [ class "" ]
         [ div [ class "centerblock" ] [ text "Your Schedules" ]
         , algoList schedule_runs
+        , creditRow account
         ]
 
 
 algoList : List ScheduleRun -> Html Msg
 algoList schedule_runs =
     div [ class "list-schedules" ]
-        ((List.map algoListRow schedule_runs)
-            ++ [ adRow ]
-        )
+        (List.map algoListRow schedule_runs)
 
 
 algoListRow : ScheduleRun -> Html Msg
@@ -66,13 +66,13 @@ algoListRow sr =
             text "list err"
 
 
-adRow : Html Msg
-adRow =
+creditRow : Account -> Html Msg
+creditRow account =
     div []
         [ div [ class "list-row-back list-schedules-notice" ]
             [ div [ class "list-row list-row-ad" ]
                 [ div [ class "list-row-ad-text" ]
-                    [ text "Unused schedule credits: 0." ]
+                    [ text ("Unused schedule credits: " ++ "0" ++ ".") ]
                 , div [ class "list-row-ad-pay" ]
                     [ button [ onClick Msg.StripePay ]
                         [ text "Add a schedule credit for $2" ]
