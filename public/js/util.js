@@ -8,7 +8,7 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function stripePay(msg) {
+function stripePay(email) {
   var myNode = document.getElementById("card-container")
   myNode.style.display = "block"
 
@@ -29,7 +29,8 @@ function stripePay(msg) {
   s.setAttribute('data-key',"pk_test_sp3PVvkNYVuTlsh4cp0EoZrL");
   s.setAttribute('data-amount',"200");
   s.setAttribute('data-name',"CoinThink");
-  s.setAttribute('data-description',"Add a schedule slot");
+  s.setAttribute('data-description',"Add a new schedule slot");
+  s.setAttribute('data-email', email);
   f.appendChild(s)
 
 //  document.getElementById('card-element').appendChild(f);

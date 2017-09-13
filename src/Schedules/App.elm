@@ -94,7 +94,12 @@ update msg model =
             ( model, Cmd.none )
 
         Msg.StripePay ->
-            ( model, stripe_pay "detail" )
+            case model.account of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just account ->
+                    ( model, stripe_pay account.email )
 
         Msg.ScheduleNewAlgorithm aId ->
             let
