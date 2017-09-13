@@ -30,7 +30,7 @@ page model =
                     items model.schedule_runs account
 
                 Msg.ModeAdd ->
-                    itemNew model
+                    itemNew model account
 
                 Msg.ModeUpdate ->
                     itemUpdate model
@@ -228,8 +228,8 @@ pluckField name object =
     )
 
 
-itemNew : Model -> Html Msg
-itemNew model =
+itemNew : Model -> Account -> Html Msg
+itemNew model account =
     div [ class "item-add" ]
         [ Html.form
             [ class ""
@@ -240,12 +240,23 @@ itemNew model =
             ]
             [ div [ class "centerblock" ] [ text "Run an algorithm" ]
             , fieldset [ disabled (False) ] (algoNewFields model)
-            , button []
+            , (if account.scheduleCredits > 0 then
+                button []
+                    [ text
+                        (if isFormSent model then
+                            "Sending..."
+                         else
+                            "Submit (uses 1 schedule credit)"
+                        )
+                    ]
+               else
+                text "No schedule credits left."
+              )
+            , div []
                 [ text
-                    (if isFormSent model then
-                        "Sending..."
-                     else
-                        "Submit"
+                    ("Current balance: "
+                        ++ (toString account.scheduleCredits)
+                        ++ " schedule credit."
                     )
                 ]
             ]
