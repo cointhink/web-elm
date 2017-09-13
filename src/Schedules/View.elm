@@ -170,7 +170,13 @@ algoListHtml s runMaybe =
             , div [ class "list-algorithm-admin" ]
                 (case s.status of
                     Schedule_Disabled ->
-                        [ a [ onClick (Msg.ScheduleDelete s.id), href "#", title "delete" ] [ text "x" ] ]
+                        [ a
+                            [ onClick (Msg.ScheduleDelete s.id)
+                            , href "#"
+                            , title "Delete this schedule permanently"
+                            ]
+                            [ text "x" ]
+                        ]
 
                     _ ->
                         []
