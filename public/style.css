@@ -220,7 +220,7 @@ footer {
 
 .list-row {
   display: flex;
-  justify-content: right;
+  justify-content: center;
 }
 
 .list-row .list-algorithm-algo {
@@ -285,6 +285,10 @@ footer {
   background-color: grey;
 }
 
+.list-schedules-notice  {
+  background-color: #d2d225;
+}
+
 .algo-list li {
   list-style: none;
   padding: 0.5em;
@@ -325,4 +329,30 @@ footer {
 
 button {
   border-top: 0px;
+}
+
+#card-container {
+  display:none;
+  width: 30em;
+  background-color: #eee;
+  margin: 1em auto;
+  padding: 0.5em 1em;
+}
+
+#card-element {
+  padding: 0.5em 0;
+}
+
+.stripe-ad {
+  font-size: 50%;
+}
+
+.stripe-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-row-ad {
+  padding: 0.5em;
+  justify-content: space-between;
 }

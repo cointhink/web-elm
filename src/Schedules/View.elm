@@ -51,7 +51,9 @@ items schedule_runs =
 algoList : List ScheduleRun -> Html Msg
 algoList schedule_runs =
     div [ class "list-schedules" ]
-        (List.map algoListRow schedule_runs)
+        ((List.map algoListRow schedule_runs)
+            ++ [ adRow ]
+        )
 
 
 algoListRow : ScheduleRun -> Html Msg
@@ -62,6 +64,32 @@ algoListRow sr =
 
         Nothing ->
             text "list err"
+
+
+adRow : Html Msg
+adRow =
+    div []
+        [ div [ class "list-row-back list-schedules-notice" ]
+            [ div [ class "list-row list-row-ad" ]
+                [ div [ class "list-row-ad-text" ]
+                    [ text "Remaining schedule slots: 0." ]
+                , div [ class "list-row-ad-pay" ]
+                    [ button [ onClick Msg.StripePay ]
+                        [ text "Add a schedule slot for $2/month" ]
+                    ]
+                ]
+            ]
+        , div [ id "card-container", class "card-inactive" ]
+            [ div [ class "stripe-row" ]
+                [ text "Add a schedule slot for $2/month"
+                , img [ src "/assets/powered_by_stripe.svg" ] []
+                ]
+            , div []
+                [ text "Adding a schedule slot creates a place to run an algorithm." ]
+            , div [ id "card-element" ]
+                []
+            ]
+        ]
 
 
 algoListHtml s runMaybe =

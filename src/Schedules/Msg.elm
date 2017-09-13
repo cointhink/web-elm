@@ -34,3 +34,4 @@ type Msg
     | ScheduleListPartialMsg ScheduleListPartial
     | AlgologMsg Algolog
     | AlgorunView String
+    | StripePay

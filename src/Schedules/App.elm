@@ -35,6 +35,9 @@ port ws_send : WsRequest -> Cmd msg
 port ws_recv : (WsResponse -> msg) -> Sub msg
 
 
+port stripe_pay : String -> Cmd msg
+
+
 msg_recv : WsResponse -> Msg
 msg_recv response =
     let
@@ -89,6 +92,9 @@ update msg model =
     case (Debug.log "schedules update" msg) of
         Msg.Noop ->
             ( model, Cmd.none )
+
+        Msg.StripePay ->
+            ( model, stripe_pay "detail" )
 
         Msg.ScheduleNewAlgorithm aId ->
             let
