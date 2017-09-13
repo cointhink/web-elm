@@ -81,11 +81,11 @@ adRow =
             ]
         , div [ id "card-container", class "card-inactive" ]
             [ div [ class "stripe-row" ]
-                [ text "Add a schedule credit for $2"
+                [ text "Add a schedule credit for $2."
                 , img [ src "/assets/powered_by_stripe.svg" ] []
                 ]
             , div []
-                [ text " Most algorithms cost one schedule credit per month."
+                [ text " Most algorithms use up one schedule credit per month."
                 ]
             , div [ id "card-element" ]
                 []
