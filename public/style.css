@@ -9,6 +9,13 @@ footer {
   margin-top: 4em;
   padding: 0.5em 0;
   font-size: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
 }
 
 .biglogo {
@@ -354,4 +361,12 @@ button {
 .list-row-ad {
   padding: 0.5em;
   justify-content: space-between;
+}
+
+.small-print {
+  font-size: 80%;
+}
+
+.spacer {
+  padding: 0 1em;
 }

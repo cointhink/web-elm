@@ -13,5 +13,9 @@ mainView mainDiv =
 
 pageFoot =
     footer []
-        [ div [] [ text "Cointhink" ]
+        [ div [] [ text "Cointhink (C) 2017" ]
+        , div [ class "spacer" ] [ text " • " ]
+        , div []
+            [ a [ href "/terms" ] [ text "Terms" ]
+            ]
         ]

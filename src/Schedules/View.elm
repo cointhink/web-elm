@@ -87,6 +87,9 @@ creditRow account =
             , div []
                 [ text " Most algorithms use up one schedule credit per month."
                 ]
+            , div [ class "small-print" ]
+                [ text "* Schedule credits have no cash value and are non-refundable."
+                ]
             , div [ id "card-element" ]
                 []
             ]
