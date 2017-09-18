@@ -73,10 +73,15 @@ creditRow account =
             [ div [ class "list-row list-row-ad" ]
                 [ div [ class "list-row-ad-text" ]
                     [ text ("Unused schedule credits: " ++ (toString account.scheduleCredits) ++ ".") ]
-                , div [ class "list-row-ad-pay" ]
-                    [ button [ onClick Msg.StripePay ]
-                        [ text "Add a schedule credit for $2" ]
-                    ]
+                , (if account.scheduleCredits < 6 then
+                    div [ class "list-row-ad-pay" ]
+                        [ button [ onClick Msg.StripePay ]
+                            [ text "Add a schedule credit for $2" ]
+                        ]
+                   else
+                    div [ class "" ]
+                        []
+                  )
                 ]
             ]
         , div [ id "card-container", class "card-inactive" ]
@@ -88,10 +93,12 @@ creditRow account =
                 [ text " Most algorithms use up one schedule credit per month."
                 ]
             , div [ class "small-print" ]
-                [ text "* Schedule credits have no cash value and are non-refundable."
+                [ text "* Schedule credits have no cash value and are non-refundable. Limit 6 credits per account."
                 ]
             , div [ id "card-element" ]
                 []
+            , div [ id "card-note" ]
+                [ text "* Payments are in test mode. Your card will not be charged." ]
             ]
         ]
 
