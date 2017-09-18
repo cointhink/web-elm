@@ -57,7 +57,10 @@ algorithmRow algorithm =
             , span [ class "algo-name" ] [ text algorithm.id ]
             , span [ class "algo-owner" ] [ text "Cointhink" ]
             ]
-        , div [ class "algo-description" ] [ text algorithm.description ]
+        , div [ class "algo-row-detail" ]
+            [ div [ class "algo-description" ] [ text algorithm.description ]
+            , div [ class "algo-code" ] [ pre [] [ text algorithm.code ] ]
+            ]
         ]
 
 

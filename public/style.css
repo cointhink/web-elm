@@ -216,6 +216,14 @@ footer a {
   width: 10em;
 }
 
+.algo-code {
+  background-color: #eee;
+}
+
+.algo-row-detail {
+  margin-left: 2em;
+}
+
 .item-add {
   margin: auto;
   width: 80%;
@@ -310,7 +318,6 @@ footer a {
 }
 
 .algo-list .algo-description {
-  padding-left: 1em;
 }
 
 .algolog-list-head {
