@@ -19,21 +19,21 @@ function stripePay(email) {
   card.mount('#card-element')
 */
 
-  var f = document.createElement("form");
-  f.setAttribute('method',"post");
-  f.setAttribute('action',"/stripe");
+  var f = document.createElement("form")
+  f.setAttribute('method',"post")
+  f.setAttribute('action',"/stripe")
 
-  var s = document.createElement("script");
+  var s = document.createElement("script")
   s.className = "stripe-button"
   s.setAttribute('src', "https://checkout.stripe.com/checkout.js")
-  s.setAttribute('data-key',"pk_test_sp3PVvkNYVuTlsh4cp0EoZrL");
-  s.setAttribute('data-amount',"200");
-  s.setAttribute('data-name',"CoinThink");
-  s.setAttribute('data-description',"Add a new schedule slot");
-  s.setAttribute('data-email', email);
+  s.setAttribute('data-key',"pk_test_sp3PVvkNYVuTlsh4cp0EoZrL")
+  s.setAttribute('data-amount',"200")
+  s.setAttribute('data-name',"CoinThink")
+  s.setAttribute('data-description',"Add a new schedule slot")
+  s.setAttribute('data-email', email)
   f.appendChild(s)
 
-//  document.getElementById('card-element').appendChild(f);
+  document.getElementById('card-element').appendChild(f);
 
 /*
 <form action="/your-server-side-code" method="POST">
