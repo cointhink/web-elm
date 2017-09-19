@@ -187,20 +187,28 @@ update msg model =
                 ( { model | seed = postSeed }, cmd )
 
         Msg.ScheduleCreateResponseMsg response ->
-            let
-                model_ =
-                    { model | schedule_add_req_id = Nothing }
-            in
-                if response.ok then
+            case model.account of
+                Just account ->
                     let
-                        ( subModel, cmd ) =
-                            update Msg.ScheduleRequest model_
+                        model_ =
+                            { model | schedule_add_req_id = Nothing }
+
+                        account_ =
+                            { account | scheduleCredits = account.scheduleCredits - 1 }
                     in
-                        ( { subModel | mode = ModeList }
-                        , Cmd.batch [ Navigation.modifyUrl "#", cmd ]
-                        )
-                else
-                    ( model_, Cmd.none )
+                        if response.ok then
+                            let
+                                ( subModel, cmd ) =
+                                    update Msg.ScheduleRequest model_
+                            in
+                                ( { subModel | mode = ModeList, account = Just account_ }
+                                , Cmd.batch [ Navigation.modifyUrl "#", cmd ]
+                                )
+                        else
+                            ( model_, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
 
         Msg.ScheduleRequest ->
             let
