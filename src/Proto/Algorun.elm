@@ -18,6 +18,7 @@ type alias Algorun =
     , scheduleId : String -- 4
     , status : String -- 5
     , code : String -- 6
+    , image : String -- 7
     }
 
 
@@ -40,6 +41,7 @@ algorunDecoder =
         |> required "ScheduleId" JD.string ""
         |> required "Status" JD.string ""
         |> required "Code" JD.string ""
+        |> required "Image" JD.string ""
 
 
 algorun_StatesDecoder : JD.Decoder Algorun_States
@@ -87,6 +89,7 @@ algorunEncoder v =
         , (requiredFieldEncoder "ScheduleId" JE.string "" v.scheduleId)
         , (requiredFieldEncoder "Status" JE.string "" v.status)
         , (requiredFieldEncoder "Code" JE.string "" v.code)
+        , (requiredFieldEncoder "Image" JE.string "" v.image)
         ]
 
 
