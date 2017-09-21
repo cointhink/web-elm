@@ -61,7 +61,7 @@ scheduleWithAlgoId algoId =
 
 blankAlgorun : String -> Algorun
 blankAlgorun id =
-    Algorun id "" "" "" "" ""
+    Algorun id "" "" "" "" "" ""
 
 
 scheduleStateEncoder : ScheduleState -> JE.Value

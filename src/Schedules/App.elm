@@ -254,11 +254,14 @@ update msg model =
             ( model, Cmd.none )
 
         Msg.AlgologMsg algolog ->
-            ( { model
-                | algorun_logs =
-                    (algolog :: model.algorun_logs)
-                        |> List.sortWith logDateOrder
-              }
+            ( if algolog.algorunId == model.algorun.id then
+                { model
+                    | algorun_logs =
+                        (algolog :: model.algorun_logs)
+                            |> List.sortWith logDateOrder
+                }
+              else
+                model
             , Cmd.none
             )
 
