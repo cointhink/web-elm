@@ -9,29 +9,32 @@
   <script type="text/javascript" src="js/util.js"></script>
   <script type="text/javascript" src="js/net.js"></script>
   <script type="text/javascript" src="js/elm-Navbar.js"></script>
-  <script type="text/javascript" src="js/elm-Algorithms.js"></script>
 </head>
 
 <body>
   <div id='navbar'></div>
-  <div id='page'></div>
+  <div id='page-terms'>
+    <p>
+    By using Cointhink (the service), you accept these terms and conditions in full.
+    </p>
+    <p>
+    The service is provided on an as-is and best-effort basis. No warranty or guarantee of any kind is made. The user agrees to indemnify and hold harmless the company, its directors, employees, agents, and partners.
+    </p>
+    <p>
+    This agreement is governed by the laws of the state of Oregon and the United States of America.
+    </p>
+  </div>
 
   <script type="text/javascript">
     let ws_url = ws_setup()
-
     let navbar = Elm.Navbar.embed(document.getElementById('navbar'),
                                   { seed: Math.floor(Math.random()*0xFFFFFFFF),
                                     ws: ws_url,
                                     token: localStorage.getItem('token') })
-    let page = Elm.Algorithms.embed(document.getElementById('page'),
-                                  { seed: Math.floor(Math.random()*0xFFFFFFFF) })
-
-    var ws = ws_init(ws_url, (m) => [navbar.ports.ws_recv.send(m),
-                                     page.ports.ws_recv.send(m)])
+    var ws = ws_init(ws_url, (m) => [navbar.ports.ws_recv.send(m)])
     navbar.ports.ws_send.subscribe(msg => ws_send(ws, msg))
     navbar.ports.store_item.subscribe(msg => localStorage.setItem(msg.item, msg.value))
     navbar.ports.remove_item.subscribe(msg => localStorage.removeItem(msg.item))
-    page.ports.ws_send.subscribe(msg => ws_send(ws, msg))
   </script>
 
   <script type="text/javascript">

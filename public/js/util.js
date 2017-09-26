@@ -1,3 +1,13 @@
+function ws_setup() {
+    let ws_proto = 'https:' == document.location.protocol ? 'wss:' : 'ws:'
+    let ws_host = window.location.host.split(':')[0]
+    let ws_port = ws_host == "localhost" ? ':8085' : ''
+    let ws_url = ws_proto + '//' + ws_host + ws_port + '/ws'
+    let url_token = getParameterByName('token', document.location)
+    if (url_token) {  localStorage.setItem('token', url_token) }
+    return ws_url
+}
+
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
