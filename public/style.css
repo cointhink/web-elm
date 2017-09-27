@@ -218,6 +218,9 @@ footer a {
 
 .algo-code {
   background-color: #eee;
+  height: 4em;
+  overflow: scroll;
+  margin-right: 10%;
 }
 
 .algo-row-detail {
