@@ -39,7 +39,7 @@ function stripePay(email) {
   s.setAttribute('data-key',"pk_test_sp3PVvkNYVuTlsh4cp0EoZrL")
   s.setAttribute('data-amount',"200")
   s.setAttribute('data-name',"CoinThink")
-  s.setAttribute('data-description',"Add a new schedule slot")
+  s.setAttribute('data-description',"Buy 1 schedule credit.")
   s.setAttribute('data-email', email)
   f.appendChild(s)
 
