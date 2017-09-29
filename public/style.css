@@ -223,6 +223,10 @@ footer a {
   margin-right: 10%;
 }
 
+.algo-code pre {
+  margin: 0;
+}
+
 .algo-row-detail {
   margin-left: 2em;
 }
