@@ -35,7 +35,7 @@ page model =
 
 catchphrase =
     div [ class "catchphrase" ]
-        [ text "Cryptocoin Price Alerts" ]
+        [ text "Algorithm Buy/Sell Signals for Digital Currency" ]
 
 
 alreadLoggedIn =
