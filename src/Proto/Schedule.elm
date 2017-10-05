@@ -17,6 +17,7 @@ type alias Schedule =
     , algorithmId : String -- 3
     , status : Schedule_States -- 4
     , initialState : String -- 5
+    , enabledUntil : String -- 6
     }
 
 
@@ -35,6 +36,7 @@ scheduleDecoder =
         |> required "AlgorithmId" JD.string ""
         |> required "Status" schedule_StatesDecoder schedule_StatesDefault
         |> required "InitialState" JD.string ""
+        |> required "EnabledUntil" JD.string ""
 
 
 schedule_StatesDecoder : JD.Decoder Schedule_States
@@ -72,6 +74,7 @@ scheduleEncoder v =
         , (requiredFieldEncoder "AlgorithmId" JE.string "" v.algorithmId)
         , (requiredFieldEncoder "Status" schedule_StatesEncoder schedule_StatesDefault v.status)
         , (requiredFieldEncoder "InitialState" JE.string "" v.initialState)
+        , (requiredFieldEncoder "EnabledUntil" JE.string "" v.enabledUntil)
         ]
 
 
