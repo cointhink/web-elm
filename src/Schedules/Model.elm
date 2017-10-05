@@ -51,12 +51,12 @@ birdSeed intSeed =
 
 
 blankSchedule =
-    Schedule "" "" "noop" Schedule_Unknown "{}"
+    scheduleWithAlgoId "noop"
 
 
 scheduleWithAlgoId : String -> Schedule
 scheduleWithAlgoId algoId =
-    Schedule "" "" algoId Schedule_Unknown "{}"
+    Schedule "" "" algoId Schedule_Unknown "{}" ""
 
 
 blankAlgorun : String -> Algorun

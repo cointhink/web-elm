@@ -21,6 +21,7 @@ import Proto.Schedule_list exposing (..)
 import Proto.Schedule_list_partial exposing (..)
 import Proto.Schedule_list_response exposing (..)
 import Proto.Schedule_start exposing (..)
+import Proto.Schedule_start_response exposing (..)
 import Proto.Schedule_stop exposing (..)
 import Proto.Schedule_delete exposing (..)
 import Proto.Schedule_run exposing (..)
@@ -60,6 +61,13 @@ msg_recv response =
                     scheduleCreateResponseDecoder
                     response.object
                     Msg.ScheduleCreateResponseMsg
+                    Noop
+
+            "ScheduleStartResponse" ->
+                wsDecode
+                    scheduleStartResponseDecoder
+                    response.object
+                    Msg.ScheduleStartResponseMsg
                     Noop
 
             "ScheduleListResponse" ->
@@ -146,6 +154,9 @@ update msg model =
                         ws_send
             in
                 ( { model | seed = postSeed }, cmd )
+
+        Msg.ScheduleStartResponseMsg scheduleStartReponse ->
+            ( model, Cmd.none )
 
         Msg.ScheduleStop scheduleId ->
             let
