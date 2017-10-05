@@ -23,23 +23,26 @@ view model =
 
 
 page model =
-    case model.account of
-        Just account ->
-            case model.mode of
-                Msg.ModeList ->
-                    items model.schedule_runs account
+    div []
+        [ div [ class "top-notice" ] [ text model.top_notice ]
+        , case model.account of
+            Just account ->
+                case model.mode of
+                    Msg.ModeList ->
+                        items model.schedule_runs account
 
-                Msg.ModeAdd ->
-                    itemNew model account
+                    Msg.ModeAdd ->
+                        itemNew model account
 
-                Msg.ModeUpdate ->
-                    itemUpdate model
+                    Msg.ModeUpdate ->
+                        itemUpdate model
 
-                Msg.ModeView ->
-                    itemView model
+                    Msg.ModeView ->
+                        itemView model
 
-        Nothing ->
-            plzlogin
+            Nothing ->
+                plzlogin
+        ]
 
 
 items schedule_runs account =

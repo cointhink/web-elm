@@ -155,8 +155,17 @@ update msg model =
             in
                 ( { model | seed = postSeed }, cmd )
 
-        Msg.ScheduleStartResponseMsg scheduleStartReponse ->
-            ( model, Cmd.none )
+        Msg.ScheduleStartResponseMsg scheduleStartResponse ->
+            let
+                model_ =
+                    case scheduleStartResponse.ok of
+                        True ->
+                            model
+
+                        False ->
+                            { model | top_notice = scheduleStartResponse.message }
+            in
+                ( model_, Cmd.none )
 
         Msg.ScheduleStop scheduleId ->
             let

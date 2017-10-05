@@ -389,3 +389,10 @@ button {
 #page-terms {
   margin: 4em;
 }
+
+.top-notice {
+  text-align: center;
+  background-color: yellow;
+  width: 80%;
+  margin: auto;
+}

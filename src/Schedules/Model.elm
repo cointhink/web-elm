@@ -21,6 +21,7 @@ type alias Model =
     , schedule_runs : List ScheduleRun
     , algorun : Algorun
     , algorun_logs : List Algolog
+    , top_notice : String
     }
 
 
@@ -43,6 +44,7 @@ defaultModel seed mode schedule algorun =
         []
         algorun
         []
+        ""
 
 
 birdSeed : Int -> Seed
