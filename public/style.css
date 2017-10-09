@@ -272,6 +272,10 @@ footer a {
   margin: 0 1em;
 }
 
+.list-row .list-enabled-until {
+  font-size: 80%;
+}
+
 .list-row .list-algorithm-admin {
   margin: 0 1em;
   width: 1em;

@@ -180,6 +180,15 @@ algoListHtml s runMaybe =
                  )
                     :: []
                 )
+            , div [ class "list-enabled-until" ]
+                [ (case Date.Extra.fromIsoString s.enabledUntil of
+                    Just time ->
+                        text ("until " ++ (Date.Format.format "%b-%d" time))
+
+                    Nothing ->
+                        text "?"
+                  )
+                ]
             , div [ class "list-algorithm-admin" ]
                 (case s.status of
                     Schedule_Disabled ->
