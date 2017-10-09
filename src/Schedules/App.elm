@@ -240,11 +240,10 @@ update msg model =
             let
                 updatedRuns =
                     List.map (replace listPartial.scheduleRun) model.schedule_runs
-
-                afterDelete =
-                    List.filter filterDelete updatedRuns
+                        |> List.filter filterDelete updatedRuns
+                        |> List.sortWith logDateOrder
             in
-                ( { model | schedule_runs = afterDelete }, Cmd.none )
+                ( { model | schedule_runs = updatedRuns }, Cmd.none )
 
         Msg.ScheduleDelete scheduleId ->
             let
