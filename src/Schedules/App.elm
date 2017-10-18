@@ -239,9 +239,9 @@ update msg model =
         Msg.ScheduleListPartialMsg listPartial ->
             let
                 updatedRuns =
-                    List.map (replace listPartial.scheduleRun) model.schedule_runs
-                        |> List.filter filterDelete updatedRuns
-                        |> List.sortWith logDateOrder
+                    model.schedule_runs
+                        |> List.map (replace listPartial.scheduleRun)
+                        |> List.filter filterDelete
             in
                 ( { model | schedule_runs = updatedRuns }, Cmd.none )
 
