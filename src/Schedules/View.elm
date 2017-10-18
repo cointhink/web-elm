@@ -326,12 +326,18 @@ algoNewExchange model =
             [ Html.option [ selected (model.schedule_state.exchange == ""), value "" ]
                 [ text "- Select Exchange -" ]
             , Html.option
-                [ selected (model.schedule_state.exchange == "simulation")
-                , value "simulation"
+                [ selected (model.schedule_state.exchange == "coinmarketcap")
+                , value "coinmarketcap"
                 , selected True
                 ]
-                [ text "Simulation Exchange" ]
+                [ text "CoinMarketCap (Data Feed)" ]
 
+            --, Html.option
+            --    [ selected (model.schedule_state.exchange == "simulation")
+            --    , value "simulation"
+            --    , selected True
+            --    ]
+            --    [ text "Simulation Exchange" ]
             --, Html.option
             --    [ selected (model.schedule_state.exchange == "coinbase")
             --    , value "coinbase"

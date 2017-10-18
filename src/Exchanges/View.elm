@@ -40,7 +40,7 @@ exchanges =
 exchangeList =
     div [ class "" ]
         [ ul []
-            [ li [] [ text "simulation exchange" ]
+            [ li [] [ text "CoinMarketCap (Data Feed)" ]
             ]
         ]
 
