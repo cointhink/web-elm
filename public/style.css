@@ -65,6 +65,16 @@ footer a {
   font-size: 1em;
 }
 
+form button {
+  padding: 0.2em;
+}
+
+.splash button {
+  padding: 0.4em 1em;
+  color: black;
+  font-size: 90%;
+}
+
 .usercard {
   display: flex;
 }
