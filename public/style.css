@@ -325,6 +325,11 @@ form button {
 .list-schedules-notice  {
 }
 
+.empty-schedules {
+  text-align: center;
+  padding: 1em 1em;
+}
+
 .algo-list li {
   list-style: none;
   padding: 0.5em;

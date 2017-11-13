@@ -56,7 +56,18 @@ items schedule_runs account =
 algoList : List ScheduleRun -> Html Msg
 algoList schedule_runs =
     div [ class "list-schedules" ]
-        (List.map algoListRow schedule_runs)
+        (if List.isEmpty schedule_runs then
+            [ div [ class "empty-schedules" ]
+                [ div []
+                    [ text "Head over to "
+                    , a [ href "/algorithms" ] [ text "Algorithms" ]
+                    , text " to choose something. "
+                    ]
+                ]
+            ]
+         else
+            (List.map algoListRow schedule_runs)
+        )
 
 
 algoListRow : ScheduleRun -> Html Msg
