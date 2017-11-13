@@ -147,10 +147,10 @@ algoListHtml s runMaybe =
                 [ text
                     ((case s.status of
                         Schedule_Disabled ->
-                            "disabled"
+                            "stopped"
 
                         Schedule_Enabled ->
-                            "enabled"
+                            "started"
 
                         Schedule_Deleted ->
                             "deleted"

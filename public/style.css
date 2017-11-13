@@ -281,6 +281,10 @@ form button {
   width: 5em;
   margin: 0 1em;
 }
+.list-row .list-algorithm-controls button {
+  background: #fff;
+  padding: 0.2em 0.5em;
+}
 
 .list-row .list-enabled-until {
   font-size: 80%;
