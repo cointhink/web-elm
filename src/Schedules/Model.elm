@@ -1,10 +1,12 @@
 module Schedules.Model exposing (..)
 
 import String
+import Dict
 import Schedules.Msg exposing (..)
 import Proto.Algolog exposing (..)
 import Proto.Algorun exposing (..)
 import Proto.Account exposing (..)
+import Proto.Algorithm exposing (..)
 import Proto.Schedule exposing (..)
 import Proto.Schedule_run exposing (..)
 import Random.Pcg exposing (Seed)
@@ -16,6 +18,9 @@ type alias Model =
     , mode : Mode
     , seed : Seed
     , schedule : Schedule
+    , schedule_new_algorithm_req_id : Maybe String
+    , schedule_new_algorithm : Maybe Algorithm
+    , schedule_new_initial_values : Dict.Dict String String
     , schedule_add_req_id : Maybe String
     , schedule_state : ScheduleState
     , schedule_runs : List ScheduleRun
@@ -39,6 +44,9 @@ defaultModel seed mode schedule algorun =
         mode
         seed
         schedule
+        Nothing
+        Nothing
+        Dict.empty
         Nothing
         (ScheduleState "" "" "")
         []

@@ -7,6 +7,7 @@ import Proto.Schedule_start_response exposing (..)
 import Proto.Schedule_list_response exposing (..)
 import Proto.Schedule_list_partial exposing (..)
 import Proto.Algolog exposing (..)
+import Proto.Algorithm_detail_response exposing (..)
 
 
 type Mode
@@ -21,9 +22,7 @@ type Msg
     | SessionCreateResponseMsg SessionCreateResponse
     | ScheduleNew
     | ScheduleRequest
-    | ScheduleSelectExchange String
-    | ScheduleSelectMarket String
-    | ScheduleSelectAmount String
+    | ScheduleSelectField String String
     | ScheduleNewAlgorithm String
     | ScheduleStart String
     | ScheduleStartResponseMsg ScheduleStartResponse
@@ -37,3 +36,4 @@ type Msg
     | AlgologMsg Algolog
     | AlgorunView String
     | StripePay
+    | AlgorithmDetailReponseMsg AlgorithmDetailResponse

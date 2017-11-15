@@ -2,6 +2,7 @@ port module Schedules.App exposing (app)
 
 import Platform.Cmd exposing (Cmd)
 import String
+import Dict
 import Navigation
 import Json.Encode exposing (Value, encode, object, string)
 import Json.Decode exposing (decodeValue)
@@ -26,6 +27,8 @@ import Proto.Schedule_stop exposing (..)
 import Proto.Schedule_delete exposing (..)
 import Proto.Schedule_run exposing (..)
 import Proto.Schedule exposing (..)
+import Proto.Algorithm_detail exposing (..)
+import Proto.Algorithm_detail_response exposing (..)
 import Cointhink.Protocol exposing (..)
 import Random.Pcg exposing (Seed, initialSeed, step)
 
@@ -91,6 +94,13 @@ msg_recv response =
                     Msg.AlgologMsg
                     Noop
 
+            "AlgorithmDetailResponse" ->
+                wsDecode
+                    algorithmDetailResponseDecoder
+                    response.object
+                    Msg.AlgorithmDetailReponseMsg
+                    Noop
+
             _ ->
                 Noop
 
@@ -113,29 +123,30 @@ update msg model =
             let
                 item =
                     model.schedule
-            in
-                ( { model | mode = ModeAdd, schedule = { item | algorithmId = aId } }, Cmd.none )
 
-        Msg.ScheduleSelectExchange value ->
-            let
-                state =
-                    model.schedule_state
+                ( postSeed, id, cmd ) =
+                    apiCall
+                        (Proto.Algorithm_detail.AlgorithmDetail aId)
+                        "AlgorithmDetail"
+                        algorithmDetailEncoder
+                        model.seed
+                        ws_send
             in
-                ( { model | schedule_state = { state | exchange = value } }, Cmd.none )
+                ( { model
+                    | mode = ModeAdd
+                    , schedule = { item | algorithmId = aId }
+                    , schedule_new_algorithm_req_id = Just id
+                    , seed = postSeed
+                  }
+                , cmd
+                )
 
-        Msg.ScheduleSelectMarket value ->
+        Msg.ScheduleSelectField key value ->
             let
-                state =
-                    model.schedule_state
+                initial_values =
+                    Dict.insert key value model.schedule_new_initial_values
             in
-                ( { model | schedule_state = { state | market = value } }, Cmd.none )
-
-        Msg.ScheduleSelectAmount value ->
-            let
-                state =
-                    model.schedule_state
-            in
-                ( { model | schedule_state = { state | amount = value } }, Cmd.none )
+                ( { model | schedule_new_initial_values = initial_values }, Cmd.none )
 
         Msg.ScheduleUpdate ->
             ( model, Cmd.none )
@@ -301,6 +312,14 @@ update msg model =
                     , cmd
                     ]
                 )
+
+        Msg.AlgorithmDetailReponseMsg algoDetail ->
+            case algoDetail.ok of
+                True ->
+                    ( { model | schedule_new_algorithm = algoDetail.algorithm }, Cmd.none )
+
+                False ->
+                    ( model, Cmd.none )
 
 
 logDateOrder : Algolog -> Algolog -> Order

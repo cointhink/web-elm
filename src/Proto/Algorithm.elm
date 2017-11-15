@@ -17,6 +17,7 @@ type alias Algorithm =
     , status : String -- 3
     , code : String -- 4
     , description : String -- 5
+    , schema : String -- 6
     }
 
 
@@ -28,6 +29,7 @@ algorithmDecoder =
         |> required "Status" JD.string ""
         |> required "Code" JD.string ""
         |> required "Description" JD.string ""
+        |> required "Schema" JD.string ""
 
 
 algorithmEncoder : Algorithm -> JE.Value
@@ -38,4 +40,5 @@ algorithmEncoder v =
         , (requiredFieldEncoder "Status" JE.string "" v.status)
         , (requiredFieldEncoder "Code" JE.string "" v.code)
         , (requiredFieldEncoder "Description" JE.string "" v.description)
+        , (requiredFieldEncoder "Schema" JE.string "" v.schema)
         ]

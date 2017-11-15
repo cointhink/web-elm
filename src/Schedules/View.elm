@@ -1,5 +1,6 @@
 module Schedules.View exposing (view)
 
+import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -302,100 +303,133 @@ itemNew model account =
         ]
 
 
+algoNewFields : Model -> List (Html Msg)
 algoNewFields model =
+    case model.schedule_new_algorithm of
+        Just algo ->
+            schemaToFields model algo.schema
+
+        Nothing ->
+            [ text "loading" ]
+
+
+schemaToFields model json =
+    case JD.decodeString (JD.dict schemaDecoder) json of
+        Ok items ->
+            Dict.values (Dict.map (schemaTypeToHtml model) items)
+
+        Err err ->
+            [ text ("json err Z" ++ json ++ "Z" ++ err) ]
+
+
+schemaDecoder =
+    JD.map2 SchemaRecord
+        (JD.field "type" JD.string)
+        (JD.field "default" JD.string)
+
+
+type alias SchemaRecord =
+    { type_ : String, default : String }
+
+
+schemaTypeToHtml model fieldName record =
+    case record.type_ of
+        "exchange" ->
+            algoNewExchange model fieldName
+
+        "market" ->
+            algoNewMarket model fieldName
+
+        "amount" ->
+            algoNewAmount fieldName
+
+        "float" ->
+            algoNewFloat fieldName
+
+        _ ->
+            text "?"
+
+
+algoNewExchange model storageFieldName =
     let
-        baseFields =
-            [ algoNewAlgorithm model
-            , algoNewExchange model
-            , algoNewMarket model
-            ]
-
-        nameParts =
-            String.split "-" model.schedule.algorithmId
-
-        firstNamePart =
-            case List.head nameParts of
-                Just part ->
-                    part
+        storageValue =
+            case Dict.get storageFieldName model.schedule_new_initial_values of
+                Just value ->
+                    value
 
                 Nothing ->
                     ""
     in
-        if firstNamePart == "signal" then
-            baseFields
-        else
-            baseFields ++ (algoNewAmount :: [])
-
-
-algoNewExchange model =
-    div []
-        [ Html.label [ for "f_exchange" ] [ text "Exchange: " ]
-        , Html.select
-            [ for "f_exchange"
-            , onInput Msg.ScheduleSelectExchange
-            ]
-            [ Html.option [ selected (model.schedule_state.exchange == ""), value "" ]
-                [ text "- Select Exchange -" ]
-            , Html.option
-                [ selected (model.schedule_state.exchange == "coinmarketcap")
-                , value "coinmarketcap"
-                , selected True
+        div []
+            [ Html.label [ for "f_exchange" ] [ text (storageFieldName ++ ": ") ]
+            , Html.select
+                [ for "f_exchange"
+                , onInput (Msg.ScheduleSelectField storageFieldName)
                 ]
-                [ text "CoinMarketCap (Data Feed)" ]
-
-            --, Html.option
-            --    [ selected (model.schedule_state.exchange == "simulation")
-            --    , value "simulation"
-            --    , selected True
-            --    ]
-            --    [ text "Simulation Exchange" ]
-            --, Html.option
-            --    [ selected (model.schedule_state.exchange == "coinbase")
-            --    , value "coinbase"
-            --    ]
-            --    [ text "Coinbase" ]
-            --, Html.option
-            --    [ selected (model.schedule_state.exchange == "poloniex")
-            --    , value "poloniex"
-            --    ]
-            --    [ text "Poloniex" ]
-            ]
-        ]
-
-
-algoNewMarket model =
-    div []
-        [ Html.label [ for "f_market" ] [ text "Market: " ]
-        , Html.select
-            [ for "f_market"
-            , onInput Msg.ScheduleSelectMarket
-            ]
-            [ Html.option
-                [ selected (model.schedule_state.market == "")
-                , value ""
+                [ Html.option [ selected (storageValue == ""), value "" ]
+                    [ text "- Select Exchange -" ]
+                , Html.option
+                    [ selected (storageValue == "coinmarketcap")
+                    , value "coinmarketcap"
+                    , selected True
+                    ]
+                    [ text "CoinMarketCap (Data Feed)" ]
                 ]
-                [ text "- Select Market -" ]
-            , Html.option
-                [ selected (model.schedule_state.market == "btc/usd")
-                , value "btc/usd"
-                ]
-                [ text "BTC/USD" ]
-            , Html.option
-                [ selected (model.schedule_state.market == "eth/usd")
-                , value "eth/usd"
-                ]
-                [ text "ETH/USD" ]
             ]
-        ]
 
 
-algoNewAmount =
+algoNewMarket model storageFieldName =
+    let
+        storageValue =
+            case Dict.get storageFieldName model.schedule_new_initial_values of
+                Just value ->
+                    value
+
+                Nothing ->
+                    ""
+    in
+        div []
+            [ Html.label [ for "f_market" ] [ text (storageFieldName ++ ": ") ]
+            , Html.select
+                [ for "f_market"
+                , onInput (Msg.ScheduleSelectField storageFieldName)
+                ]
+                [ Html.option
+                    [ selected (storageValue == "")
+                    , value ""
+                    ]
+                    [ text "- Select Market -" ]
+                , Html.option
+                    [ selected (storageValue == "btc/usd")
+                    , value "btc/usd"
+                    ]
+                    [ text "BTC/USD" ]
+                , Html.option
+                    [ selected (storageValue == "eth/usd")
+                    , value "eth/usd"
+                    ]
+                    [ text "ETH/USD" ]
+                ]
+            ]
+
+
+algoNewAmount storageFieldName =
     div
         [ for "f_market"
-        , onInput Msg.ScheduleSelectAmount
+        , onInput (Msg.ScheduleSelectField storageFieldName)
         ]
-        [ Html.label [ for "f_amount" ] [ text "Amount: $" ]
+        [ Html.label [ for "f_amount" ] [ text (storageFieldName ++ ": $") ]
         , Html.input [ id "f_amount", class "usd", placeholder "USD" ] []
+        ]
+
+
+algoNewFloat storageFieldName =
+    div
+        [ for "f_float"
+        , onInput (Msg.ScheduleSelectField storageFieldName)
+        ]
+        [ Html.label [ for "f_amount" ] [ text (storageFieldName ++ ": ") ]
+        , Html.input [ id "f_amount", class "usd", placeholder "" ] []
         ]
 
 
