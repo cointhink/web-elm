@@ -323,34 +323,41 @@ schemaToFields model json =
 
 
 schemaDecoder =
-    JD.map2 SchemaRecord
+    JD.map3 SchemaRecord
         (JD.field "type" JD.string)
         (JD.field "default" JD.string)
+        (JD.field "display" JD.string)
 
 
 type alias SchemaRecord =
-    { type_ : String, default : String }
+    { type_ : String
+    , default : String
+    , display : String
+    }
 
 
 schemaTypeToHtml model fieldName record =
     case record.type_ of
         "exchange" ->
-            algoNewExchange model fieldName
+            algoNewExchange model fieldName record
 
         "market" ->
-            algoNewMarket model fieldName
+            algoNewMarket model fieldName record
 
-        "amount" ->
-            algoNewAmount fieldName
+        "currency" ->
+            algoNewCurrency fieldName record
+
+        "percent" ->
+            algoNewPercent fieldName record
 
         "float" ->
-            algoNewFloat fieldName
+            algoNewFloat fieldName record
 
         _ ->
             text "?"
 
 
-algoNewExchange model storageFieldName =
+algoNewExchange model storageFieldName schemaRecord =
     let
         storageValue =
             case Dict.get storageFieldName model.schedule_new_initial_values of
@@ -361,7 +368,7 @@ algoNewExchange model storageFieldName =
                     ""
     in
         div []
-            [ Html.label [ for "f_exchange" ] [ text (storageFieldName ++ ": ") ]
+            [ Html.label [ for "f_exchange" ] [ text (schemaRecord.display ++ ": ") ]
             , Html.select
                 [ for "f_exchange"
                 , onInput (Msg.ScheduleSelectField storageFieldName)
@@ -378,7 +385,7 @@ algoNewExchange model storageFieldName =
             ]
 
 
-algoNewMarket model storageFieldName =
+algoNewMarket model storageFieldName schemaRecord =
     let
         storageValue =
             case Dict.get storageFieldName model.schedule_new_initial_values of
@@ -389,7 +396,7 @@ algoNewMarket model storageFieldName =
                     ""
     in
         div []
-            [ Html.label [ for "f_market" ] [ text (storageFieldName ++ ": ") ]
+            [ Html.label [ for "f_market" ] [ text (schemaRecord.display ++ ": ") ]
             , Html.select
                 [ for "f_market"
                 , onInput (Msg.ScheduleSelectField storageFieldName)
@@ -413,22 +420,33 @@ algoNewMarket model storageFieldName =
             ]
 
 
-algoNewAmount storageFieldName =
+algoNewCurrency storageFieldName schemaRecord =
     div
         [ for "f_market"
         , onInput (Msg.ScheduleSelectField storageFieldName)
         ]
-        [ Html.label [ for "f_amount" ] [ text (storageFieldName ++ ": $") ]
+        [ Html.label [ for "f_amount" ] [ text (schemaRecord.display ++ ": $") ]
         , Html.input [ id "f_amount", class "usd", placeholder "USD" ] []
         ]
 
 
-algoNewFloat storageFieldName =
+algoNewPercent storageFieldName schemaRecord =
+    div
+        [ for "f_market"
+        , onInput (Msg.ScheduleSelectField storageFieldName)
+        ]
+        [ Html.label [ for "f_amount" ] [ text (schemaRecord.display ++ ": ") ]
+        , Html.input [ id "f_amount", class "usd", placeholder "" ] []
+        , text "%"
+        ]
+
+
+algoNewFloat storageFieldName schemaRecord =
     div
         [ for "f_float"
         , onInput (Msg.ScheduleSelectField storageFieldName)
         ]
-        [ Html.label [ for "f_amount" ] [ text (storageFieldName ++ ": ") ]
+        [ Html.label [ for "f_amount" ] [ text (schemaRecord.display ++ ": ") ]
         , Html.input [ id "f_amount", class "usd", placeholder "" ] []
         ]
 
