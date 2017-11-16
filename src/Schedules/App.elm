@@ -136,6 +136,7 @@ update msg model =
                     | mode = ModeAdd
                     , schedule = { item | algorithmId = aId }
                     , schedule_new_algorithm_req_id = Just id
+                    , schedule_new_initial_values = Dict.empty
                     , seed = postSeed
                   }
                 , cmd
@@ -193,7 +194,15 @@ update msg model =
                     model.schedule
 
                 scheduleWithState =
-                    { schedule | initialState = encode 0 (scheduleStateEncoder model.schedule_state) }
+                    { schedule
+                        | initialState =
+                            encode 0
+                                (object
+                                    (Dict.toList
+                                        (Dict.map (\k v -> string v) model.schedule_new_initial_values)
+                                    )
+                                )
+                    }
 
                 item =
                     ScheduleCreate (Just scheduleWithState)

@@ -319,7 +319,7 @@ schemaToFields model json =
             Dict.values (Dict.map (schemaTypeToHtml model) items)
 
         Err err ->
-            [ text ("json err Z" ++ json ++ "Z" ++ err) ]
+            [ text ("json err " ++ err) ]
 
 
 schemaDecoder =
@@ -378,7 +378,6 @@ algoNewExchange model storageFieldName schemaRecord =
                 , Html.option
                     [ selected (storageValue == "coinmarketcap")
                     , value "coinmarketcap"
-                    , selected True
                     ]
                     [ text "CoinMarketCap (Data Feed)" ]
                 ]
