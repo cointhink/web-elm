@@ -24,7 +24,6 @@ type alias Model =
     , schedule_new_schema : Dict.Dict String SchemaRecord
     , schedule_new_initial_values : Dict.Dict String String
     , schedule_add_req_id : Maybe String
-    , schedule_state : ScheduleState
     , schedule_runs : List ScheduleRun
     , algorun : Algorun
     , algorun_logs : List Algolog
@@ -51,7 +50,6 @@ defaultModel seed mode schedule algorun =
         Dict.empty
         Dict.empty
         Nothing
-        (ScheduleState "" "" "")
         []
         algorun
         []
