@@ -34,6 +34,10 @@ function stripePay(email) {
   f.setAttribute('action',"/stripe")
 
   var s = document.createElement("script")
+  s.setAttribute('src', "https://js.stripe.com/v3/")
+  f.appendChild(s)
+
+  var s = document.createElement("script")
   s.className = "stripe-button"
   s.setAttribute('src', "https://checkout.stripe.com/checkout.js")
   s.setAttribute('data-key',"pk_test_sp3PVvkNYVuTlsh4cp0EoZrL")
