@@ -11,6 +11,7 @@ import Proto.Schedule exposing (..)
 import Proto.Schedule_run exposing (..)
 import Random.Pcg exposing (Seed)
 import Json.Encode as JE
+import Json.Decode as JD
 
 
 type alias Model =
@@ -20,6 +21,7 @@ type alias Model =
     , schedule : Schedule
     , schedule_new_algorithm_req_id : Maybe String
     , schedule_new_algorithm : Maybe Algorithm
+    , schedule_new_schema : Dict.Dict String SchemaRecord
     , schedule_new_initial_values : Dict.Dict String String
     , schedule_add_req_id : Maybe String
     , schedule_state : ScheduleState
@@ -46,6 +48,7 @@ defaultModel seed mode schedule algorun =
         schedule
         Nothing
         Nothing
+        Dict.empty
         Dict.empty
         Nothing
         (ScheduleState "" "" "")
@@ -91,3 +94,17 @@ isFormSent model =
 
         Nothing ->
             False
+
+
+schemaRecordDecoder =
+    JD.map3 SchemaRecord
+        (JD.field "type" JD.string)
+        (JD.field "default" JD.string)
+        (JD.field "display" JD.string)
+
+
+type alias SchemaRecord =
+    { type_ : String
+    , default : String
+    , display : String
+    }

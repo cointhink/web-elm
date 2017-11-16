@@ -307,146 +307,114 @@ algoNewFields : Model -> List (Html Msg)
 algoNewFields model =
     case model.schedule_new_algorithm of
         Just algo ->
-            schemaToFields model algo.schema
+            Dict.values (Dict.map (schemaTypeToHtml model) model.schedule_new_schema)
 
         Nothing ->
             [ text "loading" ]
 
 
-schemaToFields model json =
-    case JD.decodeString (JD.dict schemaDecoder) json of
-        Ok items ->
-            Dict.values (Dict.map (schemaTypeToHtml model) items)
-
-        Err err ->
-            [ text ("json err " ++ err) ]
-
-
-schemaDecoder =
-    JD.map3 SchemaRecord
-        (JD.field "type" JD.string)
-        (JD.field "default" JD.string)
-        (JD.field "display" JD.string)
-
-
-type alias SchemaRecord =
-    { type_ : String
-    , default : String
-    , display : String
-    }
-
-
 schemaTypeToHtml model fieldName record =
-    case record.type_ of
-        "exchange" ->
-            algoNewExchange model fieldName record
-
-        "market" ->
-            algoNewMarket model fieldName record
-
-        "currency" ->
-            algoNewCurrency fieldName record
-
-        "percent" ->
-            algoNewPercent fieldName record
-
-        "float" ->
-            algoNewFloat fieldName record
-
-        _ ->
-            text "?"
-
-
-algoNewExchange model storageFieldName schemaRecord =
     let
         storageValue =
-            case Dict.get storageFieldName model.schedule_new_initial_values of
+            case Dict.get fieldName model.schedule_new_initial_values of
                 Just value ->
                     value
 
                 Nothing ->
                     ""
     in
-        div []
-            [ Html.label [ for "f_exchange" ] [ text (schemaRecord.display ++ ": ") ]
-            , Html.select
-                [ for "f_exchange"
-                , onInput (Msg.ScheduleSelectField storageFieldName)
-                ]
-                [ Html.option [ selected (storageValue == ""), value "" ]
-                    [ text "- Select Exchange -" ]
-                , Html.option
-                    [ selected (storageValue == "coinmarketcap")
-                    , value "coinmarketcap"
-                    ]
-                    [ text "CoinMarketCap (Data Feed)" ]
-                ]
+        case record.type_ of
+            "exchange" ->
+                algoNewExchange model fieldName record storageValue
+
+            "market" ->
+                algoNewMarket model fieldName record storageValue
+
+            "currency" ->
+                algoNewCurrency fieldName record storageValue
+
+            "percent" ->
+                algoNewPercent fieldName record storageValue
+
+            "float" ->
+                algoNewFloat fieldName record storageValue
+
+            _ ->
+                text "?"
+
+
+algoNewExchange model storageFieldName schemaRecord currentValue =
+    div []
+        [ Html.label [ for "f_exchange" ] [ text (schemaRecord.display ++ ": ") ]
+        , Html.select
+            [ for "f_exchange"
+            , onInput (Msg.ScheduleSelectField storageFieldName)
             ]
-
-
-algoNewMarket model storageFieldName schemaRecord =
-    let
-        storageValue =
-            case Dict.get storageFieldName model.schedule_new_initial_values of
-                Just value ->
-                    value
-
-                Nothing ->
-                    ""
-    in
-        div []
-            [ Html.label [ for "f_market" ] [ text (schemaRecord.display ++ ": ") ]
-            , Html.select
-                [ for "f_market"
-                , onInput (Msg.ScheduleSelectField storageFieldName)
+            [ Html.option [ selected (currentValue == ""), value "" ]
+                [ text "- Select Exchange -" ]
+            , Html.option
+                [ selected (currentValue == "coinmarketcap")
+                , value "coinmarketcap"
                 ]
-                [ Html.option
-                    [ selected (storageValue == "")
-                    , value ""
-                    ]
-                    [ text "- Select Market -" ]
-                , Html.option
-                    [ selected (storageValue == "btc/usd")
-                    , value "btc/usd"
-                    ]
-                    [ text "BTC/USD" ]
-                , Html.option
-                    [ selected (storageValue == "eth/usd")
-                    , value "eth/usd"
-                    ]
-                    [ text "ETH/USD" ]
-                ]
+                [ text "CoinMarketCap (Data Feed)" ]
             ]
+        ]
 
 
-algoNewCurrency storageFieldName schemaRecord =
+algoNewMarket model storageFieldName schemaRecord currentValue =
+    div []
+        [ Html.label [ for "f_market" ] [ text (schemaRecord.display ++ ": ") ]
+        , Html.select
+            [ for "f_market"
+            , onInput (Msg.ScheduleSelectField storageFieldName)
+            ]
+            [ Html.option
+                [ selected (currentValue == "")
+                , value ""
+                ]
+                [ text "- Select Market -" ]
+            , Html.option
+                [ selected (currentValue == "btc/usd")
+                , value "btc/usd"
+                ]
+                [ text "BTC/USD" ]
+            , Html.option
+                [ selected (currentValue == "eth/usd")
+                , value "eth/usd"
+                ]
+                [ text "ETH/USD" ]
+            ]
+        ]
+
+
+algoNewCurrency storageFieldName schemaRecord currentValue =
     div
         [ for "f_market"
         , onInput (Msg.ScheduleSelectField storageFieldName)
         ]
         [ Html.label [ for "f_amount" ] [ text (schemaRecord.display ++ ": $") ]
-        , Html.input [ id "f_amount", class "usd", placeholder "USD" ] []
+        , Html.input [ id "f_amount", class "usd", placeholder "USD", value currentValue ] []
         ]
 
 
-algoNewPercent storageFieldName schemaRecord =
+algoNewPercent storageFieldName schemaRecord currentValue =
     div
         [ for "f_market"
         , onInput (Msg.ScheduleSelectField storageFieldName)
         ]
         [ Html.label [ for "f_amount" ] [ text (schemaRecord.display ++ ": ") ]
-        , Html.input [ id "f_amount", class "usd", placeholder "" ] []
+        , Html.input [ id "f_amount", class "usd", placeholder "", value currentValue ] []
         , text "%"
         ]
 
 
-algoNewFloat storageFieldName schemaRecord =
+algoNewFloat storageFieldName schemaRecord currentValue =
     div
         [ for "f_float"
         , onInput (Msg.ScheduleSelectField storageFieldName)
         ]
         [ Html.label [ for "f_amount" ] [ text (schemaRecord.display ++ ": ") ]
-        , Html.input [ id "f_amount", class "usd", placeholder "" ] []
+        , Html.input [ id "f_amount", class "usd", placeholder "", value currentValue ] []
         ]
 
 

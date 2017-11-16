@@ -5,7 +5,7 @@ import String
 import Dict
 import Navigation
 import Json.Encode exposing (Value, encode, object, string)
-import Json.Decode exposing (decodeValue)
+import Json.Decode as JD
 import Schedules.Msg as Msg exposing (..)
 import Schedules.Model exposing (..)
 import Schedules.View exposing (view)
@@ -322,10 +322,36 @@ update msg model =
                     ]
                 )
 
-        Msg.AlgorithmDetailReponseMsg algoDetail ->
-            case algoDetail.ok of
+        Msg.AlgorithmDetailReponseMsg algoDetailResp ->
+            case algoDetailResp.ok of
                 True ->
-                    ( { model | schedule_new_algorithm = algoDetail.algorithm }, Cmd.none )
+                    let
+                        algorithmMaybe =
+                            algoDetailResp.algorithm
+
+                        fields =
+                            case algorithmMaybe of
+                                Just algorithm ->
+                                    case JD.decodeString (JD.dict schemaRecordDecoder) algorithm.schema of
+                                        Ok items ->
+                                            items
+
+                                        Err err ->
+                                            Dict.empty
+
+                                Nothing ->
+                                    Dict.empty
+
+                        default_values =
+                            Dict.map (\k v -> v.default) fields
+                    in
+                        ( { model
+                            | schedule_new_algorithm = algorithmMaybe
+                            , schedule_new_initial_values = default_values
+                            , schedule_new_schema = fields
+                          }
+                        , Cmd.none
+                        )
 
                 False ->
                     ( model, Cmd.none )
