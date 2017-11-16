@@ -168,12 +168,6 @@ algoListHtml s runMaybe =
                            )
                     )
                 ]
-            , div [ class "list-algorithm-exchange" ]
-                [ text (pluckField "Exchange" s.initialState) ]
-            , div [ class "list-algorithm-market" ]
-                [ text (pluckField "Market" s.initialState) ]
-            , div [ class "list-algorithm-amount" ]
-                [ amountFormat s.initialState ]
             , div [ class "list-algorithm-controls" ]
                 ((case s.status of
                     Schedule_Disabled ->
