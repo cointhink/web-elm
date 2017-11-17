@@ -35,6 +35,9 @@ page model =
                     Msg.ModeAdd ->
                         itemNew model account
 
+                    Msg.ModeEdit ->
+                        itemEdit model
+
                     Msg.ModeUpdate ->
                         itemUpdate model
 
@@ -294,6 +297,13 @@ itemNew model account =
                     )
                 ]
             ]
+        ]
+
+
+itemEdit : Model -> Html Msg
+itemEdit model =
+    div []
+        [ text "edit"
         ]
 
 

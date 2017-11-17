@@ -356,6 +356,9 @@ update msg model =
                 False ->
                     ( model, Cmd.none )
 
+        Msg.ScheduleEditView scheduleId ->
+            ( { model | mode = ModeEdit }, Cmd.none )
+
 
 logDateOrder : Algolog -> Algolog -> Order
 logDateOrder a b =
@@ -457,6 +460,18 @@ routerUrl model location =
                             case List.head wordsSlice of
                                 Just id ->
                                     Just (Msg.AlgorunView id)
+
+                                Nothing ->
+                                    Nothing
+
+                    "#edit" ->
+                        let
+                            wordsSlice =
+                                List.reverse (List.take 2 words)
+                        in
+                            case List.head wordsSlice of
+                                Just id ->
+                                    Just (Msg.ScheduleEditView id)
 
                                 Nothing ->
                                     Nothing

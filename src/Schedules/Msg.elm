@@ -15,6 +15,7 @@ type Mode
     | ModeAdd
     | ModeUpdate
     | ModeView
+    | ModeEdit
 
 
 type Msg
@@ -37,3 +38,4 @@ type Msg
     | AlgorunView String
     | StripePay
     | AlgorithmDetailReponseMsg AlgorithmDetailResponse
+    | ScheduleEditView String
