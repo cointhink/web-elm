@@ -314,6 +314,7 @@ update msg model =
                 ( { model
                     | mode = ModeView
                     , algorun = { modelAlgorun | id = algorunId }
+                    , algorun_logs = []
                     , seed = postSeed
                   }
                 , cmd
