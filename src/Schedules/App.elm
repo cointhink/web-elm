@@ -232,7 +232,7 @@ update msg model =
                                 ( subModel, cmd ) =
                                     update Msg.ScheduleRequest model_
                             in
-                                ( { subModel | mode = ModeList, account = Just account_ }
+                                ( { subModel | account = Just account_ }
                                 , Cmd.batch [ Navigation.modifyUrl "#", cmd ]
                                 )
                         else
@@ -251,7 +251,7 @@ update msg model =
                         model.seed
                         ws_send
             in
-                ( { model | seed = postSeed }, cmd )
+                ( { model | seed = postSeed, mode = ModeList }, cmd )
 
         Msg.ScheduleListResponseMsg response ->
             ( { model | schedule_runs = response.schedules }, Cmd.none )
@@ -316,10 +316,7 @@ update msg model =
                     , algorun = { modelAlgorun | id = algorunId }
                     , seed = postSeed
                   }
-                , Cmd.batch
-                    [ Navigation.newUrl ("#view/" ++ algorunId)
-                    , cmd
-                    ]
+                , cmd
                 )
 
         Msg.AlgorithmDetailReponseMsg algoDetailResp ->
@@ -422,17 +419,15 @@ init flags location =
 
         firstModel =
             defaultModel firstSeed ModeList blankSchedule (blankAlgorun "")
+
+        firstAction =
+            fromUrl location
     in
-        case routerUrl firstModel location of
-            Just msg ->
-                update msg firstModel
-
-            Nothing ->
-                update Msg.ScheduleRequest firstModel
+        update firstAction firstModel
 
 
-routerUrl : Model -> Navigation.Location -> Maybe Msg
-routerUrl model location =
+fromUrl : Navigation.Location -> Msg
+fromUrl location =
     let
         words =
             String.split "/" location.hash
@@ -447,10 +442,10 @@ routerUrl model location =
                         in
                             case algoIdMaybe of
                                 Just algoId ->
-                                    Just (Msg.ScheduleNewAlgorithm algoId)
+                                    Msg.ScheduleNewAlgorithm algoId
 
                                 _ ->
-                                    Nothing
+                                    Msg.Noop
 
                     "#view" ->
                         let
@@ -459,10 +454,10 @@ routerUrl model location =
                         in
                             case List.head wordsSlice of
                                 Just id ->
-                                    Just (Msg.AlgorunView id)
+                                    Msg.AlgorunView id
 
                                 Nothing ->
-                                    Nothing
+                                    Msg.Noop
 
                     "#edit" ->
                         let
@@ -471,25 +466,16 @@ routerUrl model location =
                         in
                             case List.head wordsSlice of
                                 Just id ->
-                                    Just (Msg.ScheduleEditView id)
+                                    Msg.ScheduleEditView id
 
                                 Nothing ->
-                                    Nothing
+                                    Msg.Noop
 
                     _ ->
-                        Nothing
+                        Msg.ScheduleRequest
 
             Nothing ->
-                Nothing
-
-
-fromUrl : Navigation.Location -> Msg
-fromUrl url =
-    let
-        debug_url =
-            (Debug.log "fromUrl (always noop)" url)
-    in
-        Msg.Noop
+                Msg.ScheduleRequest
 
 
 app =

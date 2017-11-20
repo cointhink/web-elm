@@ -126,25 +126,13 @@ algoListHtml s runMaybe =
         [ li [ class "list-row" ]
             [ div [ class "list-algorithm-algo" ]
                 [ a
-                    [ onClick
-                        (Msg.AlgorunView
-                            (case runMaybe of
-                                Just run ->
-                                    run.id
+                    (case runMaybe of
+                        Just run ->
+                            [ href ("#view/" ++ run.id) ]
 
-                                Nothing ->
-                                    ""
-                            )
-                        )
-                    , class
-                        (case runMaybe of
-                            Just run ->
-                                "href"
-
-                            Nothing ->
-                                ""
-                        )
-                    ]
+                        Nothing ->
+                            []
+                    )
                     [ text s.algorithmId ]
                 ]
             , div [ class "list-algorithm-status" ]
