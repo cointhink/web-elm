@@ -121,87 +121,131 @@ creditRow account =
         ]
 
 
-algoListHtml s runMaybe =
-    div [ class ("list-row-back " ++ (algoListClasses s.status runMaybe)) ]
+algoListHtml schedule runMaybe =
+    div [ class ("list-row-back " ++ (algoListClasses schedule.status runMaybe)) ]
         [ li [ class "list-row" ]
-            [ div [ class "list-algorithm-algo" ]
-                [ a
-                    (case runMaybe of
-                        Just run ->
-                            [ href ("#view/" ++ run.id) ]
-
-                        Nothing ->
-                            []
-                    )
-                    [ text s.algorithmId ]
+            [ div [ class "list-top-row" ]
+                [ algoListHtmlId schedule runMaybe
+                , algoListHtmlStatus schedule runMaybe
+                , algoListHtmlControls schedule
+                , algoListHtmlEnabledUntil schedule
+                , algoListHtmlAdmin schedule
                 ]
-            , div [ class "list-algorithm-status" ]
-                [ text
-                    ((case s.status of
-                        Schedule_Disabled ->
-                            "stopped"
-
-                        Schedule_Enabled ->
-                            "started"
-
-                        Schedule_Deleted ->
-                            "deleted"
-
-                        Schedule_Unknown ->
-                            "unknown"
-                     )
-                        ++ (case runMaybe of
-                                Just run ->
-                                    "/" ++ run.status
-
-                                Nothing ->
-                                    ""
-                           )
-                    )
-                ]
-            , div [ class "list-algorithm-controls" ]
-                ((case s.status of
-                    Schedule_Disabled ->
-                        button [ onClick (Msg.ScheduleStart s.id) ]
-                            [ text "start" ]
-
-                    Schedule_Enabled ->
-                        button [ onClick (Msg.ScheduleStop s.id) ]
-                            [ text "stop" ]
-
-                    Schedule_Deleted ->
-                        text "?"
-
-                    Schedule_Unknown ->
-                        text "?"
-                 )
-                    :: []
-                )
-            , div [ class "list-enabled-until" ]
-                [ (case Date.Extra.fromIsoString s.enabledUntil of
-                    Just time ->
-                        text ("until " ++ (Date.Format.format "%b-%d" time))
-
-                    Nothing ->
-                        text "?"
-                  )
-                ]
-            , div [ class "list-algorithm-admin" ]
-                (case s.status of
-                    Schedule_Disabled ->
-                        [ a
-                            [ onClick (Msg.ScheduleDelete s.id)
-                            , href "#"
-                            , title "Delete this schedule permanently"
-                            ]
-                            [ text "x" ]
-                        ]
-
-                    _ ->
-                        []
-                )
+            , div [ class "list-bottom-row" ]
+                (algoListHtmlInitialValues schedule.initialState)
             ]
         ]
+
+
+algoListHtmlInitialValues json =
+    case JD.decodeString (JD.dict JD.string) json of
+        Ok items ->
+            Dict.values (Dict.map initialValueHtml items)
+
+        Err err ->
+            [ text "?" ]
+
+
+initialValueHtml k v =
+    div [ class "initalValueBox" ]
+        [ span [ class "initialValueKey" ]
+            [ text k ]
+        , text ": "
+        , span
+            [ class "initialValueValue" ]
+            [ text v ]
+        ]
+
+
+algoListHtmlId s runMaybe =
+    div [ class "list-algorithm-algo" ]
+        [ a
+            (case runMaybe of
+                Just run ->
+                    [ href ("#view/" ++ run.id) ]
+
+                Nothing ->
+                    []
+            )
+            [ text s.algorithmId ]
+        ]
+
+
+algoListHtmlStatus s runMaybe =
+    div [ class "list-algorithm-status" ]
+        [ text
+            ((case s.status of
+                Schedule_Disabled ->
+                    "stopped"
+
+                Schedule_Enabled ->
+                    "started"
+
+                Schedule_Deleted ->
+                    "deleted"
+
+                Schedule_Unknown ->
+                    "unknown"
+             )
+                ++ (case runMaybe of
+                        Just run ->
+                            "/" ++ run.status
+
+                        Nothing ->
+                            ""
+                   )
+            )
+        ]
+
+
+algoListHtmlControls s =
+    div [ class "list-algorithm-controls" ]
+        ((case s.status of
+            Schedule_Disabled ->
+                button [ onClick (Msg.ScheduleStart s.id) ]
+                    [ text "start" ]
+
+            Schedule_Enabled ->
+                button [ onClick (Msg.ScheduleStop s.id) ]
+                    [ text "stop" ]
+
+            Schedule_Deleted ->
+                text "?"
+
+            Schedule_Unknown ->
+                text "?"
+         )
+            :: []
+        )
+
+
+algoListHtmlEnabledUntil s =
+    div [ class "list-enabled-until" ]
+        [ (case Date.Extra.fromIsoString s.enabledUntil of
+            Just time ->
+                text ("until " ++ (Date.Format.format "%b-%d" time))
+
+            Nothing ->
+                text "?"
+          )
+        ]
+
+
+algoListHtmlAdmin s =
+    div [ class "list-algorithm-admin" ]
+        (case s.status of
+            Schedule_Disabled ->
+                [ a
+                    [ onClick (Msg.ScheduleDelete s.id)
+                    , href "#"
+                    , title "Delete this schedule permanently"
+                    ]
+                    [ text "x" ]
+                ]
+
+            _ ->
+                []
+        )
 
 
 amountFormat state =

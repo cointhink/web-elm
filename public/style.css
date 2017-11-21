@@ -252,6 +252,15 @@ form button {
 }
 
 .list-row {
+  list-style-type: none;
+}
+
+.list-top-row {
+  display: flex;
+  justify-content: center;
+}
+
+.list-bottom-row {
   display: flex;
   justify-content: center;
 }
@@ -327,6 +336,14 @@ form button {
 }
 
 .list-schedules-notice  {
+}
+
+.initalValueBox {
+  padding: 0 0.8em;
+}
+
+.initialValueValue {
+  font-weight: bold;
 }
 
 .empty-schedules {
