@@ -265,6 +265,10 @@ form button {
   justify-content: center;
 }
 
+.list-initialvalues {
+  display: flex;
+}
+
 .list-row .list-algorithm-algo {
   width: 10em;
 }

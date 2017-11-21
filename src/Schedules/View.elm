@@ -132,7 +132,9 @@ algoListHtml schedule runMaybe =
                 , algoListHtmlAdmin schedule
                 ]
             , div [ class "list-bottom-row" ]
-                (algoListHtmlInitialValues schedule.initialState)
+                [ div [ class "list-initialvalues" ] (algoListHtmlInitialValues schedule.initialState)
+                , div [] (algoListHtmlInitialValuesEdit schedule)
+                ]
             ]
         ]
 
@@ -144,6 +146,19 @@ algoListHtmlInitialValues json =
 
         Err err ->
             [ text "?" ]
+
+
+algoListHtmlInitialValuesEdit s =
+    (case s.status of
+        Schedule_Disabled ->
+            [ button
+                [ onClick (Msg.ScheduleEditView s.id) ]
+                [ text "edit" ]
+            ]
+
+        _ ->
+            []
+    )
 
 
 initialValueHtml k v =
@@ -200,7 +215,7 @@ algoListHtmlStatus s runMaybe =
 
 algoListHtmlControls s =
     div [ class "list-algorithm-controls" ]
-        ((case s.status of
+        [ (case s.status of
             Schedule_Disabled ->
                 button [ onClick (Msg.ScheduleStart s.id) ]
                     [ text "start" ]
@@ -214,9 +229,8 @@ algoListHtmlControls s =
 
             Schedule_Unknown ->
                 text "?"
-         )
-            :: []
-        )
+          )
+        ]
 
 
 algoListHtmlEnabledUntil s =
