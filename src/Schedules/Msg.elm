@@ -23,7 +23,6 @@ type Mode
 type Msg
     = Noop
     | SessionCreateResponseMsg SessionCreateResponse
-    | ScheduleNew
     | ScheduleListRequest
     | ScheduleSelectField String String
     | ScheduleNewAlgorithm String
@@ -33,6 +32,7 @@ type Msg
     | ScheduleDelete String
     | ScheduleDeleteResponseMsg ScheduleDeleteResponse
     | ScheduleUpdate
+    | ScheduleCreateMsg
     | ScheduleCreateResponseMsg ScheduleCreateResponse
     | ScheduleListResponseMsg ScheduleListResponse
     | ScheduleListPartialMsg ScheduleListPartial

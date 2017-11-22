@@ -320,7 +320,7 @@ itemNew model account =
             , onWithOptions
                 "submit"
                 { preventDefault = True, stopPropagation = False }
-                (JD.succeed Msg.ScheduleNew)
+                (JD.succeed Msg.ScheduleCreateMsg)
             ]
             [ div [ class "centerblock" ] [ text "Run an algorithm" ]
             , fieldset [ disabled (False) ] (algoNewFields model)
@@ -355,7 +355,7 @@ itemEdit model =
             , onWithOptions
                 "submit"
                 { preventDefault = True, stopPropagation = False }
-                (JD.succeed Msg.ScheduleNew)
+                (JD.succeed Msg.ScheduleCreateMsg)
             ]
             [ div [ class "centerblock" ] [ text "Edit initial values" ]
             , fieldset [ disabled (False) ] (algoNewFields model)

@@ -198,7 +198,7 @@ update msg model =
         Msg.SessionCreateResponseMsg response ->
             ( { model | account = response.account }, Cmd.none )
 
-        Msg.ScheduleNew ->
+        Msg.ScheduleCreateMsg ->
             let
                 schedule =
                     model.schedule
@@ -348,10 +348,16 @@ update msg model =
 
                         default_values =
                             Dict.map (\k v -> v.default) fields
+
+                        updated_values =
+                            if Dict.isEmpty model.schedule_new_initial_values then
+                                (Debug.log "going with defaults" default_values)
+                            else
+                                (Debug.log "existing initials" model.schedule_new_initial_values)
                     in
                         ( { model
                             | schedule_new_algorithm = algorithmMaybe
-                            , schedule_new_initial_values = default_values
+                            , schedule_new_initial_values = updated_values
                             , schedule_new_schema = fields
                           }
                         , Cmd.none
@@ -392,6 +398,14 @@ update msg model =
                                     Just wanted_schedule_id ->
                                         if schedule.id == wanted_schedule_id then
                                             let
+                                                existing_values =
+                                                    case JD.decodeString (JD.dict JD.string) schedule.initialState of
+                                                        Ok values ->
+                                                            values
+
+                                                        Err err ->
+                                                            Dict.empty
+
                                                 ( postSeed, id, cmd ) =
                                                     apiCall
                                                         (Proto.Algorithm_detail.AlgorithmDetail schedule.algorithmId)
@@ -400,7 +414,13 @@ update msg model =
                                                         model.seed
                                                         ws_send
                                             in
-                                                ( { model | seed = postSeed, schedule = schedule }, cmd )
+                                                ( { model
+                                                    | seed = postSeed
+                                                    , schedule = schedule
+                                                    , schedule_new_initial_values = existing_values
+                                                  }
+                                                , cmd
+                                                )
                                         else
                                             ( model, Cmd.none )
 
