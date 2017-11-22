@@ -242,7 +242,7 @@ update msg model =
                             , Navigation.modifyUrl "#"
                             )
                         else
-                            ( model_, Cmd.none )
+                            ( { model_ | top_notice = response.message }, Cmd.none )
 
                 Nothing ->
                     ( model, Cmd.none )
