@@ -349,8 +349,25 @@ itemNew model account =
 
 itemEdit : Model -> Html Msg
 itemEdit model =
-    div []
-        [ text "edit"
+    div [ class "item-add" ]
+        [ Html.form
+            [ class ""
+            , onWithOptions
+                "submit"
+                { preventDefault = True, stopPropagation = False }
+                (JD.succeed Msg.ScheduleNew)
+            ]
+            [ div [ class "centerblock" ] [ text "Edit an algorithm" ]
+            , fieldset [ disabled (False) ] (algoNewFields model)
+            , button []
+                [ text
+                    (if isFormSent model then
+                        "Sending..."
+                     else
+                        "Update values"
+                    )
+                ]
+            ]
         ]
 
 

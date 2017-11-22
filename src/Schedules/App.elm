@@ -28,6 +28,8 @@ import Proto.Schedule_stop exposing (..)
 import Proto.Schedule_delete exposing (..)
 import Proto.Schedule_run exposing (..)
 import Proto.Schedule exposing (..)
+import Proto.Schedule_detail exposing (..)
+import Proto.Schedule_detail_response exposing (..)
 import Proto.Algorithm_detail exposing (..)
 import Proto.Algorithm_detail_response exposing (..)
 import Cointhink.Protocol exposing (..)
@@ -79,6 +81,13 @@ msg_recv response =
                     scheduleListResponseDecoder
                     response.object
                     Msg.ScheduleListResponseMsg
+                    Noop
+
+            "ScheduleDetailResponse" ->
+                wsDecode
+                    scheduleDetailResponseDecoder
+                    response.object
+                    Msg.ScheduleDetailResponseMsg
                     Noop
 
             "ScheduleListPartial" ->
@@ -355,41 +364,51 @@ update msg model =
             ( model, Navigation.modifyUrl ("#edit/" ++ scheduleId) )
 
         Msg.ScheduleEditView scheduleId ->
-            case scheduleRunSearch scheduleId model.schedule_runs of
-                Just s ->
-                    case schemaDictFromJson "{}" of
-                        Ok schema ->
-                            ( { model
-                                | mode = ModeEdit
-                                , schedule_new_schema = schema
-                              }
-                            , Cmd.none
-                            )
-
-                        Err err ->
-                            ( model, Cmd.none )
-
-                Nothing ->
-                    ( model, Cmd.none )
-
-
-scheduleRunSearch scheduleId scheduleRuns =
-    List.head
-        (List.foldl
-            (\s b ->
-                case s.schedule of
-                    Just sched ->
-                        if sched.id == scheduleId then
-                            s :: b
-                        else
-                            b
+            let
+                model_ =
+                    { model | mode = ModeEdit }
+            in
+                case model.schedule_edit_req_id of
+                    Just reqId ->
+                        ( model_, Cmd.none )
 
                     Nothing ->
-                        b
-            )
-            []
-            scheduleRuns
-        )
+                        let
+                            ( postSeed, id, cmd ) =
+                                apiCall
+                                    (ScheduleDetail scheduleId)
+                                    "ScheduleDetail"
+                                    scheduleDetailEncoder
+                                    model.seed
+                                    ws_send
+                        in
+                            ( { model_ | schedule_edit_req_id = Just id, seed = postSeed }, cmd )
+
+        Msg.ScheduleDetailResponseMsg scheduleDetailResp ->
+            case scheduleDetailResp.ok of
+                True ->
+                    let
+                        scheduleMaybe =
+                            scheduleDetailResp.schedule
+                    in
+                        case scheduleMaybe of
+                            Just schedule ->
+                                let
+                                    ( postSeed, id, cmd ) =
+                                        apiCall
+                                            (Proto.Algorithm_detail.AlgorithmDetail schedule.algorithmId)
+                                            "AlgorithmDetail"
+                                            algorithmDetailEncoder
+                                            model.seed
+                                            ws_send
+                                in
+                                    ( { model | seed = postSeed }, cmd )
+
+                            Nothing ->
+                                ( model, Cmd.none )
+
+                False ->
+                    ( model, Cmd.none )
 
 
 schemaDictFromJson schema =
