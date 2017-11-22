@@ -4,6 +4,7 @@ import Platform.Cmd exposing (Cmd)
 import String
 import Dict
 import Navigation
+import Task
 import Json.Encode exposing (Value, encode, object, string)
 import Json.Decode as JD
 import Schedules.Msg as Msg exposing (..)
@@ -107,7 +108,7 @@ msg_recv response =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case (Debug.log "schedules update" msg) of
+    case (Debug.log "Schedules.App.update" msg) of
         Msg.Noop ->
             ( model, Cmd.none )
 
@@ -228,13 +229,9 @@ update msg model =
                             { account | scheduleCredits = account.scheduleCredits - 1 }
                     in
                         if response.ok then
-                            let
-                                ( subModel, cmd ) =
-                                    update Msg.ScheduleRequest model_
-                            in
-                                ( { subModel | account = Just account_ }
-                                , Cmd.batch [ Navigation.modifyUrl "#", cmd ]
-                                )
+                            ( { model_ | account = Just account_ }
+                            , Navigation.modifyUrl "#"
+                            )
                         else
                             ( model_, Cmd.none )
 
@@ -330,7 +327,7 @@ update msg model =
                         fields =
                             case algorithmMaybe of
                                 Just algorithm ->
-                                    case JD.decodeString (JD.dict schemaRecordDecoder) algorithm.schema of
+                                    case schemaDictFromJson algorithm.schema of
                                         Ok items ->
                                             items
 
@@ -354,8 +351,49 @@ update msg model =
                 False ->
                     ( model, Cmd.none )
 
+        Msg.ScheduleEditUrl scheduleId ->
+            ( model, Navigation.modifyUrl ("#edit/" ++ scheduleId) )
+
         Msg.ScheduleEditView scheduleId ->
-            ( { model | mode = ModeEdit }, Cmd.none )
+            case scheduleRunSearch scheduleId model.schedule_runs of
+                Just s ->
+                    case schemaDictFromJson "{}" of
+                        Ok schema ->
+                            ( { model
+                                | mode = ModeEdit
+                                , schedule_new_schema = schema
+                              }
+                            , Cmd.none
+                            )
+
+                        Err err ->
+                            ( model, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+
+scheduleRunSearch scheduleId scheduleRuns =
+    List.head
+        (List.foldl
+            (\s b ->
+                case s.schedule of
+                    Just sched ->
+                        if sched.id == scheduleId then
+                            s :: b
+                        else
+                            b
+
+                    Nothing ->
+                        b
+            )
+            []
+            scheduleRuns
+        )
+
+
+schemaDictFromJson schema =
+    JD.decodeString (JD.dict schemaRecordDecoder) schema
 
 
 logDateOrder : Algolog -> Algolog -> Order
@@ -424,7 +462,13 @@ init flags location =
         firstAction =
             fromUrl location
     in
-        update firstAction firstModel
+        ( firstModel, send firstAction )
+
+
+send : msg -> Cmd msg
+send msg =
+    Task.succeed msg
+        |> Task.perform identity
 
 
 fromUrl : Navigation.Location -> Msg
@@ -433,7 +477,7 @@ fromUrl location =
         words =
             String.split "/" location.hash
     in
-        case List.head words of
+        case List.head (Debug.log "fromURL" words) of
             Just word ->
                 case word of
                     "#add" ->

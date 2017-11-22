@@ -6,6 +6,7 @@ import Proto.Schedule_delete_response exposing (..)
 import Proto.Schedule_start_response exposing (..)
 import Proto.Schedule_list_response exposing (..)
 import Proto.Schedule_list_partial exposing (..)
+import Proto.Schedule exposing (..)
 import Proto.Algolog exposing (..)
 import Proto.Algorithm_detail_response exposing (..)
 
@@ -34,8 +35,9 @@ type Msg
     | ScheduleCreateResponseMsg ScheduleCreateResponse
     | ScheduleListResponseMsg ScheduleListResponse
     | ScheduleListPartialMsg ScheduleListPartial
+    | ScheduleEditView String
+    | ScheduleEditUrl String
     | AlgologMsg Algolog
     | AlgorunView String
     | StripePay
     | AlgorithmDetailReponseMsg AlgorithmDetailResponse
-    | ScheduleEditView String
