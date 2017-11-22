@@ -368,21 +368,16 @@ update msg model =
                 model_ =
                     { model | mode = ModeEdit }
             in
-                case model.schedule_edit_req_id of
-                    Just reqId ->
-                        ( model_, Cmd.none )
-
-                    Nothing ->
-                        let
-                            ( postSeed, id, cmd ) =
-                                apiCall
-                                    (ScheduleDetail scheduleId)
-                                    "ScheduleDetail"
-                                    scheduleDetailEncoder
-                                    model.seed
-                                    ws_send
-                        in
-                            ( { model_ | schedule_edit_req_id = Just id, seed = postSeed }, cmd )
+                let
+                    ( postSeed, id, cmd ) =
+                        apiCall
+                            (ScheduleDetail scheduleId)
+                            "ScheduleDetail"
+                            scheduleDetailEncoder
+                            model.seed
+                            ws_send
+                in
+                    ( { model_ | schedule_edit_schedule_id = Just scheduleId, seed = postSeed }, cmd )
 
         Msg.ScheduleDetailResponseMsg scheduleDetailResp ->
             case scheduleDetailResp.ok of
@@ -393,16 +388,24 @@ update msg model =
                     in
                         case scheduleMaybe of
                             Just schedule ->
-                                let
-                                    ( postSeed, id, cmd ) =
-                                        apiCall
-                                            (Proto.Algorithm_detail.AlgorithmDetail schedule.algorithmId)
-                                            "AlgorithmDetail"
-                                            algorithmDetailEncoder
-                                            model.seed
-                                            ws_send
-                                in
-                                    ( { model | seed = postSeed }, cmd )
+                                case model.schedule_edit_schedule_id of
+                                    Just wanted_schedule_id ->
+                                        if schedule.id == wanted_schedule_id then
+                                            let
+                                                ( postSeed, id, cmd ) =
+                                                    apiCall
+                                                        (Proto.Algorithm_detail.AlgorithmDetail schedule.algorithmId)
+                                                        "AlgorithmDetail"
+                                                        algorithmDetailEncoder
+                                                        model.seed
+                                                        ws_send
+                                            in
+                                                ( { model | seed = postSeed }, cmd )
+                                        else
+                                            ( model, Cmd.none )
+
+                                    Nothing ->
+                                        ( model, Cmd.none )
 
                             Nothing ->
                                 ( model, Cmd.none )
