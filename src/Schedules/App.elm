@@ -366,7 +366,7 @@ update msg model =
         Msg.ScheduleEditView scheduleId ->
             let
                 model_ =
-                    { model | mode = ModeEdit }
+                    { model | mode = ModeEdit, top_notice = "" }
             in
                 let
                     ( postSeed, id, cmd ) =
