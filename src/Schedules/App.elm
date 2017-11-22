@@ -247,7 +247,7 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
-        Msg.ScheduleRequest ->
+        Msg.ScheduleListRequest ->
             let
                 ( postSeed, id, cmd ) =
                     apiCall
@@ -539,10 +539,10 @@ fromUrl location =
                                     Msg.Noop
 
                     _ ->
-                        Msg.ScheduleRequest
+                        Msg.ScheduleListRequest
 
             Nothing ->
-                Msg.ScheduleRequest
+                Msg.ScheduleListRequest
 
 
 app =

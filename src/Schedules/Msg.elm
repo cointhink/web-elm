@@ -24,7 +24,7 @@ type Msg
     = Noop
     | SessionCreateResponseMsg SessionCreateResponse
     | ScheduleNew
-    | ScheduleRequest
+    | ScheduleListRequest
     | ScheduleSelectField String String
     | ScheduleNewAlgorithm String
     | ScheduleStart String
