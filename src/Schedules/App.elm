@@ -400,7 +400,7 @@ update msg model =
                                                         model.seed
                                                         ws_send
                                             in
-                                                ( { model | seed = postSeed }, cmd )
+                                                ( { model | seed = postSeed, schedule = schedule }, cmd )
                                         else
                                             ( model, Cmd.none )
 

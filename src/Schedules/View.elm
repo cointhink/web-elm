@@ -357,7 +357,7 @@ itemEdit model =
                 { preventDefault = True, stopPropagation = False }
                 (JD.succeed Msg.ScheduleNew)
             ]
-            [ div [ class "centerblock" ] [ text "Edit an algorithm" ]
+            [ div [ class "centerblock" ] [ text "Edit initial values" ]
             , fieldset [ disabled (False) ] (algoNewFields model)
             , button []
                 [ text
