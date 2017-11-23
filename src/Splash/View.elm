@@ -20,7 +20,7 @@ page model =
         page_parts =
             case model.mode of
                 ModeSplash ->
-                    [ catchphrase, steps, signupButton ]
+                    [ catchphrase, steps, screencap, signupButton ]
 
                 ModeSignup ->
                     case model.account of
@@ -54,6 +54,10 @@ steps =
 
 signupButton =
     button [ class "signupButton", onClick Msg.ShowSignup ] [ text "Sign up" ]
+
+
+screencap =
+    img [ src "assets/tworows.png" ] []
 
 
 signup model =
