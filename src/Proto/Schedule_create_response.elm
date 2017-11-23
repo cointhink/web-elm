@@ -14,6 +14,7 @@ import Json.Encode as JE
 type alias ScheduleCreateResponse =
     { ok : Bool -- 1
     , message : String -- 2
+    , scheduleCredits : Int -- 3
     }
 
 
@@ -22,6 +23,7 @@ scheduleCreateResponseDecoder =
     JD.lazy <| \_ -> decode ScheduleCreateResponse
         |> required "Ok" JD.bool False
         |> required "Message" JD.string ""
+        |> required "ScheduleCredits" JD.int 0
 
 
 scheduleCreateResponseEncoder : ScheduleCreateResponse -> JE.Value
@@ -29,4 +31,5 @@ scheduleCreateResponseEncoder v =
     JE.object <| List.filterMap identity <|
         [ (requiredFieldEncoder "Ok" JE.bool False v.ok)
         , (requiredFieldEncoder "Message" JE.string "" v.message)
+        , (requiredFieldEncoder "ScheduleCredits" JE.int 0 v.scheduleCredits)
         ]

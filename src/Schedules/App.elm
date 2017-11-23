@@ -235,7 +235,7 @@ update msg model =
                             { model | schedule_add_req_id = Nothing }
 
                         account_ =
-                            { account | scheduleCredits = account.scheduleCredits - 1 }
+                            { account | scheduleCredits = response.scheduleCredits }
                     in
                         if response.ok then
                             ( { model_ | account = Just account_ }
