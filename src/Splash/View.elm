@@ -77,6 +77,7 @@ signup model =
                     , onInput Msg.SignupFullname
                     ]
                     []
+                , br [] []
                 , Html.input
                     [ id "f_email"
                     , placeholder "Email address"
