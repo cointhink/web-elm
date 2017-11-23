@@ -225,23 +225,49 @@ form button {
 }
 
 .algo-name {
-  width: 10em;
+  width: 15em;
 }
 
 .algo-code {
   background-color: #eee;
   height: 4em;
   overflow: scroll;
-  margin-right: 10%;
+  margin-right: 5%;
+  margin-top: 1%;
 }
 
 .algo-code pre {
   margin: 0;
 }
 
-.algo-row-detail {
-  margin-left: 2em;
+.algo-row-box {
+  display: flex;
+  margin-right: 10%;
 }
+
+.algo-row-sub-box {
+  width: 100%;
+}
+
+.algo-row-detail {
+}
+
+.algo-row-summary {
+  display: flex;
+  justify-content: space-between;
+}
+
+.algo-row-summary-left {
+  display: flex;
+}
+
+.algo-row-summary-right {
+  display: flex;
+  justify-content: space-around;
+  width: 20em;
+  font-size: 95%;
+}
+
 
 .item-add {
   margin: auto;
@@ -363,6 +389,7 @@ form button {
 
 .algo-list button {
   margin-right: 0.5em;
+  height: 2em;
 }
 
 .algo-list .algo-name {
