@@ -18,6 +18,7 @@ type alias Schedule =
     , status : Schedule_States -- 4
     , initialState : String -- 5
     , enabledUntil : String -- 6
+    , executor : Schedule_Executors -- 7
     }
 
 
@@ -26,6 +27,11 @@ type Schedule_States
     | Schedule_Disabled -- 1
     | Schedule_Enabled -- 2
     | Schedule_Deleted -- 3
+
+
+type Schedule_Executors
+    = Schedule_Container -- 0
+    | Schedule_Lambda -- 1
 
 
 scheduleDecoder : JD.Decoder Schedule
@@ -37,6 +43,7 @@ scheduleDecoder =
         |> required "Status" schedule_StatesDecoder schedule_StatesDefault
         |> required "InitialState" JD.string ""
         |> required "EnabledUntil" JD.string ""
+        |> required "Executor" schedule_ExecutorsDecoder schedule_ExecutorsDefault
 
 
 schedule_StatesDecoder : JD.Decoder Schedule_States
@@ -66,6 +73,27 @@ schedule_StatesDefault : Schedule_States
 schedule_StatesDefault = Schedule_Unknown
 
 
+schedule_ExecutorsDecoder : JD.Decoder Schedule_Executors
+schedule_ExecutorsDecoder =
+    let
+        lookup s =
+            case s of
+                "container" ->
+                    Schedule_Container
+
+                "lambda" ->
+                    Schedule_Lambda
+
+                _ ->
+                    Schedule_Container
+    in
+        JD.map lookup JD.string
+
+
+schedule_ExecutorsDefault : Schedule_Executors
+schedule_ExecutorsDefault = Schedule_Container
+
+
 scheduleEncoder : Schedule -> JE.Value
 scheduleEncoder v =
     JE.object <| List.filterMap identity <|
@@ -75,6 +103,7 @@ scheduleEncoder v =
         , (requiredFieldEncoder "Status" schedule_StatesEncoder schedule_StatesDefault v.status)
         , (requiredFieldEncoder "InitialState" JE.string "" v.initialState)
         , (requiredFieldEncoder "EnabledUntil" JE.string "" v.enabledUntil)
+        , (requiredFieldEncoder "Executor" schedule_ExecutorsEncoder schedule_ExecutorsDefault v.executor)
         ]
 
 
@@ -94,6 +123,21 @@ schedule_StatesEncoder v =
 
                 Schedule_Deleted ->
                     "deleted"
+
+    in
+        JE.string <| lookup v
+
+
+schedule_ExecutorsEncoder : Schedule_Executors -> JE.Value
+schedule_ExecutorsEncoder v =
+    let
+        lookup s =
+            case s of
+                Schedule_Container ->
+                    "container"
+
+                Schedule_Lambda ->
+                    "lambda"
 
     in
         JE.string <| lookup v
