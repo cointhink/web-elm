@@ -19,6 +19,7 @@ type alias Algorun =
     , status : String -- 5
     , code : String -- 6
     , image : String -- 7
+    , state : String -- 8
     }
 
 
@@ -42,6 +43,7 @@ algorunDecoder =
         |> required "Status" JD.string ""
         |> required "Code" JD.string ""
         |> required "Image" JD.string ""
+        |> required "State" JD.string ""
 
 
 algorun_StatesDecoder : JD.Decoder Algorun_States
@@ -90,6 +92,7 @@ algorunEncoder v =
         , (requiredFieldEncoder "Status" JE.string "" v.status)
         , (requiredFieldEncoder "Code" JE.string "" v.code)
         , (requiredFieldEncoder "Image" JE.string "" v.image)
+        , (requiredFieldEncoder "State" JE.string "" v.state)
         ]
 
 

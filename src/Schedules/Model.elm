@@ -69,12 +69,12 @@ blankSchedule =
 
 scheduleWithAlgoId : String -> Schedule
 scheduleWithAlgoId algoId =
-    Schedule "" "" algoId Schedule_Unknown "{}" ""
+    Schedule "" "" algoId Schedule_Unknown "{}" "" Schedule_Container
 
 
 blankAlgorun : String -> Algorun
 blankAlgorun id =
-    Algorun id "" "" "" "" "" ""
+    Algorun id "" "" "" "" "" "" ""
 
 
 scheduleStateEncoder : ScheduleState -> JE.Value
