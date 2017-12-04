@@ -32,6 +32,7 @@ type Schedule_States
 type Schedule_Executors
     = Schedule_Container -- 0
     | Schedule_Lambda -- 1
+    | Schedule_LambdaMaster -- 2
 
 
 scheduleDecoder : JD.Decoder Schedule
@@ -83,6 +84,9 @@ schedule_ExecutorsDecoder =
 
                 "lambda" ->
                     Schedule_Lambda
+
+                "lambda_master" ->
+                    Schedule_LambdaMaster
 
                 _ ->
                     Schedule_Container
@@ -138,6 +142,9 @@ schedule_ExecutorsEncoder v =
 
                 Schedule_Lambda ->
                     "lambda"
+
+                Schedule_LambdaMaster ->
+                    "lambda_master"
 
     in
         JE.string <| lookup v

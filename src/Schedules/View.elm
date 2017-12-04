@@ -173,18 +173,32 @@ initialValueHtml k v =
         ]
 
 
+algoListHtmlId : Schedule -> Maybe Algorun -> Html Msg
 algoListHtmlId s runMaybe =
-    div [ class "list-algorithm-algo" ]
-        [ a
-            (case runMaybe of
-                Just run ->
-                    [ href ("#view/" ++ run.id) ]
+    let
+        executorMark =
+            case s.executor of
+                Schedule_Container ->
+                    ""
 
-                Nothing ->
-                    []
-            )
-            [ text s.algorithmId ]
-        ]
+                Schedule_Lambda ->
+                    "*"
+
+                Schedule_LambdaMaster ->
+                    "**"
+    in
+        div [ class "list-algorithm-algo" ]
+            [ text executorMark
+            , a
+                (case runMaybe of
+                    Just run ->
+                        [ href ("#view/" ++ run.id) ]
+
+                    Nothing ->
+                        []
+                )
+                [ text s.algorithmId ]
+            ]
 
 
 algoListHtmlStatus s runMaybe =
