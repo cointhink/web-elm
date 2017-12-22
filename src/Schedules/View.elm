@@ -91,15 +91,10 @@ creditRow account =
             [ div [ class "list-row list-row-ad" ]
                 [ div [ class "list-row-ad-text" ]
                     [ text ("Unused schedule credits: " ++ (toString account.scheduleCredits) ++ ".") ]
-                , (if account.scheduleCredits < 6 then
-                    div [ class "list-row-ad-pay" ]
-                        [ button [ onClick Msg.StripePay ]
-                            [ text "Add a schedule credit for $2" ]
-                        ]
-                   else
-                    div [ class "" ]
-                        []
-                  )
+                , div [ class "list-row-ad-pay" ]
+                    [ button [ onClick Msg.StripePay ]
+                        [ text "Add a schedule credit for $2" ]
+                    ]
                 ]
             ]
         , div [ id "card-container", class "card-inactive" ]
