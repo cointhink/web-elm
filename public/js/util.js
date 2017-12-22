@@ -47,6 +47,12 @@ function stripePay(email) {
   s.setAttribute('data-email', email)
   f.appendChild(s)
 
+  var ifield = document.createElement("input")
+  ifield.setAttribute('type', 'hidden')
+  ifield.setAttribute('name', 'cointhink-token')
+  ifield.setAttribute('value', localStorage.getItem('token'))
+  f.appendChild(ifield)
+
   document.getElementById('card-element').appendChild(f);
 
 /*
