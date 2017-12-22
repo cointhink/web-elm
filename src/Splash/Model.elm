@@ -31,7 +31,7 @@ defaultModel mode seed =
 
 blankAccount : Account
 blankAccount =
-    Account "" "" "" "" "" 0
+    Account "" "" "" "" "" 0 ""
 
 
 isFormSent : Model -> Bool

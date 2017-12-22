@@ -18,6 +18,7 @@ type alias Account =
     , fullname : String -- 4
     , timeZone : String -- 5
     , scheduleCredits : Int -- 6
+    , stripe : String -- 7
     }
 
 
@@ -30,6 +31,7 @@ accountDecoder =
         |> required "Fullname" JD.string ""
         |> required "TimeZone" JD.string ""
         |> required "ScheduleCredits" JD.int 0
+        |> required "Stripe" JD.string ""
 
 
 accountEncoder : Account -> JE.Value
@@ -41,4 +43,5 @@ accountEncoder v =
         , (requiredFieldEncoder "Fullname" JE.string "" v.fullname)
         , (requiredFieldEncoder "TimeZone" JE.string "" v.timeZone)
         , (requiredFieldEncoder "ScheduleCredits" JE.int 0 v.scheduleCredits)
+        , (requiredFieldEncoder "Stripe" JE.string "" v.stripe)
         ]
