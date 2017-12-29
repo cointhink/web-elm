@@ -22,13 +22,6 @@ function stripePay(email) {
   var myNode = document.getElementById("card-container")
   myNode.style.display = "block"
 
-/*
-  var stripe = Stripe('pk_test_sp3PVvkNYVuTlsh4cp0EoZrL');
-  var elements = stripe.elements();
-  var card = elements.create('card')
-  card.mount('#card-element')
-*/
-
   var f = document.createElement("form")
   f.setAttribute('method',"post")
   f.setAttribute('action',"/stripe")
@@ -40,7 +33,7 @@ function stripePay(email) {
   var s = document.createElement("script")
   s.className = "stripe-button"
   s.setAttribute('src', "https://checkout.stripe.com/checkout.js")
-  s.setAttribute('data-key',"pk_test_sp3PVvkNYVuTlsh4cp0EoZrL")
+  s.setAttribute('data-key',config.stripe.pubkey)
   s.setAttribute('data-amount',"200")
   s.setAttribute('data-name',"CoinThink")
   s.setAttribute('data-description',"Buy 1 schedule credit.")
@@ -59,7 +52,7 @@ function stripePay(email) {
 <form action="/your-server-side-code" method="POST">
   <script
     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-    data-key="pk_test_sp3PVvkNYVuTlsh4cp0EoZrL"
+    data-key="pk_test_"
     data-amount="999"
     data-name="CoinThink"
     data-description="Widget"
