@@ -103,15 +103,13 @@ creditRow account =
                 , img [ src "/assets/powered_by_stripe.svg" ] []
                 ]
             , div []
-                [ text " Most algorithms use up one schedule credit per month."
+                [ text " Most algorithms use one schedule credit per month."
                 ]
             , div [ class "small-print" ]
-                [ text "* Schedule credits have no cash value and are non-refundable. Limit 6 credits per account."
+                [ text "* Schedule credits have no cash value and are non-refundable."
                 ]
             , div [ id "card-element" ]
                 []
-            , div [ id "card-note" ]
-                [ text "* Payments are in test mode. Your card will not be charged." ]
             ]
         ]
 
